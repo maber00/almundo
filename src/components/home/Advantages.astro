@@ -1,0 +1,95 @@
+---
+// Ventajas competitivas con emojis
+const advantages = [
+  {
+    icon: "📍",
+    title: "Expertos Locales",
+    description: "Atención personalizada en nuestra oficina de Tuluá. Conocemos tus necesidades como viajero local."
+  },
+  {
+    icon: "💳",
+    title: "Facilidades de Pago",
+    description: "Paga en cuotas y sin intereses con nuestros aliados bancarios. Aceptamos todos los medios de pago."
+  },
+  {
+    icon: "🏷️",
+    title: "Precios Competitivos",
+    description: "Mejores tarifas garantizadas. Si encuentras un precio más bajo, ¡lo igualamos!"
+  },
+  {
+    icon: "🛂",
+    title: "Asesoría en Trámites",
+    description: "Te acompañamos en todo el proceso de visados y documentación internacional."
+  },
+  {
+    icon: "🛡️",
+    title: "Asistencia 24/7",
+    description: "Soporte permanente durante tu viaje. Estamos contigo antes, durante y después."
+  },
+  {
+    icon: "🚐",
+    title: "Transporte Incluido",
+    description: "Conexión desde Tuluá hasta el aeropuerto de Cali para nuestros grupos organizados."
+  }
+];
+---
+
+<section class="py-20 bg-blue-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">¿Por qué viajar con Almundo Tour?</h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Somos la agencia de viajes de confianza en Tuluá con más de 10 años de experiencia ofreciendo experiencias inolvidables
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {advantages.map((advantage) => (
+        <div class="bg-white rounded-lg shadow-lg p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+          <div class="flex flex-col items-center text-center">
+            <div class="text-4xl mb-6">{advantage.icon}</div>
+
+            <h3 class="text-2xl font-bold text-gray-900 mb-3">{advantage.title}</h3>
+            <p class="text-gray-600">{advantage.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-16 bg-white rounded-lg shadow-lg p-8 md:p-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <div class="md:col-span-2">
+          <h3 class="text-3xl font-bold text-gray-900 mb-4">¿Necesitas un asesor de viajes personalizado?</h3>
+          <p class="text-lg text-gray-600 mb-6">
+            Somos tus vecinos en Tuluá y entendemos tus necesidades. Visítanos en nuestra oficina para una asesoría personalizada o contáctanos por WhatsApp.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a 
+              href="/contacto" 
+              class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+            >
+              📅 Agendar una cita
+            </a>
+
+            <a 
+              href="https://wa.me/573XXXXXXXXX" 
+              target="_blank" 
+              class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
+            >
+              💬 Chatear por WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <div class="hidden md:block">
+          <img 
+            src="/images/travel-advisor.jpg" 
+            alt="Asesor de viajes" 
+            class="w-full h-64 object-cover rounded-lg"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

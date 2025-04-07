@@ -1,0 +1,123 @@
+---
+import { Icon } from 'astro-icon/components';
+// Testimonios de clientes (versión actualizada)
+const testimonials = [
+  {
+    name: "Laura Gómez",
+    location: "Colombia",
+    image: "/images/testimonials/person-1.jpg",
+    rating: 5,
+    comment: "Excelente servicio desde el primer momento. Viajamos a Cancún con mi familia y todo estuvo perfectamente organizado. El hotel, los tours, todo de primera categoría. ¡Recomendados 100%!",
+    destination: "Cancún, México"
+  },
+  {
+    name: "Carlos Martínez",
+    location: "Colombia",
+    image: "/images/testimonials/person-2.jpg",
+    rating: 5,
+    comment: "Primera vez que viajo al exterior y gracias a Almundo Tour fue una experiencia inolvidable. La asesoría para los trámites de visa fue clave. Mi viaje a Europa sin contratiempos.",
+    destination: "Madrid, España"
+  },
+  {
+    name: "Sofía Ramírez",
+    location: "Colombia",
+    image: "/images/testimonials/person-3.jpg",
+    rating: 4,
+    comment: "Agradecida con el equipo de Almundo Tour por ayudarnos a organizar nuestra luna de miel. Desde los traslados hasta las reservas de restaurantes, todo impecable. Volveremos a viajar con ustedes.",
+    destination: "San Andrés, Colombia"
+  },
+  {
+    name: "Juan Pablo Vargas",
+    location: "Colombia",
+    image: "/images/testimonials/person-4.jpg",
+    rating: 5,
+    comment: "Viajamos un grupo de amigos al Eje Cafetero y la experiencia fue genial. Las actividades de aventura que nos recomendaron fueron lo mejor del viaje. Muy profesionales y atentos a cada detalle.",
+    destination: "Eje Cafetero, Colombia"
+  },
+];
+---
+
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Lo que dicen nuestros viajeros</h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Historias reales de clientes satisfechos que confiaron en nosotros para sus aventuras
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {testimonials.map((testimonial) => (
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <img 
+                src={testimonial.image} 
+                alt={testimonial.name}
+                class="w-14 h-14 rounded-full object-cover mr-4"
+              />
+              <div>
+                <h3 class="font-bold text-gray-900">{testimonial.name}</h3>
+                <p class="text-sm text-gray-600">{testimonial.location}</p>
+              </div>
+            </div>
+            
+            <div class="flex mb-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Icon 
+                  name="tabler:star" 
+                  class={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-500' : 'text-gray-300'}`} 
+                />
+              ))}
+            </div>
+            
+            <p class="text-gray-700 mb-4 italic">"{testimonial.comment}"</p>
+            
+            <div class="flex items-center pt-4 border-t border-gray-100">
+              <Icon name="tabler:map-pin" class="w-5 h-5 text-blue-600 mr-2" />
+              <p class="text-sm font-medium text-gray-700">Viaje a: {testimonial.destination}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div class="mt-16 bg-blue-600 text-white rounded-lg shadow-lg p-8 md:p-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div>
+          <h3 class="text-3xl font-bold mb-4">Viajeros satisfechos, nuestra mejor carta de presentación</h3>
+          <p class="text-lg text-blue-100 mb-6">
+            Aunque somos una agencia nueva, nos enorgullece ofrecer experiencias de viaje excepcionales con un servicio al cliente personalizado.
+          </p>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div class="text-center">
+              <div class="text-4xl font-bold mb-2">98%</div>
+              <p class="text-sm text-blue-100">Satisfacción de clientes</p>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold mb-2">3+</div>
+              <p class="text-sm text-blue-100">Años de experiencia</p>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold mb-2">20+</div>
+              <p class="text-sm text-blue-100">Destinos ofrecidos</p>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold mb-2">24/7</div>
+              <p class="text-sm text-blue-100">Soporte al viajero</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="hidden md:block">
+          <img 
+            src="/images/happy-travelers.jpg" 
+            alt="Viajeros felices" 
+            class="w-full h-64 object-cover rounded-lg"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

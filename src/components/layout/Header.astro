@@ -1,0 +1,188 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import logo from '../../assets/images/logo-almundo-tour.png';
+
+// Datos del menú de navegación
+const navItems = [
+  { label: "Inicio", url: "/" },
+  { 
+    label: "Destinos", 
+    url: "/destinos",
+    dropdown: [
+      { label: "Nacionales", url: "/destinos/nacionales" },
+      { label: "Internacionales", url: "/destinos/internacionales" },
+      { label: "Aventura", url: "/destinos/aventura" },
+      { label: "Románticos", url: "/destinos/romanticos" },
+      { label: "Cruceros", url: "/destinos/cruceros" }
+    ]
+  },
+  { label: "Promociones", url: "/promociones" },
+  { label: "Sobre Nosotros", url: "/sobre-nosotros" },
+  { label: "Blog", url: "/blog" },
+  { label: "Contacto", url: "/contacto" }
+];
+
+// Opciones de moneda
+const currencies = [
+  { code: "COP", symbol: "$" },
+  { code: "USD", symbol: "US$" }
+];
+---
+
+<header class="fixed w-full z-50 transition-all duration-300 bg-white shadow-md">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center py-4">
+      <!-- Logo -->
+      <a href="/" class="flex items-center">
+        <Image src={logo} alt="Almundo Tour" width={160} height={50} />
+      </a>
+
+      <!-- Menú de navegación principal -->
+      <nav class="hidden md:flex">
+        <ul class="flex space-x-6">
+          {navItems.map((item) => (
+            <li class="relative group">
+              <a 
+                href={item.url} 
+                class="text-gray-700 hover:text-blue-600 font-medium py-2"
+              >
+                {item.label}
+                {item.dropdown && (
+                  <Icon name="tabler:chevron-down" class="inline-block ml-1 w-4 h-4" />
+                )}
+              </a>
+              
+              {item.dropdown && (
+                <div class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden group-hover:block">
+                  <div class="py-1">
+                    {item.dropdown.map((subItem) => (
+                      <a 
+                        href={subItem.url}
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        {subItem.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <!-- Botones de acción -->
+      <div class="hidden md:flex items-center space-x-3">
+        <!-- Selector de moneda -->
+        <div class="relative">
+          <select class="appearance-none bg-gray-100 py-1 px-3 pr-8 rounded-md text-sm focus:outline-none">
+            {currencies.map((currency) => (
+              <option value={currency.code}>{currency.code}</option>
+            ))}
+          </select>
+          <Icon name="tabler:chevron-down" class="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none" />
+        </div>
+
+        <!-- Botón de cotización -->
+        <a 
+          href="/cotizar" 
+          class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+        >
+          Solicitar cotización
+        </a>
+
+        <!-- Botón de WhatsApp -->
+        <a 
+          href="https://wa.me/573XXXXXXXXX" 
+          target="_blank" 
+          class="bg-green-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-600 transition-colors flex items-center"
+        >
+          <Icon name="tabler:brand-whatsapp" class="w-4 h-4 mr-1" />
+          WhatsApp
+        </a>
+      </div>
+
+      <!-- Botón móvil -->
+      <button class="md:hidden text-gray-700" id="mobile-menu-button">
+        <Icon name="tabler:menu-2" class="w-6 h-6" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Menú móvil -->
+  <div class="hidden md:hidden" id="mobile-menu">
+    <div class="px-4 py-3 space-y-2 bg-gray-50">
+      <ul class="space-y-3">
+        {navItems.map((item) => (
+          <li>
+            <a 
+              href={item.url}
+              class="block text-gray-700 hover:text-blue-600 font-medium py-1"
+            >
+              {item.label}
+            </a>
+            
+            {item.dropdown && (
+              <ul class="pl-4 mt-1 space-y-1">
+                {item.dropdown.map((subItem) => (
+                  <li>
+                    <a 
+                      href={subItem.url}
+                      class="block text-gray-600 hover:text-blue-600 text-sm py-1"
+                    >
+                      {subItem.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+      
+      <div class="flex flex-col space-y-2 pt-3 border-t border-gray-200">
+        <a 
+          href="/cotizar" 
+          class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors text-center"
+        >
+          Solicitar cotización
+        </a>
+        
+        <a 
+          href="https://wa.me/573XXXXXXXXX" 
+          target="_blank" 
+          class="bg-green-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
+        >
+          <Icon name="tabler:brand-whatsapp" class="w-4 h-4 mr-1" />
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Lógica para el menú móvil
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+  
+  // Lógica para cambiar el estilo del header al hacer scroll
+  const header = document.querySelector('header');
+  
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      header?.classList.add('shadow-md', 'py-2');
+      header?.classList.remove('py-4');
+    } else {
+      header?.classList.remove('shadow-md', 'py-2');
+      header?.classList.add('py-4');
+    }
+  });
+</script>

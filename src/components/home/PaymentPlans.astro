@@ -1,0 +1,131 @@
+---
+import { Icon } from 'astro-icon/components';
+
+// Opciones de financiamiento
+const financingOptions = [
+  {
+    title: "Reserva ahora, paga después",
+    description: "Asegura tu viaje con un pequeño depósito y paga el resto antes de la fecha de salida.",
+    icon: "tabler:calendar-check",
+    highlight: false
+  },
+  {
+    title: "Pago en cuotas sin interés",
+    description: "Divide el costo de tu viaje en cuotas mensuales sin intereses con nuestros bancos aliados.",
+    icon: "tabler:credit-card",
+    highlight: true
+  },
+  {
+    title: "Plan familiar",
+    description: "Descuentos especiales y opciones de pago flexibles para grupos familiares.",
+    icon: "tabler:users",
+    highlight: false
+  },
+  {
+    title: "Pago en efectivo",
+    description: "Opciones de pago en efectivo a través de Efecty, Baloto o directamente en nuestra oficina.",
+    icon: "tabler:cash",
+    highlight: false
+  }
+];
+
+// Bancos aliados
+const bankPartners = [
+  { name: "Bancolombia", logo: "/images/logos/bancolombia.png" },
+  { name: "Davivienda", logo: "/images/logos/davivienda.png" },
+  { name: "Banco de Bogotá", logo: "/images/logos/bogota.png" },
+  { name: "Banco Popular", logo: "/images/logos/popular.png" }
+];
+---
+
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Facilidades de pago</h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Viaja ahora y paga después con nuestras opciones de financiamiento flexibles
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+      {financingOptions.map((option) => (
+        <div class={`bg-white rounded-lg shadow-lg p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${option.highlight ? 'border-2 border-blue-500' : ''}`}>
+          <div class="flex flex-col items-center text-center">
+            <div class={`text-4xl mb-6 ${option.highlight ? 'text-blue-500' : 'text-gray-700'}`}>
+              <Icon name={option.icon} class="w-16 h-16" />
+            </div>
+            
+            <h3 class="text-xl font-bold text-gray-900 mb-3">{option.title}</h3>
+            <p class="text-gray-600">{option.description}</p>
+            
+            {option.highlight && (
+              <span class="mt-4 bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
+                0% interés
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div class="bg-gray-50 rounded-lg shadow-lg p-8 md:p-12">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+        <div class="md:col-span-3">
+          <h3 class="text-3xl font-bold text-gray-900 mb-4">Financia tu viaje a 0% interés</h3>
+          <p class="text-lg text-gray-600 mb-6">
+            Trabajamos con los principales bancos de Colombia para ofrecerte opciones de pago flexibles sin intereses. ¡Viaja ahora y paga después!
+          </p>
+          
+          <ul class="space-y-3 text-gray-600 mb-6">
+            <li class="flex items-start">
+              <Icon name="tabler:check" class="w-5 h-5 text-green-500 mr-2 mt-1" />
+              <span>Cuotas de 3, 6 o 12 meses sin intereses</span>
+            </li>
+            <li class="flex items-start">
+              <Icon name="tabler:check" class="w-5 h-5 text-green-500 mr-2 mt-1" />
+              <span>Aprobación rápida en menos de 24 horas</span>
+            </li>
+            <li class="flex items-start">
+              <Icon name="tabler:check" class="w-5 h-5 text-green-500 mr-2 mt-1" />
+              <span>Requisitos mínimos: solo tu cédula y comprobante de ingresos</span>
+            </li>
+            <li class="flex items-start">
+              <Icon name="tabler:check" class="w-5 h-5 text-green-500 mr-2 mt-1" />
+              <span>Asesoría personalizada para elegir el mejor plan</span>
+            </li>
+          </ul>
+          
+          <a 
+            href="/contacto" 
+            class="inline-block bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors"
+          >
+            Consultar opciones de financiamiento
+          </a>
+        </div>
+        
+        <div class="md:col-span-2">
+          <div class="bg-white p-6 rounded-lg shadow">
+            <h4 class="text-lg font-bold text-gray-900 mb-4">Nuestros bancos aliados</h4>
+            <div class="grid grid-cols-2 gap-4">
+              {bankPartners.map((bank) => (
+                <div class="flex items-center justify-center bg-gray-100 p-4 rounded">
+                  <img 
+                    src={bank.logo} 
+                    alt={`Logo ${bank.name}`}
+                    class="h-10 object-contain"
+                  />
+                </div>
+              ))}
+            </div>
+            
+            <div class="mt-6 pt-6 border-t border-gray-100">
+              <p class="text-sm text-gray-500 text-center">
+                * Sujeto a aprobación crediticia. Consulta términos y condiciones con nuestros asesores.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

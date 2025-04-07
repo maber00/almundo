@@ -1,0 +1,181 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+// Destinos destacados
+const featuredDestinations = [
+  {
+    id: "cartagena",
+    name: "Cartagena",
+    image: "/images/destinations/cartagena.jpg",
+    price: 899000,
+    duration: "4 días / 3 noches",
+    rating: 98,
+    availability: 8,
+    tag: "Nacional",
+    url: "/destinos/nacionales/cartagena"
+  },
+  {
+    id: "cancun",
+    name: "Cancún",
+    image: "/images/destinations/cancun.jpg",
+    price: 2499000,
+    duration: "7 días / 6 noches",
+    rating: 96,
+    availability: 5,
+    tag: "Oferta",
+    url: "/destinos/internacionales/cancun"
+  },
+  {
+    id: "madrid",
+    name: "Madrid",
+    image: "/images/destinations/madrid.jpg",
+    price: 4499000,
+    duration: "8 días / 7 noches",
+    rating: 95,
+    availability: 10,
+    tag: "Internacional",
+    url: "/destinos/internacionales/madrid"
+  },
+  {
+    id: "eje-cafetero",
+    name: "Eje Cafetero",
+    image: "/images/destinations/eje-cafetero.jpg",
+    price: 1199000,
+    duration: "5 días / 4 noches",
+    rating: 97,
+    availability: 4,
+    tag: "Aventura",
+    url: "/destinos/nacionales/eje-cafetero"
+  },
+  {
+    id: "punta-cana",
+    name: "Punta Cana",
+    image: "/images/destinations/punta-cana.jpg",
+    price: 2799000,
+    duration: "6 días / 5 noches",
+    rating: 94,
+    availability: 7,
+    tag: "Nuevo",
+    url: "/destinos/internacionales/punta-cana"
+  },
+  {
+    id: "san-andres",
+    name: "San Andrés",
+    image: "/images/destinations/san-andres.jpg",
+    price: 1399000,
+    duration: "5 días / 4 noches",
+    rating: 93,
+    availability: 3,
+    tag: "Oferta",
+    url: "/destinos/nacionales/san-andres"
+  }
+];
+---
+
+<section class="py-20">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Destinos Destacados</h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Conoce los destinos más populares elegidos por nuestros viajeros
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {featuredDestinations.map((destination) => (
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
+          <div class="relative">
+            <img 
+              src={destination.image} 
+              alt={destination.name}
+              class="w-full h-64 object-cover"
+            />
+            <div class="absolute top-4 right-4">
+              <span class={`text-xs font-bold px-3 py-1 rounded-full ${
+                destination.tag === 'Oferta' ? 'bg-red-500 text-white' : 
+                destination.tag === 'Nuevo' ? 'bg-green-500 text-white' : 
+                'bg-blue-500 text-white'
+              }`}>
+                {destination.tag}
+              </span>
+            </div>
+            
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+              <h3 class="text-2xl font-bold text-white">{destination.name}</h3>
+            </div>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+              <div>
+                <p class="text-sm text-gray-500">Desde</p>
+                <p class="text-2xl font-bold text-blue-600">
+                  ${destination.price.toLocaleString('es-CO')} <span class="text-sm font-normal">COP</span>
+                </p>
+              </div>
+              
+              <div class="text-right">
+                <p class="text-sm text-gray-500">Duración</p>
+                <p class="font-medium">{destination.duration}</p>
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center mb-6">
+              <div class="flex items-center">
+                <Icon name="tabler:star" class="w-5 h-5 text-yellow-500" />
+                <span class="ml-1 text-sm font-medium">
+                  {destination.rating}% de recomendación
+                </span>
+              </div>
+              
+              <div class="flex items-center">
+                <Icon name="tabler:users" class="w-5 h-5 text-gray-500" />
+                <span class="ml-1 text-sm font-medium">
+                  Últimos {destination.availability} cupos
+                </span>
+              </div>
+            </div>
+            
+            <a 
+              href={destination.url}
+              class="block w-full bg-blue-600 text-white text-center py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
+            >
+              Ver detalles
+            </a>
+          </div>
+          
+          <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <img 
+                  src="/images/avatar-testimonial.jpg" 
+                  alt="Cliente satisfecho" 
+                  class="w-8 h-8 rounded-full object-cover"
+                />
+                <p class="ml-2 text-xs italic text-gray-500">
+                  "Experiencia inolvidable"
+                </p>
+              </div>
+              
+              <a 
+                href={`${destination.url}#testimonios`}
+                class="text-xs text-blue-600 hover:text-blue-800"
+              >
+                Ver opiniones
+              </a>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div class="text-center mt-12">
+      <a 
+        href="/destinos"
+        class="inline-block bg-blue-600 text-white py-3 px-8 rounded-md text-lg font-medium hover:bg-blue-700 transition-colors"
+      >
+        Ver todos los destinos
+      </a>
+    </div>
+  </div>
+</section>

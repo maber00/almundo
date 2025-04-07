@@ -1,0 +1,284 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+// Datos para el slider
+const heroSlides = [
+  {
+    image: "/images/hero/cancun.jpg",
+    title: "Descubre Cancún",
+    subtitle: "Playas paradisíacas en el Caribe Mexicano",
+    offerText: "Desde $2,499,000 COP",
+    buttonText: "Ver oferta",
+    buttonUrl: "/destinos/internacionales/cancun"
+  },
+  {
+    image: "/images/hero/cartagena.jpg",
+    title: "Explora Colombia",
+    subtitle: "Historia y cultura en el Caribe Colombiano",
+    offerText: "Desde $899,000 COP",
+    buttonText: "Ver oferta",
+    buttonUrl: "/destinos/nacionales/cartagena"
+  },
+  {
+    image: "/images/hero/europa.jpg",
+    title: "Recorre Europa",
+    subtitle: "Conoce las ciudades más emblemáticas del viejo continente",
+    offerText: "Desde $5,999,000 COP",
+    buttonText: "Ver oferta",
+    buttonUrl: "/destinos/internacionales/europa"
+  }
+];
+
+// Tipos de destinos para el buscador
+const destinationTypes = [
+  { id: "nacional", label: "Nacional" },
+  { id: "internacional", label: "Internacional" },
+  { id: "caribe", label: "Caribe" },
+  { id: "europa", label: "Europa" },
+  { id: "norteamerica", label: "Norteamérica" },
+  { id: "sudamerica", label: "Sudamérica" },
+  { id: "asia", label: "Asia" }
+];
+
+// Rangos de presupuesto
+const budgetRanges = [
+  { id: "budget-1", label: "Hasta $1,000,000" },
+  { id: "budget-2", label: "$1,000,000 - $3,000,000" },
+  { id: "budget-3", label: "$3,000,000 - $5,000,000" },
+  { id: "budget-4", label: "$5,000,000 - $10,000,000" },
+  { id: "budget-5", label: "Más de $10,000,000" }
+];
+
+// Duraciones de viaje
+const tripDurations = [
+  { id: "duration-1", label: "3-5 días" },
+  { id: "duration-2", label: "6-8 días" },
+  { id: "duration-3", label: "9-12 días" },
+  { id: "duration-4", label: "13-15 días" },
+  { id: "duration-5", label: "Más de 15 días" }
+];
+---
+
+<section class="relative w-full min-h-screen mt-0">
+  <!-- Hero Slider -->
+  <div class="relative w-full h-screen overflow-hidden" id="hero-slider">
+    <div class="absolute inset-0 z-10 bg-black bg-opacity-40"></div>
+    
+    <div class="slides-container w-full h-full">
+      {heroSlides.map((slide, index) => (
+        <div class={`slide absolute inset-0 w-full h-full transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}>
+          <div 
+            class="w-full h-full bg-cover bg-center"
+            style={`background-image: url(${slide.image})`}
+          >
+            <div class="container mx-auto px-4 h-full flex items-center">
+              <div class="text-white max-w-xl relative z-20">
+                <h2 class="text-5xl font-bold mb-2">{slide.title}</h2>
+                <p class="text-xl mb-4">{slide.subtitle}</p>
+                <p class="text-3xl font-semibold text-yellow-400 mb-6">{slide.offerText}</p>
+                <a 
+                  href={slide.buttonUrl}
+                  class="inline-block bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-md text-lg font-medium transition-colors"
+                >
+                  {slide.buttonText}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <!-- Slider Controls -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
+      {heroSlides.map((_, index) => (
+        <button 
+          class={`w-3 h-3 rounded-full ${index === 0 ? 'bg-white' : 'bg-white bg-opacity-50'}`}
+          data-slide-index={index}
+        ></button>
+      ))}
+    </div>
+    
+    <div class="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
+      <button id="prev-slide" class="text-white p-2 rounded-full bg-black bg-opacity-30 hover:bg-opacity-50">
+        <Icon name="tabler:chevron-left" class="w-6 h-6" />
+      </button>
+    </div>
+    
+    <div class="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
+      <button id="next-slide" class="text-white p-2 rounded-full bg-black bg-opacity-30 hover:bg-opacity-50">
+        <Icon name="tabler:chevron-right" class="w-6 h-6" />
+      </button>
+    </div>
+  </div>
+  
+  <!-- Buscador Avanzado - Ahora con más margen inferior -->
+  <div class="absolute bottom-0 left-0 right-0 z-30 transform translate-y-1/2">
+    <div class="container mx-auto px-4">
+      <div class="bg-white rounded-lg shadow-xl p-6">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">Encuentra tu viaje ideal</h3>
+        
+        <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4" id="search-form">
+          <!-- Tipo de Destino -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Tipo de Destino
+            </label>
+            <div class="relative">
+              <select name="destination_type" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Todos los destinos</option>
+                {destinationTypes.map((type) => (
+                  <option value={type.id}>{type.label}</option>
+                ))}
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <Icon name="tabler:chevron-down" class="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+          
+          <!-- Presupuesto -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Presupuesto
+            </label>
+            <div class="relative">
+              <select name="budget" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Cualquier presupuesto</option>
+                {budgetRanges.map((range) => (
+                  <option value={range.id}>{range.label}</option>
+                ))}
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <Icon name="tabler:chevron-down" class="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+          
+          <!-- Duración -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Duración
+            </label>
+            <div class="relative">
+              <select name="duration" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Cualquier duración</option>
+                {tripDurations.map((duration) => (
+                  <option value={duration.id}>{duration.label}</option>
+                ))}
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <Icon name="tabler:chevron-down" class="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+          
+          <!-- Fecha -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Fecha de viaje
+            </label>
+            <input 
+              type="date"
+              name="travel_date"
+              class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          
+          <!-- Botón de búsqueda -->
+          <div class="flex items-end">
+            <button
+              type="submit"
+              class="w-full bg-blue-600 text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+            >
+              <Icon name="tabler:search" class="w-5 h-5 mr-2" />
+              Encontrar mi viaje ideal
+            </button>
+          </div>
+        </form>
+        
+        <div class="mt-4 text-center">
+          <p class="text-sm text-gray-600">
+            <span class="font-medium">Agencia de viajes en Colombia</span> con experiencia internacional
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Espacio adicional para separar el buscador de los destinos destacados -->
+<div class="py-32"></div>
+
+<script>
+  // Lógica para el slider
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const indicators = document.querySelectorAll('[data-slide-index]');
+  const prevButton = document.getElementById('prev-slide');
+  const nextButton = document.getElementById('next-slide');
+  
+  // Función para mostrar un slide específico
+  function showSlide(index: number): void {
+    if (index < 0) index = slides.length - 1;
+    if (index >= slides.length) index = 0;
+    
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('opacity-0', i !== index);
+      slide.classList.toggle('opacity-100', i === index);
+    });
+    
+    indicators.forEach((indicator, i) => {
+      indicator.classList.toggle('bg-opacity-50', i !== index);
+      indicator.classList.toggle('bg-opacity-100', i === index);
+    });
+    
+    currentSlide = index;
+  }
+  
+  // Event listeners
+  indicators.forEach((indicator) => {
+    indicator.addEventListener('click', () => {
+      const index = parseInt(indicator.getAttribute('data-slide-index') || '0');
+      showSlide(index);
+    });
+  });
+  
+  if (prevButton) {
+    prevButton.addEventListener('click', () => {
+      showSlide(currentSlide - 1);
+    });
+  }
+  
+  if (nextButton) {
+    nextButton.addEventListener('click', () => {
+      showSlide(currentSlide + 1);
+    });
+  }
+  
+  // Auto-rotate
+  setInterval(() => {
+    showSlide(currentSlide + 1);
+  }, 5000);
+  
+  // Lógica para el formulario de búsqueda
+  const searchForm = document.getElementById('search-form');
+  if (searchForm) {
+    searchForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Recopilar los datos del formulario
+      const formData = new FormData(this as HTMLFormElement);
+      const searchParams = new URLSearchParams();
+      
+      for (const [key, value] of formData.entries()) {
+        if (value) {
+          searchParams.append(key, value.toString());
+        }
+      }
+      
+      // Redirigir a la página de resultados con los parámetros de búsqueda
+      window.location.href = `/destinos?${searchParams.toString()}`;
+    });
+  }
+</script>

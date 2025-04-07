@@ -1,0 +1,106 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+// Categorías de destinos actualizadas
+const destinationCategories = [
+  {
+    id: "nacionales",
+    title: "Destinos Nacionales",
+    description: "Descubre la belleza de Colombia",
+    image: "/images/categories/colombia.jpg",
+    destinations: ["Amazonas", "Santa Marta", "La Guajira", "San Andrés", "Eje Cafetero"],
+    url: "/destinos/nacionales"
+  },
+  {
+    id: "internacionales",
+    title: "Destinos Internacionales",
+    description: "Explora el mundo con nosotros",
+    image: "/images/categories/internacional.jpg",
+    destinations: ["Perú", "Jamaica", "Argentina", "México", "España"],
+    url: "/destinos/internacionales"
+  },
+  {
+    id: "aventura",
+    title: "Destinos de Aventura",
+    description: "Experiencias únicas para aventureros",
+    image: "/images/categories/aventura.jpg",
+    destinations: ["Amazonas colombiano", "Cusco - Perú", "Patagonia Argentina", "La Guajira"],
+    url: "/destinos/aventura"
+  },
+  {
+    id: "romanticos",
+    title: "Destinos Románticos",
+    description: "Escapes perfectos para parejas",
+    image: "/images/categories/romanticos.jpg",
+    destinations: ["Cartagena", "San Andrés", "Cancún", "Buenos Aires"],
+    url: "/destinos/romanticos"
+  },
+  {
+    id: "cruceros",
+    title: "Cruceros",
+    description: "Navega por los destinos más fascinantes",
+    image: "/images/categories/cruceros.jpg",
+    destinations: ["Caribe", "Mediterráneo", "Alaska"],
+    url: "/destinos/cruceros"
+  }
+];
+---
+
+<section class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Explora nuestras categorías de destinos</h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Encuentra el viaje perfecto entre nuestra selección de destinos para todos los gustos y presupuestos
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {destinationCategories.map((category) => (
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
+          <div class="relative h-56 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+            <img 
+              src={category.image} 
+              alt={category.title}
+              class="w-full h-full object-cover transition duration-500 hover:scale-110"
+            />
+          </div>
+          
+          <div class="p-6">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">{category.title}</h3>
+            <p class="text-gray-600 mb-4">{category.description}</p>
+            
+            <div class="mb-6">
+              <h4 class="text-sm font-semibold text-gray-700 mb-2">Destinos populares:</h4>
+              <div class="flex flex-wrap gap-2">
+                {category.destinations.map((destination) => (
+                  <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    {destination}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            <a 
+              href={category.url}
+              class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
+            >
+              Ver todos los destinos
+              <Icon name="tabler:arrow-right" class="w-4 h-4 ml-1" />
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div class="text-center mt-12">
+      <a 
+        href="/destinos"
+        class="inline-block bg-blue-600 text-white py-3 px-8 rounded-md text-lg font-medium hover:bg-blue-700 transition-colors"
+      >
+        Ver todos nuestros destinos
+      </a>
+    </div>
+  </div>
+</section>

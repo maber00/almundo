@@ -1,0 +1,239 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import LeadCaptureForm from '../components/contact/LeadCaptureForm.astro';
+
+// Información de contacto
+const contactInfo = {
+  address: "Calle 25 #38-42, Centro, Bogotá, Colombia",
+  phone: "+57 300 123 4567",
+  email: "info@almundotour.com",
+  hours: "Lun - Vie: 8:00 AM - 6:00 PM, Sábados: 9:00 AM - 1:00 PM"
+};
+
+// Métodos de contacto
+const contactMethods = [
+  {
+    icon: "📞",
+    title: "Llámanos",
+    description: "Atención personalizada en una llamada",
+    action: "+57 300 123 4567",
+    actionLabel: "Llamar ahora",
+    actionUrl: "tel:+573001234567",
+    color: "blue"
+  },
+  {
+    icon: "💬",
+    title: "WhatsApp",
+    description: "Chatea con nosotros",
+    action: "+57 300 123 4567",
+    actionLabel: "Enviar mensaje",
+    actionUrl: "https://wa.me/573001234567",
+    color: "green"
+  },
+  {
+    icon: "✉️",
+    title: "Correo electrónico",
+    description: "Escríbenos tus consultas",
+    action: "info@almundotour.com",
+    actionLabel: "Enviar email",
+    actionUrl: "mailto:info@almundotour.com",
+    color: "purple"
+  }
+];
+---
+
+<Layout title="Contacto | Almundo Tour" description="Contacta con nosotros para planificar tu próximo viaje. Estamos aquí para ayudarte con todas tus necesidades y dudas de viaje.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-blue-600 text-white py-16">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Contacta con nosotros</h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+          Estamos aquí para ayudarte a planificar tu próxima aventura. ¡Cuéntanos tus planes de viaje!
+        </p>
+      </div>
+    </section>
+    
+    <!-- Métodos de contacto -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {contactMethods.map((method) => (
+            <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+              <div class={`mx-auto w-16 h-16 rounded-full bg-${method.color}-100 flex items-center justify-center mb-6`}>
+                <span class="text-4xl">{method.icon}</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">{method.title}</h3>
+              <p class="text-gray-600 mb-4">{method.description}</p>
+              <p class="font-medium text-gray-800 mb-4">{method.action}</p>
+              <a 
+                href={method.actionUrl} 
+                class={`inline-block bg-${method.color}-600 text-white py-2 px-4 rounded-md font-medium hover:bg-${method.color}-700 transition-colors`}
+                target={method.actionUrl.startsWith('http') ? "_blank" : ""}
+              >
+                {method.actionLabel}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    
+    <!-- Formulario de contacto y mapa -->
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Cuéntanos sobre tu viaje soñado</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Completa el formulario a continuación y un asesor especializado se pondrá en contacto contigo para ayudarte con todos los detalles.
+          </p>
+        </div>
+        
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Información de contacto -->
+            <div class="lg:w-1/3">
+              <div class="bg-blue-600 text-white rounded-lg shadow-lg p-8 h-full">
+                <h3 class="text-2xl font-bold mb-6">Información de contacto</h3>
+                
+                <div class="space-y-6">
+                  <div class="flex items-start">
+                    <div class="bg-blue-500 p-2 rounded-full mr-4 flex items-center justify-center">
+                      <span class="text-xl">📍</span>
+                    </div>
+                    <div>
+                      <h4 class="font-medium mb-1">Dirección</h4>
+                      <p class="text-blue-100">{contactInfo.address}</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start">
+                    <div class="bg-blue-500 p-2 rounded-full mr-4 flex items-center justify-center">
+                      <span class="text-xl">📞</span>
+                    </div>
+                    <div>
+                      <h4 class="font-medium mb-1">Teléfono</h4>
+                      <p class="text-blue-100">{contactInfo.phone}</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start">
+                    <div class="bg-blue-500 p-2 rounded-full mr-4 flex items-center justify-center">
+                      <span class="text-xl">✉️</span>
+                    </div>
+                    <div>
+                      <h4 class="font-medium mb-1">Email</h4>
+                      <p class="text-blue-100">{contactInfo.email}</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start">
+                    <div class="bg-blue-500 p-2 rounded-full mr-4 flex items-center justify-center">
+                      <span class="text-xl">🕒</span>
+                    </div>
+                    <div>
+                      <h4 class="font-medium mb-1">Horario de atención</h4>
+                      <p class="text-blue-100">{contactInfo.hours}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="mt-12">
+                  <h4 class="font-medium mb-4">Síguenos en redes sociales</h4>
+                  <div class="flex space-x-4">
+                    <a href="https://facebook.com/almundotour" target="_blank" class="bg-blue-500 p-2 rounded-full hover:bg-blue-400 transition-colors flex items-center justify-center">
+                      <span class="text-xl">📘</span>
+                    </a>
+                    <a href="https://instagram.com/almundotour" target="_blank" class="bg-blue-500 p-2 rounded-full hover:bg-blue-400 transition-colors flex items-center justify-center">
+                      <span class="text-xl">📸</span>
+                    </a>
+                    <a href="https://twitter.com/almundotour" target="_blank" class="bg-blue-500 p-2 rounded-full hover:bg-blue-400 transition-colors flex items-center justify-center">
+                      <span class="text-xl">🐦</span>
+                    </a>
+                    <a href="https://youtube.com/almundotour" target="_blank" class="bg-blue-500 p-2 rounded-full hover:bg-blue-400 transition-colors flex items-center justify-center">
+                      <span class="text-xl">▶️</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Formulario -->
+            <div class="lg:w-2/3">
+              <LeadCaptureForm />
+            </div>
+          </div>
+  
+      </div>
+    </section>
+    
+    <!-- Mapa de ubicación -->
+    <section class="pb-16">
+      <div class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div class="p-6 bg-gray-50 border-b">
+            <h3 class="text-xl font-bold text-gray-900">Nuestra ubicación</h3>
+          </div>
+          <div class="h-96 w-full">
+            <!-- Reemplaza con un iframe de Google Maps o una imagen del mapa -->
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254508.39280650613!2d-74.17748716426918!3d4.648617999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9bfd2da6cb29%3A0x239d635520a33914!2zQm9nb3TDoQ!5e0!3m2!1ses!2sco!4v1649538331357!5m2!1ses!2sco" 
+              width="100%" 
+              height="100%" 
+              style="border:0;" 
+              allowfullscreen="" 
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- FAQ rápido -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Preguntas frecuentes</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Algunas respuestas a las dudas más comunes
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">¿Cuánto tiempo antes debo planificar mi viaje?</h3>
+            <p class="text-gray-600">Recomendamos planificar con al menos 3 meses de anticipación para destinos internacionales y 1 mes para destinos nacionales. Para temporadas altas, es mejor planificar con 6 meses de antelación.</p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">¿Ofrecen planes con todo incluido?</h3>
+            <p class="text-gray-600">Sí, ofrecemos planes con todo incluido para varios destinos. Estos suelen incluir vuelos, alojamiento, traslados, alimentación y algunas actividades. También podemos personalizar según tus necesidades.</p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">¿Qué formas de pago aceptan?</h3>
+            <p class="text-gray-600">Aceptamos tarjetas de crédito, débito, transferencias bancarias, pagos en efectivo en nuestra oficina y pagos por PSE. También ofrecemos opciones de financiamiento sin intereses con algunos bancos aliados.</p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">¿Ofrecen asesoría para trámites de visa?</h3>
+            <p class="text-gray-600">Sí, brindamos asesoría completa para trámites de visa según el destino que elijas. Te guiamos en todo el proceso para aumentar las probabilidades de aprobación.</p>
+          </div>
+        </div>
+        
+        <div class="text-center mt-8">
+          <a href="/faq" class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800">
+            Ver todas las preguntas frecuentes
+            <span class="ml-1">➡️</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
