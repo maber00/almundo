@@ -1,0 +1,233 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import DestinationCard from '../../components/destinations/DestinationCard.astro';
+import { getFilteredDestinations } from '../../utils/destinationsData.js';
+
+// Obtener parámetros de búsqueda de la URL
+const { searchParams } = Astro.url;
+const destination_type = searchParams.get('destination_type') || '';
+const budget = searchParams.get('budget') || '';
+const duration = searchParams.get('duration') || '';
+const travel_date = searchParams.get('travel_date') || '';
+
+// Obtener destinos filtrados
+const destinations = getFilteredDestinations({
+  destination_type,
+  budget,
+  duration,
+  travel_date
+});
+
+// Traducir valores de los filtros para mostrarlos
+const destinationTypeLabels: Record<string, string> = {
+  'nacional': 'Nacional',
+  'internacional': 'Internacional',
+  'caribe': 'Caribe',
+  'europa': 'Europa',
+  'norteamerica': 'Norteamérica',
+  'sudamerica': 'Sudamérica',
+  'asia': 'Asia'
+};
+
+const budgetLabels: Record<string, string> = {
+  'budget-1': 'Hasta $1,000,000',
+  'budget-2': '$1,000,000 - $3,000,000',
+  'budget-3': '$3,000,000 - $5,000,000',
+  'budget-4': '$5,000,000 - $10,000,000',
+  'budget-5': 'Más de $10,000,000'
+};
+
+const durationLabels: Record<string, string> = {
+  'duration-1': '3-5 días',
+  'duration-2': '6-8 días',
+  'duration-3': '9-12 días',
+  'duration-4': '13-15 días',
+  'duration-5': 'Más de 15 días'
+};
+
+// Construir lista de filtros aplicados para mostrar
+const activeFilters = [];
+if (destination_type && destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]) {
+  activeFilters.push({
+    label: 'Tipo de destino',
+    value: destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]
+  });
+}
+
+if (budget && budgetLabels[budget as keyof typeof budgetLabels]) {
+  activeFilters.push({
+    label: 'Presupuesto',
+    value: budgetLabels[budget as keyof typeof budgetLabels]
+  });
+}
+
+if (duration && durationLabels[duration as keyof typeof durationLabels]) {
+  activeFilters.push({
+    label: 'Duración',
+    value: durationLabels[duration as keyof typeof durationLabels]
+  });
+}
+
+if (travel_date) {
+  const formattedDate = new Date(travel_date).toLocaleDateString('es-CO', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  activeFilters.push({
+    label: 'Fecha de viaje',
+    value: formattedDate
+  });
+}
+
+// Título de la página según los filtros
+let pageTitle = 'Todos nuestros destinos';
+
+if (destination_type && destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]) {
+  pageTitle = `Destinos ${destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]}`;
+}
+---
+
+<Layout title={`${pageTitle} | Almundo Tour`} description="Encuentra tu destino de viaje ideal con Almundo Tour, tu agencia de viajes de confianza en Colombia.">
+  <Header />
+  
+  <main>
+    <section class="bg-blue-50 py-12">
+      <div class="container mx-auto px-4">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">{pageTitle}</h1>
+        
+        <!-- Breadcrumbs -->
+        <div class="flex items-center text-sm text-gray-500 mb-8">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
+          
+          {destination_type && (
+            <>
+              <span class="mx-2">➡️</span>
+              <span class="text-gray-700">{destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]}</span>
+            </>
+          )}
+        </div>
+        
+        <!-- Filtros activos -->
+        {activeFilters.length > 0 && (
+          <div class="bg-white p-4 rounded-lg shadow-sm mb-8">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-medium text-gray-700">Filtros aplicados:</span>
+              
+              {activeFilters.map((filter) => (
+                <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
+                  <span class="font-medium mr-1">{filter.label}:</span>
+                  {filter.value}
+                </div>
+              ))}
+              
+              <a href="/destinos" class="ml-auto text-sm text-red-600 hover:text-red-800 flex items-center">
+                <span class="mr-1">❌</span>
+                Limpiar filtros
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- Resultados de búsqueda -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {destinations.map((destination) => (
+            <a href={`/destinos/${destination.type === 'nacional' ? 'nacionales' : 'internacionales'}/${destination.id}`} class="block">
+              <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div class="relative">
+                  <img 
+                    src={destination.image} 
+                    alt={destination.name}
+                    class="w-full h-64 object-cover"
+                  />
+                  <div class="absolute top-4 right-4">
+                    <span class={`text-xs font-bold px-3 py-1 rounded-full ${
+                      destination.tag === 'Oferta' ? 'bg-red-500 text-white' : 
+                      destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
+                      'bg-blue-500 text-white'
+                    }`}>
+                      {destination.tag}
+                    </span>
+                  </div>
+                  
+                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                    <h3 class="text-2xl font-bold text-white">{destination.name}</h3>
+                  </div>
+                </div>
+                
+                <div class="p-6">
+                  <div class="flex justify-between items-center mb-4">
+                    <div>
+                      <p class="text-sm text-gray-500">Desde</p>
+                      <p class="text-2xl font-bold text-blue-600">
+                        ${destination.price.toLocaleString('es-CO')} <span class="text-sm font-normal">COP</span>
+                      </p>
+                    </div>
+                    
+                    <div class="text-right">
+                      <p class="text-sm text-gray-500">Duración</p>
+                      <p class="font-medium">{destination.durationText}</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center">
+                      <span class="text-yellow-500 mr-1">⭐</span>
+                      <span class="text-sm font-medium">
+                        {destination.rating}% de recomendación
+                      </span>
+                    </div>
+                    
+                    <div class="flex items-center">
+                      <span class="text-gray-500 mr-1">👥</span>
+                      <span class="text-sm font-medium">
+                        Últimos {destination.availability} cupos
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <button 
+                    class="block w-full bg-blue-600 text-white text-center py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
+                  >
+                    Ver detalles
+                  </button>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+        
+        {destinations.length === 0 && (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">No encontramos destinos que coincidan con tu búsqueda</h2>
+            <p class="text-lg text-gray-600 mb-6">Prueba aplicando otros filtros o contacta con nuestros asesores para encontrar el destino perfecto para ti.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔄</span>
+                Ver todos los destinos
+              </a>
+              
+              <a href="/contacto" class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">💬</span>
+                Contactar asesor
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
