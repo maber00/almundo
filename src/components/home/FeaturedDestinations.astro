@@ -1,11 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import { getAllDestinations } from '../../utils/destinationsData.js';
+import { getFeaturedDestinations } from '../../utils/airtable.js';
 
-// Obtener todos los destinos y filtrar los destacados
-const allDestinations = getAllDestinations();
-const featuredDestinations = allDestinations.filter(dest => dest.featured).slice(0, 6);
+const featuredDestinations = await getFeaturedDestinations();
+
 ---
 
 <section class="py-20">
