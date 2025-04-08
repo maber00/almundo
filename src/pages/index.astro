@@ -1,26 +1,28 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/layout/Header.astro';
-import HeroSectionUpdated from '../components/home/HeroSection.astro';
-import DestinationCategoriesUpdated from '../components/home/DestinationCategories.astro';
+import HeroSection from '../components/home/HeroSection.astro';
+import DestinationCategories from '../components/home/DestinationCategories.astro';
 import FeaturedDestinations from '../components/home/FeaturedDestinations.astro';
 import Advantages from '../components/home/Advantages.astro';
-import TestimonialsUpdated from '../components/home/Testimonials.astro';
+import Alliances from '../components/home/Alliances.astro';
+import Testimonials from '../components/home/Testimonials.astro';
 import Newsletter from '../components/home/Newsletter.astro';
 import PaymentPlans from '../components/home/PaymentPlans.astro';
-import FooterUpdated from '../components/layout/Footer.astro';
+import Footer from '../components/layout/Footer.astro';
 ---
 
 <Layout title="Almundo Tour - Agencia de Viajes en Colombia">
   <Header />
   <main>
-    <HeroSectionUpdated />
+    <HeroSection />
     <FeaturedDestinations />
-    <DestinationCategoriesUpdated />
+    <DestinationCategories />
     <Advantages />
+    <Alliances />
     <PaymentPlans />
-    <TestimonialsUpdated />
+    <Testimonials />
     <Newsletter />
   </main>
-  <FooterUpdated />
+  <Footer />
 </Layout>

@@ -1,75 +1,11 @@
 ---
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-// Destinos destacados
-const featuredDestinations = [
-  {
-    id: "cartagena",
-    name: "Cartagena",
-    image: "/images/destinations/cartagena.jpg",
-    price: 899000,
-    duration: "4 días / 3 noches",
-    rating: 98,
-    availability: 8,
-    tag: "Nacional",
-    url: "/destinos/nacionales/cartagena"
-  },
-  {
-    id: "cancun",
-    name: "Cancún",
-    image: "/images/destinations/cancun.jpg",
-    price: 2499000,
-    duration: "7 días / 6 noches",
-    rating: 96,
-    availability: 5,
-    tag: "Oferta",
-    url: "/destinos/internacionales/cancun"
-  },
-  {
-    id: "madrid",
-    name: "Madrid",
-    image: "/images/destinations/madrid.jpg",
-    price: 4499000,
-    duration: "8 días / 7 noches",
-    rating: 95,
-    availability: 10,
-    tag: "Internacional",
-    url: "/destinos/internacionales/madrid"
-  },
-  {
-    id: "eje-cafetero",
-    name: "Eje Cafetero",
-    image: "/images/destinations/eje-cafetero.jpg",
-    price: 1199000,
-    duration: "5 días / 4 noches",
-    rating: 97,
-    availability: 4,
-    tag: "Aventura",
-    url: "/destinos/nacionales/eje-cafetero"
-  },
-  {
-    id: "punta-cana",
-    name: "Punta Cana",
-    image: "/images/destinations/punta-cana.jpg",
-    price: 2799000,
-    duration: "6 días / 5 noches",
-    rating: 94,
-    availability: 7,
-    tag: "Nuevo",
-    url: "/destinos/internacionales/punta-cana"
-  },
-  {
-    id: "san-andres",
-    name: "San Andrés",
-    image: "/images/destinations/san-andres.jpg",
-    price: 1399000,
-    duration: "5 días / 4 noches",
-    rating: 93,
-    availability: 3,
-    tag: "Oferta",
-    url: "/destinos/nacionales/san-andres"
-  }
-];
+import { getAllDestinations } from '../../utils/destinationsData.js';
+
+// Obtener todos los destinos y filtrar los destacados
+const allDestinations = getAllDestinations();
+const featuredDestinations = allDestinations.filter(dest => dest.featured).slice(0, 6);
 ---
 
 <section class="py-20">
@@ -93,7 +29,9 @@ const featuredDestinations = [
             <div class="absolute top-4 right-4">
               <span class={`text-xs font-bold px-3 py-1 rounded-full ${
                 destination.tag === 'Oferta' ? 'bg-red-500 text-white' : 
-                destination.tag === 'Nuevo' ? 'bg-green-500 text-white' : 
+                destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
+                destination.tag === 'Playa' ? 'bg-cyan-500 text-white' :
+                destination.tag === 'Cultural' ? 'bg-purple-500 text-white' :
                 'bg-blue-500 text-white'
               }`}>
                 {destination.tag}
@@ -109,14 +47,28 @@ const featuredDestinations = [
             <div class="flex justify-between items-center mb-4">
               <div>
                 <p class="text-sm text-gray-500">Desde</p>
-                <p class="text-2xl font-bold text-blue-600">
-                  ${destination.price.toLocaleString('es-CO')} <span class="text-sm font-normal">COP</span>
-                </p>
+                {destination.originalPrice ? (
+                  <div>
+                    <p class="line-through text-gray-400 text-sm">
+                      {destination.priceInUsd ? 'USD ' : ''}${destination.originalPrice.toLocaleString('es-CO')}
+                    </p>
+                    <p class="text-2xl font-bold text-red-600">
+                      {destination.priceInUsd ? 'USD ' : ''}${destination.price.toLocaleString('es-CO')} 
+                      <span class="text-sm font-normal">{destination.priceInUsd ? '' : 'COP'}</span>
+                    </p>
+                  </div>
+                ) : (
+                  <p class="text-2xl font-bold text-blue-600">
+                    {destination.priceInUsd ? 'USD ' : ''}${destination.price.toLocaleString('es-CO')} 
+                    <span class="text-sm font-normal">{destination.priceInUsd ? '' : 'COP'}</span>
+                  </p>
+                )}
+                <p class="text-xs text-gray-500 mt-1">por persona</p>
               </div>
               
               <div class="text-right">
                 <p class="text-sm text-gray-500">Duración</p>
-                <p class="font-medium">{destination.duration}</p>
+                <p class="font-medium">{destination.durationText}</p>
               </div>
             </div>
             
@@ -137,7 +89,7 @@ const featuredDestinations = [
             </div>
             
             <a 
-              href={destination.url}
+              href={`/destinos/${destination.type === 'nacional' ? 'nacionales' : 'internacionales'}/${destination.id}`}
               class="block w-full bg-blue-600 text-white text-center py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
             >
               Ver detalles
@@ -158,7 +110,7 @@ const featuredDestinations = [
               </div>
               
               <a 
-                href={`${destination.url}#testimonios`}
+                href={`/destinos/${destination.type === 'nacional' ? 'nacionales' : 'internacionales'}/${destination.id}#testimonios`}
                 class="text-xs text-blue-600 hover:text-blue-800"
               >
                 Ver opiniones

@@ -1,154 +1,392 @@
 {
-    "destinations": [
-      {
-        "id": "amazonas",
-        "name": "Amazonas",
-        "type": "nacional",
-        "region": "sur",
-        "price": 1850000,
-        "duration": 5,
-        "durationText": "5 días / 4 noches",
-        "image": "/images/destinations/amazonas.jpg",
-        "rating": 96,
-        "availability": 8,
-        "tag": "Aventura",
-        "description": "Explora la selva amazónica colombiana con guías locales expertos.",
-        "featured": true
-      },
-      {
-        "id": "san-andres",
-        "name": "San Andrés",
-        "type": "nacional",
-        "region": "caribe",
-        "price": 1399000,
-        "duration": 4,
-        "durationText": "4 días / 3 noches",
-        "image": "/images/destinations/san-andres.jpg",
-        "rating": 95,
-        "availability": 12,
-        "tag": "Playa",
-        "description": "Disfruta del mar de siete colores y la cultura raizal en esta paradisíaca isla.",
-        "featured": true
-      },
-      {
-        "id": "santa-marta",
-        "name": "Santa Marta",
-        "type": "nacional",
-        "region": "caribe",
-        "price": 950000,
-        "duration": 4,
-        "durationText": "4 días / 3 noches",
-        "image": "/images/destinations/santa-marta.jpg",
-        "rating": 92,
-        "availability": 15,
-        "tag": "Playa",
-        "description": "Conoce el punto de encuentro perfecto entre la Sierra Nevada y el Mar Caribe.",
-        "featured": false
-      },
-      {
-        "id": "la-guajira",
-        "name": "La Guajira",
-        "type": "nacional",
-        "region": "caribe",
-        "price": 1250000,
-        "duration": 4,
-        "durationText": "4 días / 3 noches",
-        "image": "/images/destinations/la-guajira.jpg",
-        "rating": 93,
-        "availability": 8,
-        "tag": "Aventura",
-        "description": "Viaja al desierto costero más grande de Colombia y conoce la cultura wayuu.",
-        "featured": true
-      },
-      {
-        "id": "eje-cafetero",
-        "name": "Eje Cafetero",
-        "type": "nacional",
-        "region": "andina",
-        "price": 1100000,
-        "duration": 4,
-        "durationText": "4 días / 3 noches",
-        "image": "/images/destinations/eje-cafetero.jpg",
-        "rating": 97,
-        "availability": 20,
-        "tag": "Cultural",
-        "description": "Descubre la región cafetera y su impresionante paisaje cultural.",
-        "featured": true
-      },
-      {
-        "id": "peru-machu-picchu",
-        "name": "Perú - Machu Picchu",
-        "type": "internacional",
-        "region": "sudamerica",
-        "price": 3500000,
-        "duration": 7,
-        "durationText": "7 días / 6 noches",
-        "image": "/images/destinations/peru.jpg",
-        "rating": 98,
-        "availability": 10,
-        "tag": "Cultural",
-        "description": "Visita la ciudad sagrada de los Incas y maravíllate con su arquitectura.",
-        "featured": true
-      },
-      {
-        "id": "jamaica",
-        "name": "Jamaica",
-        "type": "internacional",
-        "region": "caribe",
-        "price": 3250000,
-        "duration": 6,
-        "durationText": "6 días / 5 noches",
-        "image": "/images/destinations/jamaica.jpg",
-        "rating": 94,
-        "availability": 8,
-        "tag": "Playa",
-        "description": "Disfruta de las playas paradisíacas y la cultura rastafari en Montego Bay.",
-        "featured": true
-      },
-      {
-        "id": "argentina-buenos-aires",
-        "name": "Argentina - Buenos Aires",
-        "type": "internacional",
-        "region": "sudamerica",
-        "price": 2950000,
-        "duration": 6,
-        "durationText": "6 días / 5 noches",
-        "image": "/images/destinations/argentina.jpg",
-        "rating": 96,
-        "availability": 15,
-        "tag": "Cultural",
-        "description": "Conoce la ciudad más europea de Latinoamérica y su intensa vida cultural.",
-        "featured": true
-      },
-      {
-        "id": "mexico-cancun",
-        "name": "México - Cancún",
-        "type": "internacional",
-        "region": "norteamerica",
-        "price": 2499000,
-        "duration": 7,
-        "durationText": "7 días / 6 noches",
-        "image": "/images/destinations/cancun.jpg",
-        "rating": 95,
-        "availability": 20,
-        "tag": "Playa",
-        "description": "Playas de arena blanca y aguas cristalinas en el Caribe mexicano.",
-        "featured": true
-      },
-      {
-        "id": "espana-madrid",
-        "name": "España - Madrid",
-        "type": "internacional",
-        "region": "europa",
-        "price": 4500000,
-        "duration": 8,
-        "durationText": "8 días / 7 noches",
-        "image": "/images/destinations/madrid.jpg",
-        "rating": 97,
-        "availability": 12,
-        "tag": "Cultural",
-        "description": "Descubre la capital española y su impresionante oferta cultural y gastronómica.",
-        "featured": false
-      }
-    ]
-  }
+  "destinations": [
+    {
+      "id": "amazonas",
+      "name": "Amazonas",
+      "type": "nacional",
+      "region": "sur",
+      "price": 1399000,
+      "originalPrice": null,
+      "duration": 4,
+      "durationText": "4 días / 3 noches",
+      "image": "/images/destinations/amazonas.jpg",
+      "rating": 96,
+      "availability": 8,
+      "tag": "Aventura",
+      "description": "Explora la selva amazónica colombiana con guías locales expertos.",
+      "featured": true,
+      "includes": [
+        "Tiquetes aéreos ida y regreso",
+        "Alojamiento 4 días 3 noches",
+        "Alimentación de acuerdo al hotel seleccionado",
+        "Traslado aeropuerto – hotel – aeropuerto",
+        "Asistencia médica"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero"
+      ],
+      "notes": "Este paquete está sujeto a cotización."
+    },
+    {
+      "id": "san-andres",
+      "name": "San Andrés",
+      "type": "nacional",
+      "region": "caribe",
+      "price": 1249000,
+      "originalPrice": 1500000,
+      "duration": 4,
+      "durationText": "4 días / 3 noches",
+      "image": "/images/destinations/san-andres.jpg",
+      "rating": 95,
+      "availability": 12,
+      "tag": "Oferta",
+      "description": "Disfruta del mar de siete colores y la cultura raizal en esta paradisíaca isla.",
+      "featured": true,
+      "includes": [
+        "Tiquetes aéreos ida y regreso",
+        "Alojamiento 4 días 3 noches",
+        "Alimentación de acuerdo al hotel seleccionado",
+        "Traslado aeropuerto – hotel – aeropuerto",
+        "Asistencia médica"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero"
+      ],
+      "notes": "Este paquete está sujeto a cotización."
+    },
+    {
+      "id": "santa-marta",
+      "name": "Santa Marta",
+      "type": "nacional",
+      "region": "caribe",
+      "price": 949000,
+      "originalPrice": null,
+      "duration": 4,
+      "durationText": "4 días / 3 noches",
+      "image": "/images/destinations/santa-marta.jpg",
+      "rating": 92,
+      "availability": 15,
+      "tag": "Playa",
+      "description": "Conoce el punto de encuentro perfecto entre la Sierra Nevada y el Mar Caribe.",
+      "featured": false,
+      "includes": [
+        "Tiquetes aéreos ida y regreso",
+        "Alojamiento 4 días 3 noches",
+        "Alimentación de acuerdo al hotel seleccionado",
+        "Traslado aeropuerto – hotel – aeropuerto",
+        "Asistencia médica"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero"
+      ],
+      "notes": "Este paquete está sujeto a cotización."
+    },
+    {
+      "id": "la-guajira",
+      "name": "La Guajira",
+      "type": "nacional",
+      "region": "caribe",
+      "price": 1599000,
+      "originalPrice": null,
+      "duration": 4,
+      "durationText": "4 días / 3 noches",
+      "image": "/images/destinations/la-guajira.jpg",
+      "rating": 93,
+      "availability": 8,
+      "tag": "Aventura",
+      "description": "Viaja al desierto costero más grande de Colombia y conoce la cultura wayuu.",
+      "featured": true,
+      "includes": [
+        "Tiquetes aéreos ida y regreso",
+        "Alojamiento 4 días 3 noches en Wayira Beach Hotel",
+        "Alimentación: desayuno, almuerzo y cena",
+        "Traslado aeropuerto – hotel – aeropuerto",
+        "Asistencia médica"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero"
+      ],
+      "notes": "Este paquete está sujeto a cotización."
+    },
+    {
+      "id": "medellin",
+      "name": "Medellín",
+      "type": "nacional",
+      "region": "andina",
+      "price": 749000,
+      "originalPrice": null,
+      "duration": 4,
+      "durationText": "4 días / 3 noches",
+      "image": "/images/destinations/medellin.jpg",
+      "rating": 94,
+      "availability": 20,
+      "tag": "Cultural",
+      "description": "Descubre la ciudad de la eterna primavera, su cultura y transformación social.",
+      "featured": true,
+      "includes": [
+        "Tiquetes aéreos ida y regreso",
+        "Alojamiento 4 días 3 noches",
+        "Alimentación de acuerdo al hotel seleccionado",
+        "Traslado aeropuerto – hotel – aeropuerto",
+        "Asistencia médica"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero"
+      ],
+      "notes": "Este paquete está sujeto a cotización."
+    },
+    {
+      "id": "cartagena",
+      "name": "Cartagena",
+      "type": "nacional",
+      "region": "caribe",
+      "price": 1050000,
+      "originalPrice": null,
+      "duration": 4,
+      "durationText": "4 días / 3 noches",
+      "image": "/images/destinations/cartagena.jpg",
+      "rating": 97,
+      "availability": 18,
+      "tag": "Cultural",
+      "description": "Disfruta de la magia de la ciudad amurallada, su historia y hermosas playas.",
+      "featured": true,
+      "includes": [
+        "Tiquetes aéreos ida y regreso",
+        "Alojamiento 4 días 3 noches",
+        "Alimentación de acuerdo al hotel seleccionado",
+        "Traslado aeropuerto – hotel – aeropuerto",
+        "Asistencia médica"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero"
+      ],
+      "notes": "Este paquete está sujeto a cotización."
+    },
+    {
+      "id": "peru-cusco",
+      "name": "Perú - Cusco Clásico",
+      "type": "internacional",
+      "region": "sudamerica",
+      "price": 569,
+      "originalPrice": null,
+      "duration": 6,
+      "durationText": "6 días / 5 noches",
+      "image": "/images/destinations/peru.jpg",
+      "rating": 98,
+      "availability": 10,
+      "tag": "Cultural",
+      "description": "Descubre la magia de Cusco, el Valle Sagrado, Machu Picchu y la impresionante Montaña de Colores.",
+      "featured": true,
+      "priceInUsd": true,
+      "includes": [
+        "Traslados aeropuerto – hotel – aeropuerto (o terminal terrestre)",
+        "Noches de hotel en Cusco según el programa",
+        "1 noche de hotel en Aguas Calientes",
+        "Desayunos",
+        "1 almuerzo buffet en el Valle Sagrado",
+        "1 desayuno y almuerzo buffet en la Montaña de Colores",
+        "1 desayuno y almuerzo buffet en la Laguna de Humantay",
+        "Bus turístico para todos los tours",
+        "Ticket de tren turístico clase turista (Expedition o Voyager)",
+        "Boleto de ingreso a Machu Picchu",
+        "Boleto de bus Aguas Calientes – Machu Picchu – Aguas Calientes",
+        "Tours y boletos incluidos",
+        "BTG (Boleto Turístico General)",
+        "Entrada al Templo Qoricancha",
+        "Cuatrimotos e implementos de seguridad",
+        "Guía profesional de turismo en inglés y español",
+        "Protocolos de bioseguridad en los transportes",
+        "Monitoreo permanente"
+      ],
+      "notIncludes": [
+        "Almuerzos y cenas no especificadas en el programa",
+        "Boletos de avión",
+        "Otros servicios no indicados en el programa"
+      ],
+      "itinerary": [
+        {
+          "day": 1,
+          "title": "Bienvenida a Cusco + City Tour Cusco"
+        },
+        {
+          "day": 2,
+          "title": "Laguna Humantay"
+        },
+        {
+          "day": 3,
+          "title": "Valle Sagrado + Maras y Moray con noche en Aguas Calientes"
+        },
+        {
+          "day": 4,
+          "title": "Tour a Machu Picchu"
+        },
+        {
+          "day": 5,
+          "title": "Montaña de Colores"
+        },
+        {
+          "day": 6,
+          "title": "Despedida – Traslado al aeropuerto de Cusco"
+        }
+      ]
+    },
+    {
+      "id": "jamaica",
+      "name": "Jamaica - Montego Bay",
+      "type": "internacional",
+      "region": "caribe",
+      "price": 3250000,
+      "originalPrice": null,
+      "duration": 4,
+      "durationText": "4 días / 3 noches",
+      "image": "/images/destinations/jamaica.jpg",
+      "rating": 94,
+      "availability": 8,
+      "tag": "Playa",
+      "description": "Disfruta de las playas paradisíacas y la cultura rastafari en Montego Bay.",
+      "featured": true,
+      "includes": [
+        "Tiquetes aéreos ida y regreso",
+        "Alojamiento 4 días 3 noches en hotel todo incluido (desayuno, almuerzo, cena, snacks y bar abierto)",
+        "Traslado aeropuerto – hotel – aeropuerto",
+        "Asistencia médica"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero"
+      ],
+      "notes": "Este paquete está sujeto a cotización."
+    },
+    {
+      "id": "punta-cana",
+      "name": "Punta Cana",
+      "type": "internacional",
+      "region": "caribe",
+      "price": 2799000,
+      "originalPrice": null,
+      "duration": 4,
+      "durationText": "4 días / 3 noches",
+      "image": "/images/destinations/punta-cana.jpg",
+      "rating": 94,
+      "availability": 7,
+      "tag": "Playa",
+      "description": "Disfruta del paraíso caribeño con sus playas de arena blanca y aguas cristalinas.",
+      "featured": true,
+      "includes": [
+        "Tiquetes aéreos ida y regreso",
+        "Alojamiento 4 días 3 noches en hotel todo incluido (desayuno, almuerzo, cena, snacks y bar abierto)",
+        "Traslado aeropuerto – hotel – aeropuerto",
+        "Asistencia médica"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero"
+      ],
+      "notes": "Este paquete está sujeto a cotización."
+    },
+    {
+      "id": "cancun",
+      "name": "Cancún",
+      "type": "internacional",
+      "region": "norteamerica",
+      "price": 2499000,
+      "originalPrice": null,
+      "duration": 4,
+      "durationText": "4 días / 3 noches",
+      "image": "/images/destinations/cancun.jpg",
+      "rating": 95,
+      "availability": 20,
+      "tag": "Playa",
+      "description": "Playas de arena blanca y aguas cristalinas en el Caribe mexicano.",
+      "featured": true,
+      "includes": [
+        "Tiquetes aéreos ida y regreso",
+        "Alojamiento 4 días 3 noches en hotel todo incluido (desayuno, almuerzo, cena, snacks y bar abierto)",
+        "Traslado aeropuerto – hotel – aeropuerto",
+        "Asistencia médica"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero"
+      ],
+      "notes": "Este paquete está sujeto a cotización."
+    },
+    {
+      "id": "colombia-completo",
+      "name": "Colombia Completo",
+      "type": "internacional",
+      "region": "sudamerica",
+      "price": 1199,
+      "originalPrice": null,
+      "duration": 13,
+      "durationText": "13 días / 12 noches",
+      "image": "/images/destinations/colombia-completo.jpg",
+      "rating": 97,
+      "availability": 15,
+      "tag": "Cultural",
+      "description": "Recorre los destinos más emblemáticos de Colombia: Bogotá, Medellín, Santa Marta, Parque Tayrona y Cartagena.",
+      "featured": true,
+      "priceInUsd": true,
+      "includes": [
+        "Alojamiento 11 noches en hoteles seleccionados",
+        "Traslados aeropuerto – hotel – aeropuerto en cada destino",
+        "Tours de acuerdo al itinerario",
+        "Asistencia médica",
+        "Alimentación según el hotel o tour contratado"
+      ],
+      "notIncludes": [
+        "Gastos no especificados en el plan",
+        "Seguro hotelero",
+        "Transporte entre Santa Marta y Cartagena (se puede gestionar transporte privado si lo deseas)"
+      ],
+      "itinerary": [
+        {
+          "day": "1-3",
+          "title": "Bogotá – 3 noches",
+          "activities": [
+            "Día 1: Llegada a Bogotá, traslado al hotel y descanso",
+            "Día 2: City Tour por Bogotá (Monserrate, Candelaria, Museo del Oro, entre otros)",
+            "Día 3: Día libre para explorar a tu ritmo o descansar",
+            "Día 4: Traslado al aeropuerto para tomar vuelo hacia Medellín"
+          ]
+        },
+        {
+          "day": "4-7",
+          "title": "Medellín – 4 noches",
+          "activities": [
+            "Día 4 (continuación): Llegada a Medellín y traslado al hotel",
+            "Día 5: City Tour en Medellín incluyendo Comuna 13, Escaleras Eléctricas, Grafitis y centro histórico",
+            "Día 6: Excursión a Guatapé + Piedra del Peñol",
+            "Día 7: Día libre para explorar el Pueblito Paisa, jardines o centros comerciales",
+            "Día 8: Traslado al aeropuerto de Medellín y vuelo a Santa Marta"
+          ]
+        },
+        {
+          "day": "8-9",
+          "title": "Santa Marta / Parque Tayrona – 2 noches",
+          "activities": [
+            "Día 8 (continuación): Llegada a Santa Marta – Día libre",
+            "Día 9: Excursión al Parque Tayrona – Caminata hacia el Cabo San Juan del Guía y alojamiento en hotel ecológico dentro del parque, rodeado de naturaleza"
+          ]
+        },
+        {
+          "day": "10-13",
+          "title": "Cartagena – 4 noches",
+          "activities": [
+            "Día 10: Salida desde Tayrona a Cartagena (por cuenta propia o con transporte privado gestionado)",
+            "Día 11: City Tour por Cartagena (Ciudad Amurallada, Castillo de San Felipe, Getsemaní)",
+            "Día 12: Excursión a la Isla Múcura – Alojamiento en isla privada con playas de aguas cristalinas",
+            "Día 13: Regreso a Cartagena – Día libre para seguir explorando la ciudad",
+            "Día 14: Traslado al aeropuerto de Cartagena"
+          ]
+        }
+      ]
+    }
+  ]
+}

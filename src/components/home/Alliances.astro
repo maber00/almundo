@@ -1,0 +1,198 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+
+// Datos de las alianzas
+const alliances = [
+  {
+    id: "fonsancarlos",
+    name: "Fonsancarlos",
+    fullName: "Fondo de Empleados del Ingenio Sancarlos",
+    description: "Beneficios exclusivos para los empleados y asociados del Fondo de Empleados del Ingenio Sancarlos.",
+    logo: "/images/logos/fonsancarlos.png", // Asegúrate de tener este logo en tu carpeta de imágenes
+    benefits: [
+      "5% de descuento adicional en todos los paquetes nacionales",
+      "Financiación especial hasta 12 meses sin intereses",
+      "Cupos preferenciales en temporadas altas",
+      "Atención personalizada con asesor dedicado"
+    ]
+  },
+  {
+    id: "cootrabinca",
+    name: "Cootrabinca",
+    fullName: "Cooperativa Multiactiva de Trabajadores del Ingenio Carmelita",
+    description: "Condiciones especiales para miembros de la Cooperativa Multiactiva de Trabajadores del Ingenio Carmelita.",
+    logo: "/images/logos/cootrabinca.png", // Asegúrate de tener este logo en tu carpeta de imágenes
+    benefits: [
+      "Descuentos especiales del 7% en paquetes internacionales",
+      "Planes familiares con tarifas preferenciales",
+      "Facilidades de pago exclusivas para asociados",
+      "Excursiones grupales organizadas especialmente para la cooperativa"
+    ]
+  }
+];
+
+// Beneficios generales para todas las alianzas
+const generalBenefits = [
+  {
+    icon: "tabler:discount",
+    title: "Descuentos Exclusivos",
+    description: "Tarifas especiales y promociones únicas para miembros de nuestras entidades aliadas."
+  },
+  {
+    icon: "tabler:credit-card",
+    title: "Facilidades de Pago",
+    description: "Opciones de financiamiento preferenciales y planes de pago flexibles."
+  },
+  {
+    icon: "tabler:users",
+    title: "Viajes Grupales",
+    description: "Organización de excursiones especiales para grupos de empleados y sus familias."
+  },
+  {
+    icon: "tabler:clock",
+    title: "Atención Prioritaria",
+    description: "Canales exclusivos de atención y asesoría personalizada para tu viaje."
+  }
+];
+
+// Testimonios de usuarios de las alianzas
+const testimonials = [
+  {
+    name: "Carlos Ramírez",
+    alliance: "Fonsancarlos",
+    image: "/images/testimonials/person-1.jpg",
+    comment: "Gracias a la alianza entre Almundo Tour y Fonsancarlos, pudimos realizar nuestro viaje familiar a San Andrés con un excelente descuento y financiación a 10 meses."
+  },
+  {
+    name: "María Fernanda López",
+    alliance: "Cootrabinca",
+    image: "/images/testimonials/person-2.jpg",
+    comment: "El servicio de Almundo Tour para los asociados de Cootrabinca es excepcional. Nos brindaron todo el apoyo para nuestro viaje a Cancún y el precio fue inmejorable."
+  }
+];
+---
+
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Alianzas Estratégicas</h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Beneficios exclusivos para miembros de nuestras entidades aliadas en el Valle del Cauca
+      </p>
+    </div>
+    
+    <!-- Tarjetas de las alianzas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+      {alliances.map((alliance) => (
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl border border-gray-100">
+          <div class="p-8">
+            <div class="flex flex-col md:flex-row items-center mb-6">
+              <div class="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center p-4 mb-4 md:mb-0 md:mr-6">
+                <img 
+                  src={alliance.logo} 
+                  alt={`Logo de ${alliance.name}`}
+                  class="max-w-full max-h-full"
+                />
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900">{alliance.name}</h3>
+                <p class="text-sm text-gray-600">{alliance.fullName}</p>
+              </div>
+            </div>
+            
+            <p class="text-gray-700 mb-6">{alliance.description}</p>
+            
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">Beneficios exclusivos:</h4>
+            <ul class="space-y-2 mb-6">
+              {alliance.benefits.map((benefit) => (
+                <li class="flex items-start">
+                  <Icon name="tabler:check" class="w-5 h-5 text-green-500 mr-2 mt-1" />
+                  <span class="text-gray-700">{benefit}</span>
+                </li>
+              ))}
+            </ul>
+            
+            <a 
+              href={`/alianzas/${alliance.id}`}
+              class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
+            >
+              Ver más información
+              <Icon name="tabler:arrow-right" class="w-4 h-4 ml-1" />
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <!-- Beneficios generales -->
+    <div class="bg-blue-50 rounded-lg shadow-lg p-8 mb-16">
+      <h3 class="text-2xl font-bold text-gray-900 text-center mb-8">Beneficios generales para todos nuestros aliados</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {generalBenefits.map((benefit) => (
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <div class="text-blue-600 mb-4">
+              <Icon name={benefit.icon} class="w-12 h-12" />
+            </div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-2">{benefit.title}</h4>
+            <p class="text-gray-600">{benefit.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Testimonios -->
+    <div class="mb-16">
+      <h3 class="text-2xl font-bold text-gray-900 text-center mb-8">Lo que dicen nuestros viajeros aliados</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {testimonials.map((testimonial) => (
+          <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-100">
+            <div class="flex items-center mb-4">
+              <img 
+                src={testimonial.image} 
+                alt={testimonial.name}
+                class="w-14 h-14 rounded-full object-cover mr-4"
+              />
+              <div>
+                <h4 class="font-bold text-gray-900">{testimonial.name}</h4>
+                <p class="text-sm text-blue-600">{testimonial.alliance}</p>
+              </div>
+            </div>
+            
+            <p class="text-gray-700 italic">"‎{testimonial.comment}"‎</p>
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <!-- CTA -->
+    <div class="bg-blue-600 text-white rounded-lg shadow-lg p-8 text-center">
+      <h3 class="text-2xl font-bold mb-4">¿Perteneces a una de nuestras entidades aliadas?</h3>
+      <p class="text-lg text-blue-100 mb-6 max-w-3xl mx-auto">
+        Si eres miembro de Fonsancarlos, Cootrabinca o cualquiera de nuestras entidades aliadas, 
+        contacta con nosotros y accede a beneficios exclusivos para tu próximo viaje.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a 
+          href="/contacto?ref=alianzas" 
+          class="bg-white text-blue-600 py-3 px-6 rounded-md font-medium hover:bg-blue-50 transition-colors inline-flex items-center justify-center"
+        >
+          <Icon name="tabler:mail" class="w-5 h-5 mr-2" />
+          Consultar beneficios
+        </a>
+        
+        <a 
+          href="https://wa.me/573165276338?text=Hola,%20pertenezco%20a%20una%20entidad%20aliada%20y%20quiero%20información" 
+          target="_blank" 
+          class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center"
+        >
+          <Icon name="tabler:brand-whatsapp" class="w-5 h-5 mr-2" />
+          WhatsApp directo
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

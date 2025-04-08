@@ -6,8 +6,8 @@ import LeadCaptureForm from '../components/contact/LeadCaptureForm.astro';
 
 // Información de contacto
 const contactInfo = {
-  address: "Calle 25 #38-42, Centro, Bogotá, Colombia",
-  phone: "+57 300 123 4567",
+  address: "Calle 38 No 21-31, Tuluá, Colombia",
+  phone: "+57 3165276338",
   email: "info@almundotour.com",
   hours: "Lun - Vie: 8:00 AM - 6:00 PM, Sábados: 9:00 AM - 1:00 PM"
 };
@@ -18,18 +18,18 @@ const contactMethods = [
     icon: "📞",
     title: "Llámanos",
     description: "Atención personalizada en una llamada",
-    action: "+57 300 123 4567",
+    action: "+57 3165276338",
     actionLabel: "Llamar ahora",
-    actionUrl: "tel:+573001234567",
+    actionUrl: "tel:+573165276338",
     color: "blue"
   },
   {
     icon: "💬",
     title: "WhatsApp",
     description: "Chatea con nosotros",
-    action: "+57 300 123 4567",
+    action: "+57 3165276338",
     actionLabel: "Enviar mensaje",
-    actionUrl: "https://wa.me/573001234567",
+    actionUrl: "https://wa.me/573165276338",
     color: "green"
   },
   {
@@ -48,8 +48,8 @@ const contactMethods = [
   <Header />
   
   <main>
-    <!-- Hero section -->
-    <section class="bg-blue-600 text-white py-16">
+    <!-- Hero section - Se aumentó el padding superior (pt-32) para evitar que se superponga con el header -->
+    <section class="bg-blue-600 text-white py-16 pt-40">
       <div class="container mx-auto px-4 text-center">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">Contacta con nosotros</h1>
         <p class="text-xl text-blue-100 max-w-3xl mx-auto">
@@ -178,9 +178,9 @@ const contactMethods = [
             <h3 class="text-xl font-bold text-gray-900">Nuestra ubicación</h3>
           </div>
           <div class="h-96 w-full">
-            <!-- Reemplaza con un iframe de Google Maps o una imagen del mapa -->
+            <!-- Actualizado para mostrar Tuluá en el mapa -->
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254508.39280650613!2d-74.17748716426918!3d4.648617999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9bfd2da6cb29%3A0x239d635520a33914!2zQm9nb3TDoQ!5e0!3m2!1ses!2sco!4v1649538331357!5m2!1ses!2sco" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.5651865059487!2d-76.19953608255615!3d4.086111897036856!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e39c5c0ee149db3%3A0x22a68421fb2aa1d9!2sCl.%2038%20%2321-31%2C%20Tulu%C3%A1%2C%20Valle%20del%20Cauca!5e0!3m2!1ses!2sco!4v1650054562178!5m2!1ses!2sco" 
               width="100%" 
               height="100%" 
               style="border:0;" 
