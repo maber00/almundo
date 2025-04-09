@@ -265,6 +265,58 @@ export async function getAllAlliances() {
   }
 }
 
+// ID de la tabla de slides del hero
+const HERO_SLIDES_TABLE = 'tblGpCQfQLcsnDnGu';
+
+/**
+ * Obtiene los slides para el Hero carrusel
+ * @returns {Promise<Array>} Lista de slides
+ */
+export async function getHeroSlides() {
+  try {
+    const records = await base(HERO_SLIDES_TABLE).select({
+      filterByFormula: '{Activo} = TRUE()',
+      sort: [{ field: 'Orden', direction: 'asc' }]
+    }).all();
+    
+    return records.map(record => ({
+      image: getImageUrl(record.get('Imagen')),
+      title: record.get('Título') || '',
+      subtitle: record.get('Subtítulo') || '',
+      offerText: record.get('Texto oferta') || '',
+      buttonText: record.get('Texto botón') || 'Ver oferta',
+      buttonUrl: record.get('URL botón') || '#',
+      order: record.get('Orden') || 0
+    }));
+  } catch (error) {
+    console.error('Error al obtener slides del hero:', error);
+    return [];
+  }
+}
+
+// Puedes usar los IDs de campos si prefieres, así:
+export async function getHeroSlidesWithFieldIds() {
+  try {
+    const records = await base(HERO_SLIDES_TABLE).select({
+      filterByFormula: '{fldNXHvDCvq4jNUIg} = TRUE()',
+      sort: [{ field: 'fld4DM7cZIKFe0Ff5', direction: 'asc' }]
+    }).all();
+    
+    return records.map(record => ({
+      image: getImageUrl(record.get('fldYUEHrJ2EYlwpiP')),
+      title: record.get('fldJFGedk97bA1q8N') || '',
+      subtitle: record.get('fldTQQGIDt9vbd1Kn') || '',
+      offerText: record.get('fldqWPAxCUMHyjqwP') || '',
+      buttonText: record.get('fldf0bILzIIfBcp86') || 'Ver oferta',
+      buttonUrl: record.get('fldSgYCBMCL5L0y8k') || '#',
+      order: record.get('fld4DM7cZIKFe0Ff5') || 0
+    }));
+  } catch (error) {
+    console.error('Error al obtener slides del hero:', error);
+    return [];
+  }
+}
+
 // Función auxiliar para transformar un registro de destino al formato deseado
 function formatDestination(record) {
     const fields = record.fields;
@@ -319,7 +371,7 @@ function formatDestination(record) {
 // Función auxiliar para obtener la URL de una imagen
 function getImageUrl(attachmentField) {
   if (!attachmentField || !Array.isArray(attachmentField) || attachmentField.length === 0) {
-    return ''; // URL de imagen por defecto o vacía
+    return '/images/placeholder.jpg'; // URL de imagen por defecto
   }
   
   return attachmentField[0].url;

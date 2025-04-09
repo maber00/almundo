@@ -1,0 +1,45 @@
+---
+interface Props {
+  locationId: string;
+  lang?: string;
+  backgroundColor?: string;
+}
+
+const { 
+  locationId, 
+  lang = "es", 
+  backgroundColor = "#FFFFFF" 
+} = Astro.props;
+
+const apiKey = "EB83A70DB16E493A93340F358715006D";
+---
+
+<div id="TA_selfserveprop{locationId}" class="TA_selfserveprop w-full">
+  <ul id="KbYftm" class="TA_links oLYJPGxvGCk">
+    <li id="xyDFhj" class="pJDJj9L">
+      <a target="_blank" href="https://www.tripadvisor.es/">
+        <img src="https://www.tripadvisor.es/img/cdsi/img2/branding/150_logo-11900-2.png" alt="TripAdvisor"/>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- Script TripAdvisor -->
+<script define:vars={{ locationId, lang, backgroundColor, apiKey }}>
+  function loadTripAdvisorWidget() {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.jscache.com/wejs?wtype=selfserveprop&uniq=${Math.random()}&locationId=${locationId}&lang=${lang}&rating=true&nreviews=5&writereviewlink=true&popIdx=true&iswide=false&border=true&display_version=2&backgroundColor=${backgroundColor}&api_key=${apiKey}`;
+    document.head.appendChild(script);
+  }
+  
+  document.addEventListener('DOMContentLoaded', loadTripAdvisorWidget);
+</script>
+
+<style>
+  .TA_selfserveprop {
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+</style>
