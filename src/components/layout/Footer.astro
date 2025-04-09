@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import logo from '../../assets/images/logo-almundo-tour.png';
+import logo from '../../assets/images/logo-Al-mundo-tours3.svg';
 
 // Enlaces rápidos
 const quickLinks = [
@@ -29,27 +29,29 @@ const legalLinks = [
   { label: "Política de Cancelación", url: "/politica-cancelacion" },
 ];
 
-// Redes sociales con iconos propios
+// Redes sociales usando Iconify (íconos de Material Design Icons)
 const socialMedia = [
-  { name: "Facebook", url: "https://facebook.com/almundotour", icon: "tabler:brand-facebook" },
-  { name: "Instagram", url: "https://instagram.com/almundotour", icon: "tabler:brand-instagram" },
-  { name: "Twitter", url: "https://twitter.com/almundotour", icon: "tabler:brand-twitter" },
-  { name: "YouTube", url: "https://youtube.com/almundotour", icon: "tabler:brand-youtube" },
-  { name: "WhatsApp", url: "https://wa.me/573165276338", icon: "tabler:brand-whatsapp" },
+  { name: "Facebook", url: "https://www.facebook.com/p/Al-Mundo-Tours-61565786490036/", icon: "mdi:facebook" },
+  { name: "Instagram", url: "https://www.instagram.com/al_mundotours/", icon: "mdi:instagram" },
+  { name: "Twitter", url: "https://twitter.com/almundotour", icon: "mdi:twitter" },
+  { name: "YouTube", url: "https://youtube.com/almundotour", icon: "mdi:youtube" },
+  { name: "WhatsApp", url: "https://wa.me/573165276338", icon: "mdi:whatsapp" },
 ];
 
-// Métodos de pago
+
+// Métodos de pago usando Iconify (aquí se usan iconos de Simple Icons y Material, puedes ajustar según tus preferencias)
 const paymentMethods = [
-  { name: "Visa", icon: "tabler:brand-visa" },
-  { name: "MasterCard", icon: "tabler:brand-mastercard" },
-  { name: "American Express", icon: "tabler:brand-amex" },
-  { name: "PSE", icon: "tabler:credit-card" },
-  { name: "Efecty", icon: "tabler:building-store" },
-  { name: "Baloto", icon: "tabler:cash" },
+  { name: "Visa", icon: "simple-icons:visa" },
+  { name: "MasterCard", icon: "simple-icons:mastercard" },
+  { name: "American Express", icon: "simple-icons:americanexpress" },
+  { name: "PSE", icon: "mdi:credit-card-outline" },
+  { name: "Efecty", icon: "mdi:storefront-outline" },
+  { name: "Baloto", icon: "mdi:cash-multiple" },
 ];
 ---
 
 <footer class="bg-gray-900 text-white pt-16 pb-8">
+  <!-- Recuerda incluir el script de Iconify en el layout o en la página principal -->
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
       <!-- Columna 1: Información de contacto -->
@@ -57,11 +59,9 @@ const paymentMethods = [
         <div class="mb-6">
           <Image src={logo} alt="Almundo Tour" width={160} height={50} class="invert" />
         </div>
-        
         <p class="text-gray-400 mb-4">
           Agencia de viajes en Colombia con experiencia internacional. RNT: 12345.
         </p>
-        
         <div class="space-y-3 text-sm text-gray-300">
           <p>📍 Calle 38 No 21-31<br/>Tuluá, Colombia</p>
           <p>📱 +57 316 527 6338</p>
@@ -104,7 +104,6 @@ const paymentMethods = [
         <p class="text-gray-400 mb-4">
           Recibe nuestras mejores ofertas y promociones directamente en tu correo.
         </p>
-
         <form class="mb-6">
           <div class="flex">
             <input 
@@ -121,23 +120,20 @@ const paymentMethods = [
             </button>
           </div>
         </form>
-
         <h4 class="text-lg font-bold mb-4 text-white">Síguenos</h4>
-        <div class="flex space-x-4">
-          {socialMedia.map((social) => (
-            <a 
-              href={social.url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              class="bg-gray-800 hover:bg-blue-600 text-white p-2 rounded-full transition-colors"
-              aria-label={`Síguenos en ${social.name}`}
-            >
-              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href={`/icons/${social.icon}.svg#icon`}></use>
-              </svg>
-            </a>
-          ))}
-        </div>
+<div class="flex space-x-4">
+  {socialMedia.map((social) => (
+    <a 
+      href={social.url} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      aria-label={`Síguenos en ${social.name}`}
+      class="hover:text-blue-400 transition-colors"
+    >
+      <span class="iconify" data-icon={social.icon} style="font-size: 24px;"></span>
+    </a>
+  ))}
+</div>
       </div>
     </div>
 
@@ -149,22 +145,11 @@ const paymentMethods = [
           <div class="flex flex-wrap gap-3 text-white text-sm">
             {paymentMethods.map((method) => (
               <div class="bg-gray-800 px-3 py-1 rounded flex items-center">
-                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <use href={`/icons/${method.icon}.svg#icon`}></use>
-                </svg>
+                <span class="iconify" data-icon={method.icon} style="font-size: 20px; margin-right: 0.5rem;"></span>
                 {method.name}
               </div>
             ))}
           </div>
-        </div>
-
-        <div class="flex flex-col items-center md:items-end">
-          <div class="flex space-x-3 mb-3">
-            <img src="/images/logos/anato.png" alt="ANATO" class="h-12" />
-            <img src="/images/logos/iata.png" alt="IATA" class="h-12" />
-            <img src="/images/logos/mincit.png" alt="MinCIT" class="h-12" />
-          </div>
-          <p class="text-sm text-gray-500">Miembros acreditados de asociaciones turísticas</p>
         </div>
       </div>
     </div>
@@ -175,7 +160,6 @@ const paymentMethods = [
         <p class="text-gray-500 text-sm mb-4 md:mb-0">
           &copy; {new Date().getFullYear()} AL mundo Tour. Todos los derechos reservados.
         </p>
-        
         <div class="flex flex-wrap justify-center space-x-4">
           {legalLinks.map((link) => (
             <a href={link.url} class="text-gray-500 hover:text-blue-400 text-sm transition-colors">

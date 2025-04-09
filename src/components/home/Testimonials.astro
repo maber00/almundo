@@ -1,5 +1,8 @@
 ---
-import TripAdvisorReviews from "../reviews/TripAdvisorReviews.astro";
+import TripAdvisorWidget from "../reviews/TripAdvisorWidget.astro";
+
+const tripAdvisorLocationId = "32812634"; // ID de tu negocio
+const fullReviewUrl = "https://www.tripadvisor.com/Attraction_Review-g1598746-d32812634-Reviews-Al_Mundo_Tours-Tulua_Valle_del_Cauca_Department.html";
 ---
 
 <section class="py-12 bg-gray-50">
@@ -7,11 +10,15 @@ import TripAdvisorReviews from "../reviews/TripAdvisorReviews.astro";
     <div class="text-center mb-10">
       <h2 class="text-3xl font-bold text-gray-900 mb-4">Lo que dicen nuestros viajeros</h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-        Experiencias reales de clientes que han viajado con nosotros
+        Experiencias reales de clientes que han viajado con nosotros.
       </p>
     </div>
-    
-    <!-- Solo muestra 5 reseñas -->
-    <TripAdvisorReviews locationId="32812634" lang="es" limit="5" />
+
+    <!-- Se muestra la cantidad de reseñas según el parámetro "limit" -->
+    <TripAdvisorWidget 
+      locationId={tripAdvisorLocationId} 
+      reviewUrl={fullReviewUrl}
+      limit={10} 
+    />
   </div>
 </section>

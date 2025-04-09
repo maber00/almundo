@@ -1,54 +1,232 @@
 ---
-interface Props {
+/**
+ * Componente para mostrar reseñas obtenidas de la API de TripAdvisor
+ * Este componente muestra las reseñas en 4 columnas
+ */
+
+ interface Props {
   locationId: string;
-  lang?: string;
+  reviewUrl?: string; // URL completa para "Ver todas las opiniones", opcional
+  language?: string;
+  limit?: number;
 }
-const { locationId, lang = "es" } = Astro.props;
----
-<div class="tripadvisor-widget-container">
-  <div class="tripadvisor-header">
-    <img class="tripadvisor-logo" src="https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary_registered.svg" alt="TripAdvisor" />
-  </div>
-  <div id={`TA_reviews${locationId}`} class="TA_reviews"></div>
-  <script define:vars={{ locationId, lang }}>
-    // Usamos define:vars para pasar las variables al script del cliente
-    const uniqueId = Math.random();
-    const url = `https://www.jscache.com/wejs?wtype=reviews&uniq=${uniqueId}&locationId=${locationId}&lang=${lang}&display_version=2`;
-    console.log("Cargando widget de TripAdvisor con:");
-    console.log("locationId:", locationId);
-    console.log("lang:", lang);
-    console.log("URL generada:", url);
-    const scriptEl = document.createElement('script');
-    scriptEl.async = true;
-    scriptEl.src = url;
-    scriptEl.setAttribute('data-loadtrk', '');
-    scriptEl.onload = () => console.log("Script de TripAdvisor cargado exitosamente");
-    document.body.appendChild(scriptEl);
-  </script>
-</div>
-<style>
-  .tripadvisor-widget-container {
-    max-width: 800px;
-    margin: 0 auto;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    padding: 16px;
-    background-color: white;
+
+// Definición de la estructura de una reseña para TypeScript
+interface Review {
+  user?: {
+    username?: string;
+  };
+  published_date: string;
+  rating: number;
+  text: string;
+}
+
+const { locationId, reviewUrl, language = "es", limit = 6 } = Astro.props;
+
+// La API_KEY debe definirse en las variables de entorno (.env)
+const API_KEY = import.meta.env.TRIPADVISOR_API_KEY;
+
+let reviewsData: Review[] | null = null;
+let errorMessage: string | null = null;
+
+try {
+  if (!API_KEY) {
+    throw new Error("La API Key de TripAdvisor no está configurada");
+  }
+
+  // Se añade el parámetro "limit" a la URL (si la API lo soporta)
+  const apiUrl = `https://api.content.tripadvisor.com/api/v1/location/${locationId}/reviews?key=${API_KEY}&language=${language}&limit=${limit}`;
+  
+  const response = await fetch(apiUrl);
+  
+  if (!response.ok) {
+    throw new Error(`Error al obtener reseñas: ${response.status} ${response.statusText}`);
   }
   
-  .tripadvisor-header {
+  const data = await response.json();
+  // Se asume que las reseñas se encuentran en data.data
+  reviewsData = data.data as Review[];
+  
+  // En caso de que la API retorne más reseñas de las requeridas, se limita la cantidad
+  if (limit && reviewsData && reviewsData.length > limit) {
+    reviewsData = reviewsData.slice(0, limit);
+  }
+} catch (error: unknown) {
+  console.error("Error al obtener reseñas de TripAdvisor:", error);
+  errorMessage = error instanceof Error ? error.message : String(error);
+}
+
+// Si no se proporciona "reviewUrl", se usa un link por defecto
+const defaultReviewUrl = `https://www.tripadvisor.com/ShowUserReviews-g-d${locationId}`;
+const finalReviewUrl = reviewUrl || defaultReviewUrl;
+---
+
+<div class="tripadvisor-container">
+  <div class="text-center mb-6">
+    <div class="logo-container">
+      <img 
+        src="https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary_registered.svg" 
+        alt="TripAdvisor" 
+        class="tripadvisor-logo"
+      />
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mt-2">Opiniones verificadas de viajeros</h3>
+  </div>
+
+  {errorMessage && (
+    <div class="error-message">
+      <p>No se pudieron cargar las reseñas en este momento. Por favor, intente más tarde.</p>
+      {import.meta.env.DEV && <p class="dev-error">Error: {errorMessage}</p>}
+    </div>
+  )}
+
+  {reviewsData && reviewsData.length > 0 ? (
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {reviewsData.map((review: Review) => {
+        // Obtiene el username original o un valor por defecto
+        const rawName = review.user?.username || "Viajero de TripAdvisor";
+        // Elimina dígitos iniciales (por ejemplo, "669yuryl" pasará a "yuryl")
+        const noLeadingDigits = rawName.replace(/^\d+/, '');
+        // Extrae solo la secuencia de letras en minúsculas al inicio (p.ej.: "angelas" de "angelasK1652OS")
+        const match = noLeadingDigits.match(/^[a-z]+/);
+        const displayName = match ? match[0] : noLeadingDigits;
+
+        return (
+          <div class="review-card">
+            <div class="review-header">
+              <p class="reviewer-name">{displayName}</p>
+              <p class="review-date">
+                {new Date(review.published_date).toLocaleDateString(
+                  language === "es" ? "es-ES" : "en-US",
+                  { year: 'numeric', month: 'long', day: 'numeric' }
+                )}
+              </p>
+              <div class="review-rating mt-2">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span class={`star ${i < review.rating ? 'filled' : ''}`}>
+                    ★
+                  </span>
+                ))}
+              </div>
+            </div>
+            <blockquote class="review-text">"{review.text}"</blockquote>
+          </div>
+        );
+      })}
+    </div>
+  ) : (
+    <div class="no-reviews">
+      {!errorMessage && <p>No hay reseñas disponibles en este momento.</p>}
+    </div>
+  )}
+
+  <div class="text-center mt-6 pt-4 border-t border-gray-200">
+    <a 
+      href={finalReviewUrl} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="view-more-link"
+    >
+      Ver todas las opiniones en TripAdvisor
+    </a>
+  </div>
+</div>
+
+<style>
+  .tripadvisor-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+
+  .logo-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 10px;
   }
-  
+
   .tripadvisor-logo {
     width: 180px;
+    height: auto;
   }
-  
-  .TA_reviews {
+
+  .review-card {
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .review-header {
+    margin-bottom: 12px;
+  }
+
+  .reviewer-name {
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .review-date {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 2px;
+  }
+
+  .review-rating {
+    display: flex;
+    gap: 2px;
+  }
+
+  .star {
+    color: #d1d5db;
+  }
+
+  .star.filled {
+    color: #facc15;
+  }
+
+  .review-text {
+    font-style: italic;
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0;
     overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    flex-grow: 1;
+  }
+
+  .error-message, .no-reviews {
+    text-align: center;
+    padding: 30px 20px;
+    color: #6b7280;
+  }
+
+  .dev-error {
+    margin-top: 8px;
+    font-size: 0.875rem;
+    color: #ef4444;
+  }
+
+  .view-more-link {
+    display: inline-block;
+    color: #3b82f6;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    padding: 6px 12px;
+    border-radius: 4px;
+  }
+
+  .view-more-link:hover {
+    color: #2563eb;
+    background-color: rgba(59, 130, 246, 0.1);
   }
 </style>
