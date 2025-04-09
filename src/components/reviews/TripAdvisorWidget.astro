@@ -2,34 +2,32 @@
 interface Props {
   locationId: string;
   lang?: string;
-  backgroundColor?: string;
+  numberOfReviews?: number;
 }
 
 const { 
   locationId, 
   lang = "es", 
-  backgroundColor = "#FFFFFF" 
+  numberOfReviews = 5 
 } = Astro.props;
-
-const apiKey = "EB83A70DB16E493A93340F358715006D";
 ---
 
-<div id="TA_selfserveprop{locationId}" class="TA_selfserveprop w-full">
-  <ul id="KbYftm" class="TA_links oLYJPGxvGCk">
-    <li id="xyDFhj" class="pJDJj9L">
-      <a target="_blank" href="https://www.tripadvisor.es/">
-        <img src="https://www.tripadvisor.es/img/cdsi/img2/branding/150_logo-11900-2.png" alt="TripAdvisor"/>
+<!-- Contenedor del widget de reseñas -->
+<div id="TA_reviewsWidget{locationId}" class="TA_reviewsWidget">
+  <ul id="I5g4BcNn" class="TA_links vYrEcv">
+    <li id="AEMxdXF7" class="ucbZxpOQbH">
+      <a target="_blank" href="https://www.tripadvisor.com/Attraction_Review-g1598746-d32812634-Reviews-Al_Mundo_Tours-Tulua_Valle_del_Cauca_Department.html">
+        <img src="https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary_registered.svg" alt="TripAdvisor" class="widEXCIMG" id="CDSWIDEXCLOGO" />
       </a>
     </li>
   </ul>
 </div>
 
-<!-- Script TripAdvisor -->
-<script define:vars={{ locationId, lang, backgroundColor, apiKey }}>
+<script define:vars={{ locationId, lang, numberOfReviews }}>
   function loadTripAdvisorWidget() {
     const script = document.createElement('script');
     script.async = true;
-    script.src = `https://www.jscache.com/wejs?wtype=selfserveprop&uniq=${Math.random()}&locationId=${locationId}&lang=${lang}&rating=true&nreviews=5&writereviewlink=true&popIdx=true&iswide=false&border=true&display_version=2&backgroundColor=${backgroundColor}&api_key=${apiKey}`;
+    script.src = `https://www.jscache.com/wejs?wtype=reviewsWidget&uniq=${Math.random()}&locationId=${locationId}&lang=${lang}&rating=true&nreviews=${numberOfReviews}&writereviewlink=true&popIdx=true&iswide=false&display_version=2`;
     document.head.appendChild(script);
   }
   
@@ -37,8 +35,9 @@ const apiKey = "EB83A70DB16E493A93340F358715006D";
 </script>
 
 <style>
-  .TA_selfserveprop {
+  .TA_reviewsWidget {
     width: 100%;
+    max-width: 800px;
     margin: 0 auto;
     overflow: hidden;
   }

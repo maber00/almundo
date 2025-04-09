@@ -5,13 +5,13 @@ import TripAdvisorWidget from "../reviews/TripAdvisorWidget.astro";
 <section class="py-12 bg-gray-50">
   <div class="container mx-auto px-4">
     <div class="text-center mb-10">
-      <h2 class="text-3xl font-bold text-gray-900 mb-4">Lo que dicen otros viajeros</h2>
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Lo que dicen nuestros viajeros</h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-        Reseñas verificadas de TripAdvisor sobre este destino
+        Experiencias reales de clientes que han viajado con nosotros
       </p>
     </div>
     
-    <!-- Puedes pasar los props que necesites -->
-    <TripAdvisorWidget locationId="EB83A70DB16E493A93340F358715006D" lang="es" backgroundColor="#FFFFFF" />
+    <!-- Solo muestra 5 reseñas -->
+    <TripAdvisorWidget locationId="32812634" numberOfReviews={5} />
   </div>
 </section>
