@@ -2,43 +2,46 @@
 interface Props {
   locationId: string;
   lang?: string;
-  numberOfReviews?: number;
 }
-
-const { 
-  locationId, 
-  lang = "es", 
-  numberOfReviews = 5 
-} = Astro.props;
+const { locationId, lang = "es" } = Astro.props;
 ---
-
-<!-- Contenedor del widget de reseñas -->
-<div id="TA_reviewsWidget{locationId}" class="TA_reviewsWidget">
-  <ul id="I5g4BcNn" class="TA_links vYrEcv">
-    <li id="AEMxdXF7" class="ucbZxpOQbH">
-      <a target="_blank" href="https://www.tripadvisor.com/Attraction_Review-g1598746-d32812634-Reviews-Al_Mundo_Tours-Tulua_Valle_del_Cauca_Department.html">
-        <img src="https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary_registered.svg" alt="TripAdvisor" class="widEXCIMG" id="CDSWIDEXCLOGO" />
-      </a>
-    </li>
-  </ul>
+<div class="tripadvisor-widget-container">
+  <div class="tripadvisor-header">
+    <img class="tripadvisor-logo" src="https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary_registered.svg" alt="TripAdvisor" />
+  </div>
+  <div id={`TA_reviews${locationId}`} class="TA_reviews"></div>
+  <div id="TA_excellentChoice123" class="TA_excellentChoice">
+    <ul id="vHvblCiJ" class="TA_links WPEHnE3uSz0">
+      <li id="v04A3u" class="nXcjVN7H1D">
+        <a target="_blank" href="https://www.tripadvisor.com/"><img src="https://www.tripadvisor.com/img/cdsi/img2/widgets/excellentChoice_v2-36306-2.png" alt="TripAdvisor"/></a>
+      </li>
+    </ul>
+  </div>
+  <script src="https://www.jscache.com/wejs?wtype=excellentChoice&uniq=123&locationId=d32812634&lang=es&display_version=2"></script>
 </div>
-
-<script define:vars={{ locationId, lang, numberOfReviews }}>
-  function loadTripAdvisorWidget() {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://www.jscache.com/wejs?wtype=reviewsWidget&uniq=${Math.random()}&locationId=${locationId}&lang=${lang}&rating=true&nreviews=${numberOfReviews}&writereviewlink=true&popIdx=true&iswide=false&display_version=2`;
-    document.head.appendChild(script);
-  }
-  
-  document.addEventListener('DOMContentLoaded', loadTripAdvisorWidget);
-</script>
-
 <style>
-  .TA_reviewsWidget {
-    width: 100%;
+  .tripadvisor-widget-container {
     max-width: 800px;
     margin: 0 auto;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: white;
+  }
+  
+  .tripadvisor-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  
+  .tripadvisor-logo {
+    width: 180px;
+  }
+  
+  .TA_reviews {
     overflow: hidden;
   }
 </style>
