@@ -10,14 +10,21 @@ const { locationId, lang = "es" } = Astro.props;
     <img class="tripadvisor-logo" src="https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary_registered.svg" alt="TripAdvisor" />
   </div>
   <div id={`TA_reviews${locationId}`} class="TA_reviews"></div>
-  <div id="TA_excellentChoice123" class="TA_excellentChoice">
-    <ul id="vHvblCiJ" class="TA_links WPEHnE3uSz0">
-      <li id="v04A3u" class="nXcjVN7H1D">
-        <a target="_blank" href="https://www.tripadvisor.com/"><img src="https://www.tripadvisor.com/img/cdsi/img2/widgets/excellentChoice_v2-36306-2.png" alt="TripAdvisor"/></a>
-      </li>
-    </ul>
-  </div>
-  <script src="https://www.jscache.com/wejs?wtype=excellentChoice&uniq=123&locationId=d32812634&lang=es&display_version=2"></script>
+  <script define:vars={{ locationId, lang }}>
+    // Usamos define:vars para pasar las variables al script del cliente
+    const uniqueId = Math.random();
+    const url = `https://www.jscache.com/wejs?wtype=reviews&uniq=${uniqueId}&locationId=${locationId}&lang=${lang}&display_version=2`;
+    console.log("Cargando widget de TripAdvisor con:");
+    console.log("locationId:", locationId);
+    console.log("lang:", lang);
+    console.log("URL generada:", url);
+    const scriptEl = document.createElement('script');
+    scriptEl.async = true;
+    scriptEl.src = url;
+    scriptEl.setAttribute('data-loadtrk', '');
+    scriptEl.onload = () => console.log("Script de TripAdvisor cargado exitosamente");
+    document.body.appendChild(scriptEl);
+  </script>
 </div>
 <style>
   .tripadvisor-widget-container {

@@ -1,0 +1,50 @@
+---
+// src/components/TripAdvisorReviews.astro
+
+// Define la interfaz de la reseña según lo que retorne la API
+interface Review {
+  id: string;
+  text?: string;
+  rating?: number;
+  // Agrega aquí más propiedades según la respuesta real
+}
+
+// Propiedades del componente, con valores por defecto
+const { locationId = '32812634', lang = 'es', limit = 5 } = Astro.props;
+
+// Realizar la llamada al endpoint de TripAdvisor de forma server-side
+const response = await fetch(`/api/tripadvisor-reviews?locationId=${locationId}&lang=${lang}&limit=${limit}`);
+const reviewsData = await response.json();
+
+// Se asume que la respuesta tiene una propiedad 'data' que es un arreglo de reseñas.
+// Si la estructura es diferente, ajusta la forma en la que accedes a los datos.
+const reviews: Review[] = reviewsData.data || [];
+---
+
+<section class="tripadvisor-reviews">
+  <h2 class="text-2xl font-bold mb-4">Reseñas de TripAdvisor</h2>
+  {reviews.length === 0 ? (
+    <p>No se encontraron reseñas.</p>
+  ) : (
+    <ul>
+      {reviews.map((review: Review) => (
+        // Se ha removido el atributo 'key' ya que no es necesario para elementos HTML nativos en Astro
+        <li class="p-4 border border-gray-300 mb-2 rounded">
+          <p class="mb-2">{review.text || 'Sin texto'}</p>
+          <p class="font-bold">Rating: {review.rating || 'N/A'}</p>
+          {/* Puedes agregar más campos como autor, fecha, etc. según la respuesta de la API */}
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+
+<style>
+  .tripadvisor-reviews {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+  }
+</style>
