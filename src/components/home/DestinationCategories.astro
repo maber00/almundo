@@ -1,9 +1,9 @@
 ---
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import { getAllCategories } from '../../utils/airtable.js';
+import { getAllCategories } from '../../utils/content.js'; // Cambiado de airtable.js a content.js
 
-// Obtener categorías desde Airtable
+// Obtener categorías desde el sistema de contenido
 const destinationCategories = await getAllCategories();
 ---
 
@@ -26,7 +26,6 @@ const destinationCategories = await getAllCategories();
               alt={String(category.title)} 
               class="w-full h-full object-cover transition duration-500 hover:scale-110"
             />
-
           </div>
           
           <div class="p-6">
@@ -36,10 +35,10 @@ const destinationCategories = await getAllCategories();
             <div class="mb-6">
               <h4 class="text-sm font-semibold text-gray-700 mb-2">Destinos populares:</h4>
               <div class="flex flex-wrap gap-2">
-                {category.destinations.map((destination) => (
-                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                  {String(destination)}
-                </span>
+                {category.destinations && category.destinations.map((destination: string) => (
+                  <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    {String(destination)}
+                  </span>
                 ))}
               </div>
             </div>

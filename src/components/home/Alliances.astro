@@ -1,28 +1,23 @@
 ---
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import { getAllAlliances } from '../../utils/airtable.js';
+import { getAllAlliances } from '../../utils/content.js'; // Cambiado de airtable.js a content.js
 
-interface Alliance {
-  id: string;
-  name: string;
-  fullName: string;
+// Definir una interfaz para el beneficio
+interface Benefit {
+  icon: string;
+  title: string;
   description: string;
-  logo: string;
-  benefits: string[];
-  active: boolean;
-  // Otros campos según sea necesario
 }
 
-// Obtener alianzas desde Airtable
-const alliances: Alliance[] = await getAllAlliances();
+// Obtener alianzas desde el sistema de contenido
+const alliances = await getAllAlliances();
 
 // Filtrar solo alianzas activas
-const activeAlliances = alliances.filter((alliance: Alliance) => alliance.active);
-
+const activeAlliances = alliances.filter(alliance => alliance.active);
 
 // Beneficios generales para todas las alianzas
-const generalBenefits = [
+const generalBenefits: Benefit[] = [
   {
     icon: "tabler:discount",
     title: "Descuentos Exclusivos",
@@ -45,7 +40,6 @@ const generalBenefits = [
   }
 ];
 ---
-
 <section class="py-20 bg-white">
   <div class="container mx-auto px-4">
     <div class="text-center mb-16">
@@ -78,7 +72,7 @@ const generalBenefits = [
             
             <h4 class="text-lg font-semibold text-gray-900 mb-3">Beneficios exclusivos:</h4>
             <ul class="space-y-2 mb-6">
-              {alliance.benefits.map((benefit: string) => (
+              {alliance.benefits && alliance.benefits.map((benefit: string) => (
                 <li class="flex items-start">
                   <Icon name="tabler:check" class="w-5 h-5 text-green-500 mr-2 mt-1" />
                   <span class="text-gray-700">{benefit}</span>
@@ -103,7 +97,7 @@ const generalBenefits = [
       <h3 class="text-2xl font-bold text-gray-900 text-center mb-8">Beneficios generales para todos nuestros aliados</h3>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {generalBenefits.map((benefit) => (
+        {generalBenefits.map((benefit: Benefit) => (
           <div class="bg-white rounded-lg p-6 shadow-sm">
             <div class="text-blue-600 mb-4">
               <Icon name={benefit.icon} class="w-12 h-12" />
