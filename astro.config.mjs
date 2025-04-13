@@ -7,9 +7,9 @@ export default defineConfig({
   integrations: [
     icon(),
     tailwind({
-      // Opcional: especifica la ruta
       config: { path: './tailwind.config.cjs' },
     }),
   ],
   output: 'server',
+  adapter: netlify(),
 });
