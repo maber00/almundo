@@ -3,11 +3,23 @@ import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import { getAllAlliances } from '../../utils/airtable.js';
 
+interface Alliance {
+  id: string;
+  name: string;
+  fullName: string;
+  description: string;
+  logo: string;
+  benefits: string[];
+  active: boolean;
+  // Otros campos según sea necesario
+}
+
 // Obtener alianzas desde Airtable
-const alliances = await getAllAlliances();
+const alliances: Alliance[] = await getAllAlliances();
 
 // Filtrar solo alianzas activas
-const activeAlliances = alliances.filter(alliance => alliance.active);
+const activeAlliances = alliances.filter((alliance: Alliance) => alliance.active);
+
 
 // Beneficios generales para todas las alianzas
 const generalBenefits = [
