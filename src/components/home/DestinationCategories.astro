@@ -1,19 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import { getAllCategories } from '../../utils/content.js';
+import { getAllCategories } from '../../utils/content.js'; // Cambiado de airtable.js a content.js
 
-// Definir una interfaz para las categorías de destinos
-interface Category {
-  image: string;
-  title: string;
-  description: string;
-  url: string;
-  // "destinations" es opcional, ya que puede no estar definida
-  destinations?: string[];
-}
-
-// Obtener categorías desde el sistema de contenido y tiparlas
-const destinationCategories: Category[] = await getAllCategories();
+// Obtener categorías desde el sistema de contenido
+const destinationCategories = await getAllCategories();
 ---
 
 <section class="py-20 bg-gray-50">
@@ -46,7 +37,7 @@ const destinationCategories: Category[] = await getAllCategories();
               <div class="flex flex-wrap gap-2">
                 {category.destinations && category.destinations.map((destination: string) => (
                   <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                    {destination}
+                    {String(destination)}
                   </span>
                 ))}
               </div>
