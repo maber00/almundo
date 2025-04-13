@@ -1,5 +1,5 @@
 [build]
-  command = "npm i -f && npm run build"
+  command = "npm install --no-optional && npm run build"
   publish = "dist"
 
 [[redirects]]
