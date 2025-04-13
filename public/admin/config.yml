@@ -1,0 +1,64 @@
+backend:
+  name: git-gateway
+  branch: main # Cambia a "master" si tu rama principal es "master"
+
+media_folder: "public/images/uploads" # Donde se guardarán los archivos subidos
+public_folder: "/images/uploads" # URL pública para los archivos subidos
+
+collections:
+  # Colección para destinos
+  - name: "destinations"
+    label: "Destinos"
+    folder: "src/content/destinations"
+    create: true
+    slug: "{{id}}"
+    fields:
+      - { label: "ID", name: "id", widget: "string" }
+      - { label: "Nombre", name: "name", widget: "string" }
+      - { label: "Tipo", name: "type", widget: "select", options: ["nacional", "internacional"] }
+      - { label: "Región", name: "region", widget: "string" }
+      - { label: "Precio", name: "price", widget: "number" }
+      - { label: "Moneda", name: "currency", widget: "select", options: ["COP", "USD"], default: "COP" }
+      - { label: "Precio en USD", name: "priceInUsd", widget: "boolean", default: false }
+      - { label: "Precio Original", name: "originalPrice", widget: "number", required: false }
+      - { label: "Duración (días)", name: "duration", widget: "number" }
+      - { label: "Texto Duración", name: "durationText", widget: "string" }
+      - { label: "Imagen Principal", name: "image", widget: "image" }
+      - { label: "Galería de Imágenes", name: "gallery", widget: "list", field: { label: "Imagen", name: "image", widget: "image" }, required: false }
+      - { label: "Descripción", name: "description", widget: "text" }
+      - { label: "Destacado", name: "featured", widget: "boolean", default: false }
+      - { label: "Puntuación", name: "rating", widget: "number", min: 0, max: 100 }
+      - { label: "Disponibilidad", name: "availability", widget: "number" }
+      - { label: "Etiqueta", name: "tag", widget: "select", options: ["Oferta", "Aventura", "Playa", "Cultural"] }
+      - { label: "Incluye", name: "includes", widget: "list", required: false }
+      - { label: "No Incluye", name: "notIncludes", widget: "list", required: false }
+      - { label: "Notas", name: "notes", widget: "text", required: false }
+
+  # Colección para categorías
+  - name: "categories"
+    label: "Categorías"
+    folder: "src/content/categories"
+    create: true
+    slug: "{{id}}"
+    fields:
+      - { label: "ID", name: "id", widget: "string" }
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Descripción", name: "description", widget: "text" }
+      - { label: "Imagen", name: "image", widget: "image" }
+      - { label: "Destinos Populares", name: "destinations", widget: "list" }
+      - { label: "URL", name: "url", widget: "string" }
+
+  # Colección para alianzas
+  - name: "alliances"
+    label: "Alianzas"
+    folder: "src/content/alliances"
+    create: true
+    slug: "{{id}}"
+    fields:
+      - { label: "ID", name: "id", widget: "string" }
+      - { label: "Nombre", name: "name", widget: "string" }
+      - { label: "Nombre Completo", name: "fullName", widget: "string" }
+      - { label: "Descripción", name: "description", widget: "text" }
+      - { label: "Logo", name: "logo", widget: "image" }
+      - { label: "Beneficios", name: "benefits", widget: "list" }
+      - { label: "Activo", name: "active", widget: "boolean", default: true }

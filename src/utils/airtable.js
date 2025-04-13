@@ -1,5 +1,5 @@
 // src/utils/airtable.js
-import Airtable from 'airtable';
+import { getCollection } from 'astro:content';
 
 /**
  * @typedef {Object} Category
@@ -105,18 +105,39 @@ const FIELDS = {
 
 // Función para obtener todos los destinos
 export async function getAllDestinations() {
-  try {
-    const records = await base(TABLES.DESTINOS).select({
-      view: 'Grid view'
-    }).all();
-    
-    // Transformar los registros al formato que espera tu sitio
-    return records.map(record => formatDestination(record));
-  } catch (error) {
-    console.error('Error al obtener destinos:', error);
-    return [];
+    try {
+      const records = await base(TABLES.DESTINOS).select({
+        view: 'Grid view', // asegúrate de que aquí esté la vista con el campo de imagen visible
+      }).all();
+      return records.map(formatDestination);
+    } catch (error) {
+      console.error('Error al obtener destinos:', error);
+      return [];
+    }
   }
-}
+  function formatCategory(record) {
+    const f = record.fields;
+    const destinosPopulares = f['Destinos Populares'] || '';
+  
+    let destinos = [];
+    if (destinosPopulares) {
+      // si está en un multilinea o CSV
+      destinos = destinosPopulares
+        .split(/[\n,]/)  // separa por comas o saltos de línea
+        .map(d => d.trim())
+        .filter(d => d);
+    }
+  
+    return {
+      id: f.ID || '',
+      title: f.Nombre || '',
+      description: f.Descripción || '',
+      image: getImageUrl(f['Imagen']), 
+      destinations: destinos,
+      url: `/destinos/${f.ID || ''}`,
+    };
+  }
+  
 
 // Función para obtener destinos destacados
 export async function getFeaturedDestinations() {
@@ -173,33 +194,16 @@ export async function getDestinationById(id) {
 export async function getAllCategories() {
     try {
       const records = await base(TABLES.CATEGORIAS).select({
-        view: 'Grid view'
+        view: 'Grid view',
       }).all();
-      
-      return records.map(record => {
-        const destinosPopulares = record.get('Destinos Populares');
-        let destinos = [];
-        
-        if (destinosPopulares) {
-          destinos = destinosPopulares.includes(',') 
-            ? destinosPopulares.split(',').map(d => d.trim())
-            : destinosPopulares.split('\n').map(d => d.trim()).filter(d => d);
-        }
-        
-        return {
-          id: record.get('ID') || '',
-          title: record.get('Nombre') || '',
-          description: record.get('Descripción') || '',
-          image: getImageUrl(record.get('Imagen')),
-          destinations: destinos,
-          url: `/destinos/${record.get('ID') || ''}`
-        };
-      });
+  
+      return records.map(formatCategory);
     } catch (error) {
       console.error('Error al obtener categorías:', error);
       return [];
     }
   }
+  
 
 // Función para obtener todas las promociones activas
 export async function getActivePromotions() {
@@ -319,64 +323,60 @@ export async function getHeroSlidesWithFieldIds() {
 
 // Función auxiliar para transformar un registro de destino al formato deseado
 function formatDestination(record) {
-    const fields = record.fields;
-    
-    // Procesamos el campo Tag que puede ser un array o un único valor
-    let tags = [];
-    if (fields.Tag) {
-      if (Array.isArray(fields.Tag)) {
-        tags = fields.Tag;
-      } else {
-        tags = [fields.Tag];
-      }
-    }
-    
-    // Procesamos los campos de texto con múltiples líneas
-    const incluye = fields.Incluye ? 
-      fields.Incluye.split('\n').filter(line => line.trim()) : [];
-    
-    const noIncluye = fields['No Incluye'] ? 
-      fields['No Incluye'].split('\n').filter(line => line.trim()) : [];
-    
-    // Determinamos si el precio está en USD basado en el campo Moneda
-    const currency = fields.Moneda?.trim() || 'COP';
+    const f = record.fields;
+    // Determinar si la moneda es USD
+    const currency = f.Moneda?.trim() || 'COP';
     const priceInUsd = currency === 'USD';
-    
+  
     return {
-      id: fields.ID || '',
-      name: fields.Nombre || '',
-      type: fields.Tipo || '',
-      region: fields.Región || '',
-      price: fields.Precio || 0,
+      id: f.ID || '',
+      name: f.Nombre || '',
+      type: f.Tipo || '',
+      region: f.Región || '',
+      price: f.Precio || 0,
       currency,
-      priceInUsd, // Añadimos esta propiedad
-      originalPrice: fields['Precio Original'] || null,
-      duration: fields.Duración || 0,
-      durationText: fields['Duración Texto']?.trim() || '',
-      image: getImageUrl(fields['Imagen Principal']),
-      gallery: Array.isArray(fields.Galería) ? 
-        fields.Galería.map(img => img.url) : [],
-      description: fields.Descripción || '',
-      featured: fields.Featured || false,
-      rating: fields.Rating || 0,
-      availability: fields.Disponibilidad || 0,
-      tag: tags,
-      includes: incluye,
-      notIncludes: noIncluye,
-      notes: fields.Notas || ''
+      originalPrice: f['Precio Original'] || null,
+      duration: f.Duración || 0,
+      durationText: f['Duración Texto']?.trim() || '',
+      image: getImageUrl(f["Imagen Principal"]),
+      gallery: [],
+      description: f.Descripción || '',
+      featured: f.Featured || false,
+      rating: f.Rating || 0,
+      availability: f.Disponibilidad || 0,
+      tag: [],
+      includes: [],
+      notIncludes: [],
+      notes: '',
+      // Aquí asignas el valor calculado:
+      priceInUsd,
     };
   }
   
+  
+  
 
 // Función auxiliar para obtener la URL de una imagen
+// Función auxiliar mejorada para obtener la URL de una imagen desde Airtable
 function getImageUrl(attachmentField) {
-  if (!attachmentField || !Array.isArray(attachmentField) || attachmentField.length === 0) {
-    return '/images/placeholder.jpg'; // URL de imagen por defecto
+    if (!attachmentField) {
+      return '/images/placeholder.jpg';
+    }
+    if (typeof attachmentField === 'string') {
+      return attachmentField;
+    }
+    if (Array.isArray(attachmentField) && attachmentField.length > 0) {
+      if (attachmentField[0].url) {
+        return attachmentField[0].url;
+      }
+      if (attachmentField[0].thumbnails?.full?.url) {
+        return attachmentField[0].thumbnails.full.url;
+      }
+    }
+    return '/images/placeholder.jpg';
   }
   
-  return attachmentField[0].url;
-}
-
+  
 // Función para filtrar destinos según criterios
 export async function getFilteredDestinations(filters = {}) {
   try {

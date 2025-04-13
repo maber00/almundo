@@ -65,16 +65,27 @@ function formatDestination(record) {
  */
 export async function getAllDestinations() {
   try {
-    const records = await base(DESTINOS_TABLE).select({
+    const records = await base(TABLES.DESTINOS).select({
       view: 'Grid view'
     }).all();
     
-    return records.map(record => formatDestination(record));
+    // Añadir este bloque de depuración:
+    if (records.length > 0) {
+      const sampleRecord = records[0];
+      console.log("MUESTRA DE REGISTRO COMPLETO:", JSON.stringify(sampleRecord, null, 2));
+      console.log("MUESTRA DEL CAMPO DE IMAGEN:", JSON.stringify(sampleRecord.fields['Imagen Principal'], null, 2));
+    }
+    
+    const destinations = records.map(record => formatDestination(record));
+    return destinations;
   } catch (error) {
     console.error('Error al obtener destinos:', error);
     return [];
   }
 }
+
+
+
 
 /**
  * Obtiene un destino específico por su ID

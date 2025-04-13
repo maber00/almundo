@@ -21,10 +21,11 @@ const { destination } = Astro.props;
 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
   <div class="relative">
     <img 
-      src={destination.image} 
-      alt={destination.name}
-      class="w-full h-64 object-cover"
-    />
+    src={destination.image || '/images/placeholder.jpg'} 
+    alt={String(destination.name)}
+    class="w-full h-64 object-cover"
+    onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
+  />
     <div class="absolute top-4 right-4">
       <span class={`text-xs font-bold px-3 py-1 rounded-full ${
         destination.tag === 'Oferta' ? 'bg-red-500 text-white' : 

@@ -1,10 +1,9 @@
 ---
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import { getFeaturedDestinations } from '../../utils/airtable.js';
+import { getFeaturedDestinations } from '../../utils/content.js';
 
 const featuredDestinations = await getFeaturedDestinations();
-
 ---
 
 <section class="py-20">
@@ -21,10 +20,12 @@ const featuredDestinations = await getFeaturedDestinations();
         <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
           <div class="relative">
             <img 
-              src={destination.image} 
-              alt={destination.name}
+              src={destination.image || '/images/placeholder.jpg'} 
+              alt={String(destination.name)}
               class="w-full h-64 object-cover"
+              onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
             />
+            
             <div class="absolute top-4 right-4">
               <span class={`text-xs font-bold px-3 py-1 rounded-full ${
                 destination.tag === 'Oferta' ? 'bg-red-500 text-white' : 
@@ -49,10 +50,10 @@ const featuredDestinations = await getFeaturedDestinations();
                 {destination.originalPrice ? (
                   <div>
                     <p class="line-through text-gray-400 text-sm">
-                      {destination.priceInUsd ? 'USD ' : ''}${destination.originalPrice.toLocaleString('es-CO')}
+                      {destination.currency === 'USD' ? 'USD ' : ''}${destination.price.toLocaleString('es-CO')}
                     </p>
                     <p class="text-2xl font-bold text-red-600">
-                      {destination.priceInUsd ? 'USD ' : ''}${destination.price.toLocaleString('es-CO')} 
+                      {destination.currency === 'USD' ? 'USD ' : ''}${destination.price.toLocaleString('es-CO')}
                       <span class="text-sm font-normal">{destination.priceInUsd ? '' : 'COP'}</span>
                     </p>
                   </div>
@@ -93,28 +94,6 @@ const featuredDestinations = await getFeaturedDestinations();
             >
               Ver detalles
             </a>
-          </div>
-          
-          <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <img 
-                  src="/images/avatar-testimonial.jpg" 
-                  alt="Cliente satisfecho" 
-                  class="w-8 h-8 rounded-full object-cover"
-                />
-                <p class="ml-2 text-xs italic text-gray-500">
-                  "Experiencia inolvidable"
-                </p>
-              </div>
-              
-              <a 
-                href={`/destinos/${destination.type === 'nacional' ? 'nacionales' : 'internacionales'}/${destination.id}#testimonios`}
-                class="text-xs text-blue-600 hover:text-blue-800"
-              >
-                Ver opiniones
-              </a>
-            </div>
           </div>
         </div>
       ))}

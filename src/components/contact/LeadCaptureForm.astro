@@ -75,14 +75,26 @@ const referralOptions = [
 ---
 
 <div class="bg-white shadow-xl rounded-lg overflow-hidden">
-    <div class="bg-blue-600 px-8 py-10 text-white text-center">
-      <div class="mb-6 text-6xl">✈️</div>
-      <h2 class="text-3xl font-bold mb-4">¡Comienza a planear tu viaje soñado!</h2>
-      <p class="text-xl text-blue-100 max-w-2xl mx-auto">Cuéntanos sobre tus intereses y un asesor te contactará con la mejor propuesta personalizada.</p>
-    </div>
+  <div class="bg-blue-600 px-8 py-10 text-white text-center">
+    <div class="mb-6 text-6xl">✈️</div>
+    <h2 class="text-3xl font-bold mb-4">¡Comienza a planear tu viaje soñado!</h2>
+    <p class="text-xl text-blue-100 max-w-2xl mx-auto">Cuéntanos sobre tus intereses y un asesor te contactará con la mejor propuesta personalizada.</p>
+  </div>
+
   
-    <form id="lead-capture-form" class="p-8 md:p-10" action="/api/submit-lead" method="POST">
-      <!-- Sección: Datos Básicos -->
+ <!-- Cambia el form para usar Netlify Forms -->
+ <form 
+ id="lead-capture-form" 
+ class="p-8 md:p-10"
+ name="contact"
+ method="POST"
+ data-netlify="true"
+ netlify-honeypot="bot-field"
+>
+ <p class="hidden">
+   <label>No llenes esto si eres humano: <input name="bot-field" /></label>
+ </p>
+       <!-- Sección: Datos Básicos -->
       <div class="mb-12">
         <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-200">Datos Básicos</h3>
         
@@ -418,6 +430,7 @@ const referralOptions = [
           Enviar solicitud
         </button>
       </div>
+
       
       <!-- Mensaje de estado -->
       <div id="form-status" class="mt-8 text-center hidden">
@@ -435,57 +448,17 @@ const referralOptions = [
   </div>
   
 
-<script>
-  // Función para manejar el envío del formulario
-  const formElement = document.getElementById('lead-capture-form') as HTMLFormElement;
-  formElement?.addEventListener('submit', async function(e) {
-    e.preventDefault();
+  <script>
+    // Este script maneja la respuesta del formulario con Netlify
+    const formElement = document.getElementById('lead-capture-form');
     
-    // Ocultar cualquier mensaje anterior
-    document.getElementById('form-success')?.classList.add('hidden');
-    document.getElementById('form-error')?.classList.add('hidden');
-    document.getElementById('form-status')?.classList.add('hidden');
-    
-    // Recopilar los datos del formulario
-    const formData = new FormData(this);
-    
-    // Convertir datos a formato JSON para enviar a la API
-    const formObject: Record<string, any> = {};
-    for (const [key, value] of formData.entries()) {
-      const keyStr = key.toString();
-      // Manejar checkboxes múltiples (agrupar en arrays)
-      if (keyStr === 'travel_with' || keyStr === 'experience') {
-        if (!formObject[keyStr]) {
-          formObject[keyStr] = [];
-        }
-        formObject[keyStr].push(value);
-      } else {
-        formObject[keyStr] = value;
-      }
-    }
-    
-    try {
-      // Enviar datos a la API
-      const response = await fetch('/api/submit-lead', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formObject)
-      });
-      
-      // Mostrar mensaje de éxito o error
-      if (response.ok) {
+    if (formElement) {
+      formElement.addEventListener('submit', function(e) {
+        // No necesitas prevenir el evento por defecto cuando usas Netlify Forms
+        
+        // Pero puedes mostrar un mensaje de éxito después del envío
         document.getElementById('form-success')?.classList.remove('hidden');
         document.getElementById('form-status')?.classList.remove('hidden');
-        this.reset(); // Limpiar formulario
-      } else {
-        throw new Error('Error en la respuesta del servidor');
-      }
-    } catch (error) {
-      console.error('Error al enviar el formulario:', error);
-      document.getElementById('form-error')?.classList.remove('hidden');
-      document.getElementById('form-status')?.classList.remove('hidden');
+      });
     }
-  });
-</script>
+  </script>

@@ -1,8 +1,10 @@
 ---
 import { Image } from 'astro:assets';
-import logo from '../../assets/images/logo-Al-mundo-tours3.svg';
+import logo from '../../assets/images/logo-almundo-tour.png';
 
-// Enlaces rápidos
+// Importa las imágenes para Efecty y Baloto
+
+// Enlaces rápidos, destinos y demás arrays siguen igual…
 const quickLinks = [
   { label: "Destinos Nacionales", url: "/destinos/nacionales" },
   { label: "Destinos Internacionales", url: "/destinos/internacionales" },
@@ -12,7 +14,6 @@ const quickLinks = [
   { label: "Preguntas Frecuentes", url: "/faq" },
 ];
 
-// Enlaces de destinos populares actualizados
 const popularDestinations = [
   { label: "Amazonas", url: "/destinos/nacionales/amazonas" },
   { label: "San Andrés", url: "/destinos/nacionales/san-andres" },
@@ -22,31 +23,27 @@ const popularDestinations = [
   { label: "La Guajira", url: "/destinos/nacionales/la-guajira" },
 ];
 
-// Enlaces legales
 const legalLinks = [
   { label: "Términos y Condiciones", url: "/terminos-condiciones" },
   { label: "Política de Privacidad", url: "/politica-privacidad" },
   { label: "Política de Cancelación", url: "/politica-cancelacion" },
 ];
 
-// Redes sociales usando Iconify (íconos de Material Design Icons)
+// Redes sociales se mantienen con Iconify
 const socialMedia = [
-  { name: "Facebook", url: "https://www.facebook.com/p/Al-Mundo-Tours-61565786490036/", icon: "mdi:facebook" },
-  { name: "Instagram", url: "https://www.instagram.com/al_mundotours/", icon: "mdi:instagram" },
+  { name: "Facebook", url: "https://facebook.com/almundotour", icon: "mdi:facebook" },
+  { name: "Instagram", url: "https://instagram.com/almundotour", icon: "mdi:instagram" },
   { name: "Twitter", url: "https://twitter.com/almundotour", icon: "mdi:twitter" },
   { name: "YouTube", url: "https://youtube.com/almundotour", icon: "mdi:youtube" },
   { name: "WhatsApp", url: "https://wa.me/573165276338", icon: "mdi:whatsapp" },
 ];
 
-
-// Métodos de pago usando Iconify (aquí se usan iconos de Simple Icons y Material, puedes ajustar según tus preferencias)
+// Métodos de pago: para Efecty y Baloto se usan las imágenes en lugar de iconos
 const paymentMethods = [
   { name: "Visa", icon: "simple-icons:visa" },
   { name: "MasterCard", icon: "simple-icons:mastercard" },
   { name: "American Express", icon: "simple-icons:americanexpress" },
   { name: "PSE", icon: "mdi:credit-card-outline" },
-  { name: "Efecty", icon: "mdi:storefront-outline" },
-  { name: "Baloto", icon: "mdi:cash-multiple" },
 ];
 ---
 
