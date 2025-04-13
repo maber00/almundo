@@ -1,4 +1,3 @@
-// Este archivo será una función serverless en Vercel
 // Nos conectamos con Airtable para guardar los leads
 
 export async function post({ request }) {
