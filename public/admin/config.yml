@@ -50,23 +50,6 @@ collections:
 
   # Colección para alianzas
   - name: "alliances"
-    label: "Alianzas"
-    folder: "src/content/alliances"
-    create: true
-    slug: "{{id}}"
-    fields:
-      - { label: "ID", name: "id", widget: "string" }
-      - { label: "Nombre", name: "name", widget: "string" }
-      - { label: "Nombre Completo", name: "fullName", widget: "string" }
-      - { label: "Descripción", name: "description", widget: "text" }
-      - { label: "Logo", name: "logo", widget: "image" }
-      - { label: "Beneficios", name: "benefits", widget: "list" }
-      - { label: "Activo", name: "active", widget: "boolean", default: true }
-
-      # Configuración específica para la colección de alianzas
-
-
-  - name: "alliances"
     label: "Alianzas Estratégicas"
     folder: "src/content/alliances"
     create: true
@@ -80,7 +63,8 @@ collections:
       - { label: "Beneficios", name: "benefits", widget: "list", hint: "Lista de beneficios específicos para esta alianza", min: 1 }
       - { label: "Activo", name: "active", widget: "boolean", default: true, hint: "Mostrar u ocultar esta alianza en el sitio" }
 
-      - name: "hero-slides"
+  # Colección para diapositivas del Hero
+  - name: "hero-slides"
     label: "Diapositivas Hero"
     folder: "src/content/hero-slides"
     create: true
