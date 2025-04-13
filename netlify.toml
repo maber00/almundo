@@ -2,7 +2,19 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  NODE_VERSION = "18"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Añade este bloque para resolver el problema de rollup
+[[plugins]]
+  package = "@netlify/plugin-npm-install"
+  
+  [plugins.inputs]
+    npmBinary = "npm"
+    # Esto forzará una instalación limpia
+    args = ["install", "--force"]
