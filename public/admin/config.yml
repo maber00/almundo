@@ -62,3 +62,36 @@ collections:
       - { label: "Logo", name: "logo", widget: "image" }
       - { label: "Beneficios", name: "benefits", widget: "list" }
       - { label: "Activo", name: "active", widget: "boolean", default: true }
+
+      # Configuración específica para la colección de alianzas
+collections:
+  # ... otras colecciones (destinos, categorías, etc.)
+
+  - name: "alliances"
+    label: "Alianzas Estratégicas"
+    folder: "src/content/alliances"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "ID", name: "id", widget: "string", hint: "Identificador único para la alianza (sin espacios ni caracteres especiales)" }
+      - { label: "Nombre", name: "name", widget: "string", hint: "Nombre corto de la alianza" }
+      - { label: "Nombre Completo", name: "fullName", widget: "string", hint: "Nombre completo o legal de la entidad" }
+      - { label: "Descripción", name: "description", widget: "text", hint: "Breve descripción de la alianza y sus beneficios principales" }
+      - { label: "Logo", name: "logo", widget: "image", hint: "Logo de la entidad aliada (preferiblemente con fondo transparente)" }
+      - { label: "Beneficios", name: "benefits", widget: "list", hint: "Lista de beneficios específicos para esta alianza", min: 1 }
+      - { label: "Activo", name: "active", widget: "boolean", default: true, hint: "Mostrar u ocultar esta alianza en el sitio" }
+
+      - name: "hero-slides"
+    label: "Diapositivas Hero"
+    folder: "src/content/hero-slides"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Subtítulo", name: "subtitle", widget: "string" }
+      - { label: "Imagen", name: "image", widget: "image" }
+      - { label: "Texto de Oferta", name: "offerText", widget: "string", hint: "Ej: Desde $2,499,000 COP" }
+      - { label: "Texto del Botón", name: "buttonText", widget: "string", default: "Ver oferta" }
+      - { label: "URL del Botón", name: "buttonUrl", widget: "string", hint: "Ej: /destinos/internacionales/cancun" }
+      - { label: "Orden", name: "order", widget: "number", default: 0, hint: "Posición de la diapositiva (0 es la primera)" }
+      - { label: "Activo", name: "active", widget: "boolean", default: true }
