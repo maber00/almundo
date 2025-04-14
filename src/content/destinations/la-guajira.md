@@ -6,7 +6,7 @@ region: Caribe
 price: 1599000
 currency: COP
 priceInUsd: false
-originalPrice: ""
+originalPrice: null
 duration: 4
 durationText: 4 días / 3 noches
 image: /images/uploads/foto-la-guajira-4.jpg
