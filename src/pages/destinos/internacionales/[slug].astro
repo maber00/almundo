@@ -10,8 +10,9 @@ export async function getStaticPaths() {
   const { getCollection } = await import('astro:content');
   const destinations = await getCollection('destinations');
   
-  // Filtrar solo destinos nacionales
-  const internationalDestinations = destinations.filter(entry => entry.data.type === 'internacional');  
+  // Filtrar solo destinos internacionales
+  const internationalDestinations = destinations.filter(entry => entry.data.type === 'internacional');
+  
   return internationalDestinations.map(destination => ({
     params: { slug: destination.data.id || destination.slug },
     props: { destination: destination.data }
@@ -78,6 +79,8 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
               destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
               destination.tag === 'Playa' ? 'bg-cyan-500 text-white' :
               destination.tag === 'Cultural' ? 'bg-purple-500 text-white' :
+              destination.tag === 'Romántico' ? 'bg-pink-500 text-white' :
+              destination.tag === 'Todo incluido' ? 'bg-yellow-500 text-white' :
               'bg-blue-500 text-white'
             }`}>
               {destination.tag}
@@ -196,7 +199,43 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
               <p class="text-gray-700 leading-relaxed mb-6">
                 {destination.description}
               </p>
+              
+              <!-- Categorías del destino (si están disponibles) -->
+              {destination.experience && destination.experience.length > 0 && (
+                <div class="mb-4">
+                  <h3 class="text-lg font-medium text-gray-900 mb-2">Categorías:</h3>
+                  <div class="flex flex-wrap gap-2">
+                    {destination.experience.map((exp: string) => (
+                      <span class="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                        {exp}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
+            
+            <!-- Itinerario (si existe) -->
+            {destination.itinerary && destination.itinerary.length > 0 && (
+              <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Itinerario</h2>
+                <div class="space-y-6">
+                  {destination.itinerary.map((day: any, index: number) => (
+                    <div class="relative pl-8 border-l-2 border-blue-200">
+                      <div class="absolute left-[-8px] top-0 w-4 h-4 rounded-full bg-blue-500"></div>
+                      <h3 class="text-lg font-bold text-gray-900">{`Día ${day.day || index + 1}: ${day.title}`}</h3>
+                      {day.activities && day.activities.length > 0 && (
+                        <ul class="mt-2 space-y-1">
+                          {day.activities.map((activity: string) => (
+                            <li class="text-gray-700">{activity}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             
             <!-- Qué incluye -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -247,6 +286,26 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
                 </div>
               </div>
             )}
+            
+            <!-- Requisitos (visas, etc.) para destinos internacionales -->
+            {destination.requirements && (
+              <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <Icon name="tabler:file-certificate" class="w-6 h-6 text-amber-500 mr-2" />
+                  Requisitos de viaje
+                </h2>
+                <ul class="space-y-3">
+                  {destination.requirements.map((req) => (
+                    <li class="flex items-start">
+                      <div class="bg-amber-100 p-1 rounded-full mt-1 mr-3">
+                        <Icon name="tabler:alert-triangle" class="w-4 h-4 text-amber-600" />
+                      </div>
+                      <span class="text-gray-700">{req}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           
           <!-- Columna lateral con formulario y CTA -->
@@ -294,7 +353,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
                 <p class="text-center text-gray-500 text-sm">O si prefieres, contáctanos directamente:</p>
                 
                 <div class="flex flex-col gap-3 mt-4">
-                  <a href="https://wa.me/573165276338?text=Hola, estoy interesado en el destino ${destination.name}" target="_blank" class="flex items-center justify-center bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
+                  <a href={`https://wa.me/573165276338?text=Hola, estoy interesado en el destino ${destination.name}`} target="_blank" class="flex items-center justify-center bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
                     <Icon name="tabler:brand-whatsapp" class="w-5 h-5 mr-2" />
                     WhatsApp
                   </a>
@@ -390,6 +449,8 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
                       related.tag === 'Aventura' ? 'bg-green-500 text-white' : 
                       related.tag === 'Playa' ? 'bg-cyan-500 text-white' :
                       related.tag === 'Cultural' ? 'bg-purple-500 text-white' :
+                      related.tag === 'Romántico' ? 'bg-pink-500 text-white' :
+                      related.tag === 'Todo incluido' ? 'bg-yellow-500 text-white' :
                       'bg-blue-500 text-white'
                     }`}>
                       {related.tag}
@@ -470,34 +531,33 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
     
     // Función para mostrar una imagen específica
     function showImage(index: number) {
-  // Ajustar el índice si se sale de los límites
-  if (index < 0) index = images.length - 1;
-  if (index >= images.length) index = 0;
-  
-  // Ocultar todas las imágenes
-  images.forEach((img) => {
-    img.classList.add('opacity-0');
-    img.classList.remove('opacity-100');
-  });
-  
-  // Mostrar la imagen actual
-  images[index].classList.add('opacity-100');
-  images[index].classList.remove('opacity-0');
-  
-  // Actualizar los dots
-  dots.forEach((dot, i) => {
-    if (i === index) {
-      dot.classList.add('bg-white');
-      dot.classList.remove('bg-white/50');
-    } else {
-      dot.classList.add('bg-white/50');
-      dot.classList.remove('bg-white');
+      // Ajustar el índice si se sale de los límites
+      if (index < 0) index = images.length - 1;
+      if (index >= images.length) index = 0;
+      
+      // Ocultar todas las imágenes
+      images.forEach((img) => {
+        img.classList.add('opacity-0');
+        img.classList.remove('opacity-100');
+      });
+      
+      // Mostrar la imagen actual
+      images[index].classList.add('opacity-100');
+      images[index].classList.remove('opacity-0');
+      
+      // Actualizar los dots
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.add('bg-white');
+          dot.classList.remove('bg-white/50');
+        } else {
+          dot.classList.add('bg-white/50');
+          dot.classList.remove('bg-white');
+        }
+      });
+      
+      currentIndex = index;
     }
-  });
-  
-  currentIndex = index;
-}
-
     
     // Event listeners para los botones
     if (prevBtn) {
@@ -526,4 +586,4 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
       }, 5000);
     }
   });
-</script>
+</script>                  

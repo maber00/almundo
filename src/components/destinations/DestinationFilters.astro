@@ -1,0 +1,239 @@
+---
+import { Icon } from 'astro-icon/components';
+
+// Categorías de experiencia (selección múltiple)
+const experienceCategories = [
+  { id: "aniversario", label: "Aniversario" },
+  { id: "aventura", label: "Aventura" },
+  { id: "cultural", label: "Cultural" },
+  { id: "ecoturismo", label: "Ecoturismo" },
+  { id: "familiar", label: "Familiar" },
+  { id: "ocio", label: "Ocio" },
+  { id: "oferta", label: "Oferta" },
+  { id: "playa", label: "Playa" },
+  { id: "romantico", label: "Romántico" },
+  { id: "todo-incluido", label: "Todo incluido" }
+];
+
+// Regiones para destinos nacionales (selección única)
+const nationalRegions = [
+  { id: "all", label: "Todas las regiones" },
+  { id: "caribe", label: "Caribe" },
+  { id: "andina", label: "Andina" },
+  { id: "pacifica", label: "Pacífica" },
+  { id: "amazonica", label: "Amazónica" },
+  { id: "orinoquia", label: "Orinoquía" }
+];
+
+// Regiones para destinos internacionales (selección única)
+const internationalRegions = [
+  { id: "all", label: "Todas las regiones" },
+  { id: "norteamerica", label: "Norteamérica" },
+  { id: "centroamerica", label: "Centroamérica" },
+  { id: "sudamerica", label: "Sudamérica" },
+  { id: "caribe", label: "Caribe" },
+  { id: "europa", label: "Europa" },
+  { id: "asia", label: "Asia" },
+  { id: "africa", label: "África" },
+  { id: "oceania", label: "Oceanía" }
+];
+
+// Presupuesto
+const budgetRanges = [
+  { id: "budget-1", label: "Hasta $1,000,000" },
+  { id: "budget-2", label: "$1,000,000 - $3,000,000" },
+  { id: "budget-3", label: "$3,000,000 - $5,000,000" },
+  { id: "budget-4", label: "$5,000,000 - $10,000,000" },
+  { id: "budget-5", label: "Más de $10,000,000" }
+];
+
+// Duraciones del viaje
+const tripDurations = [
+  { id: "duration-1", label: "3-5 días" },
+  { id: "duration-2", label: "6-8 días" },
+  { id: "duration-3", label: "9-12 días" },
+  { id: "duration-4", label: "13-15 días" },
+  { id: "duration-5", label: "Más de 15 días" }
+];
+
+interface Props {
+  type?: "nacional" | "internacional" | "all";
+  activeFilters?: Record<string, string | string[]>;
+}
+
+const { 
+  type = "all",
+  activeFilters = {}
+} = Astro.props;
+
+// Determinar qué regiones mostrar basado en el tipo
+const regions = type === "nacional" ? nationalRegions : 
+               type === "internacional" ? internationalRegions :
+               [...nationalRegions.slice(1), ...internationalRegions.slice(1)]; // Para "all", combina ambas sin los "all"
+---
+
+<div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+  <h2 class="text-xl font-bold text-gray-900 mb-4">Filtrar destinos</h2>
+  
+  <form id="destination-filters" method="get">
+    <!-- Tipo de experiencia (selección múltiple) -->
+    <div class="mb-6">
+      <h3 class="text-md font-medium text-gray-700 mb-3">Tipo de experiencia</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+        {experienceCategories.map((category) => (
+          <div class="flex items-center">
+            <input 
+              type="checkbox" 
+              id={`experience-${category.id}`} 
+              name="experience" 
+              value={category.id}
+              class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              checked={Array.isArray(activeFilters.experience) && activeFilters.experience.includes(category.id)}
+            />
+            <label for={`experience-${category.id}`} class="ml-2 text-sm text-gray-700">
+              {category.label}
+            </label>
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Región (selección única) -->
+    {regions.length > 0 && (
+      <div class="mb-6">
+        <h3 class="text-md font-medium text-gray-700 mb-3">Región</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+          {regions.map((region) => (
+            <div class="flex items-center">
+              <input 
+                type="radio" 
+                id={`region-${region.id}`} 
+                name="region" 
+                value={region.id}
+                class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                checked={activeFilters.region === region.id || (region.id === "all" && !activeFilters.region)}
+              />
+              <label for={`region-${region.id}`} class="ml-2 text-sm text-gray-700">
+                {region.label}
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+    
+    <!-- Presupuesto -->
+    <div class="mb-6">
+      <h3 class="text-md font-medium text-gray-700 mb-3">Presupuesto</h3>
+      <div class="relative">
+        <select 
+          name="budget"
+          class="block appearance-none w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">Cualquier presupuesto</option>
+          {budgetRanges.map((range) => (
+            <option 
+              value={range.id}
+              selected={activeFilters.budget === range.id}
+            >
+              {range.label}
+            </option>
+          ))}
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <Icon name="tabler:chevron-down" class="w-4 h-4" />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Duración -->
+    <div class="mb-6">
+      <h3 class="text-md font-medium text-gray-700 mb-3">Duración</h3>
+      <div class="relative">
+        <select 
+          name="duration"
+          class="block appearance-none w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">Cualquier duración</option>
+          {tripDurations.map((duration) => (
+            <option 
+              value={duration.id}
+              selected={activeFilters.duration === duration.id}
+            >
+              {duration.label}
+            </option>
+          ))}
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <Icon name="tabler:chevron-down" class="w-4 h-4" />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Fecha de viaje -->
+    <div class="mb-6">
+      <h3 class="text-md font-medium text-gray-700 mb-3">Fecha de viaje</h3>
+      <input 
+        type="date"
+        name="travel_date"
+        value={activeFilters.travel_date}
+        class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+    
+    <!-- Botones de acción -->
+    <div class="flex gap-3">
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+      >
+        <Icon name="tabler:filter" class="w-5 h-5 mr-2" />
+        Aplicar filtros
+      </button>
+      
+      <a 
+        href={`/destinos${type !== "all" ? `/${type}s` : ""}`}
+        class="bg-gray-100 text-gray-700 py-2 px-3 rounded-md font-medium hover:bg-gray-200 transition-colors flex items-center justify-center"
+      >
+        <Icon name="tabler:refresh" class="w-5 h-5 mr-2" />
+        Limpiar
+      </a>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Script para gestionar los checkboxes de experiencia y envío del formulario
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('destination-filters');
+    
+    if (form) {
+      // Al enviar el formulario, procesar los checkboxes de experiencia
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(form as HTMLFormElement);
+        const urlParams = new URLSearchParams();
+        
+        // Procesar checkboxes de experiencia (valores múltiples)
+        const experienceValues = formData.getAll('experience');
+        if (experienceValues.length > 0) {
+          experienceValues.forEach(value => {
+            urlParams.append('experience', value.toString());
+          });
+        }
+        
+        // Procesar el resto de campos (valores únicos)
+        for (const [key, value] of formData.entries()) {
+          // Saltamos 'experience' porque ya lo procesamos
+          if (key !== 'experience' && value) {
+            urlParams.set(key, value.toString());
+          }
+        }
+        
+        // Redirigir a la misma página con los parámetros de búsqueda
+        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+      });
+    }
+  });
+</script>

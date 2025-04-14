@@ -3,7 +3,7 @@ import { defineCollection, z } from 'astro:content';
 
 // Esquema para destinos
 const destinationsCollection = defineCollection({
-  type: 'content', // 'content' para archivos Markdown, 'data' para JSON/YAML
+  type: 'content',
   schema: z.object({
     id: z.string(),
     name: z.string(),
@@ -24,9 +24,18 @@ const destinationsCollection = defineCollection({
     tag: z.string(),
     includes: z.array(z.string()).default([]),
     notIncludes: z.array(z.string()).default([]),
-    notes: z.string().optional()
+    notes: z.string().optional(),
+    // Añade estas nuevas propiedades
+    experience: z.array(z.string()).optional().default([]),
+    itinerary: z.array(z.object({
+      day: z.union([z.string(), z.number()]).optional(),
+      title: z.string(),
+      activities: z.array(z.string()).optional()
+    })).optional().default([]),
+    requirements: z.array(z.string()).optional().default([])
   })
 });
+
 
 // Esquema para categorías
 const categoriesCollection = defineCollection({
