@@ -1,33 +1,22 @@
 ---
-import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import { Icon } from 'astro-icon/components';
-// Datos para el slider
-const heroSlides = [
-  {
-    image: "/images/hero/cancun.jpg",
-    title: "Descubre Cancún",
-    subtitle: "Playas paradisíacas en el Caribe Mexicano",
-    offerText: "Desde $2,499,000 COP",
-    buttonText: "Ver oferta",
-    buttonUrl: "/destinos/internacionales/cancun"
-  },
-  {
-    image: "/images/hero/cartagena.jpg",
-    title: "Explora Colombia",
-    subtitle: "Historia y cultura en el Caribe Colombiano",
-    offerText: "Desde $899,000 COP",
-    buttonText: "Ver oferta",
-    buttonUrl: "/destinos/nacionales/cartagena"
-  },
-  {
-    image: "/images/hero/europa.jpg",
-    title: "Recorre Europa",
-    subtitle: "Conoce las ciudades más emblemáticas del viejo continente",
-    offerText: "Desde $5,999,000 COP",
-    buttonText: "Ver oferta",
-    buttonUrl: "/destinos/internacionales/europa"
-  }
-];
+
+// Obtener slides del CMS
+const heroSlidesEntries = await getCollection('hero-slides');
+// Ordenar y filtrar solo slides activos
+const heroSlides = heroSlidesEntries
+  .filter(slide => slide.data.active !== false)
+  .sort((a, b) => (a.data.order || 0) - (b.data.order || 0))
+  .map(entry => ({
+    image: entry.data.image,
+    title: entry.data.title,
+    subtitle: entry.data.subtitle,
+    offerText: entry.data.offerText,
+    buttonText: entry.data.buttonText,
+    buttonUrl: entry.data.buttonUrl
+  }));
+
 
 // Tipos de destinos para el buscador
 const destinationTypes = [

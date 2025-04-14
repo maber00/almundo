@@ -157,6 +157,16 @@ declare module 'astro:content' {
   rendered?: RenderedContent;
   filePath?: string;
 }>;
+"blog": Record<string, {
+  id: string;
+  render(): Render[".md"];
+  slug: string;
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
 "categories": Record<string, {
   id: string;
   render(): Render[".md"];
@@ -179,9 +189,11 @@ declare module 'astro:content' {
 }>;
 "hero-slides": Record<string, {
   id: string;
-  body?: string;
+  render(): Render[".md"];
+  slug: string;
+  body: string;
   collection: "hero-slides";
-  data: any;
+  data: InferEntrySchema<"hero-slides">;
   rendered?: RenderedContent;
   filePath?: string;
 }>;

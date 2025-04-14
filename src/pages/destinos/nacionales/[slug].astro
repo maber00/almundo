@@ -37,12 +37,14 @@ if (!destination) {
 // Procesamiento seguro del precio original
 const originalPrice = destination.originalPrice 
   ? (typeof destination.originalPrice === 'string' 
-      ? Number(destination.originalPrice) || 0
-      : destination.originalPrice) 
+      ? Number((destination.originalPrice as string).replace(/\./g, '')) || 0
+      : destination.originalPrice)
   : 0;
 
+
+
 // Verificar si es una oferta (tiene precio original mayor que el precio actual)
-const isOffer = originalPrice > 0 && originalPrice > destination.price;
+const isOffer = originalPrice > 0 && originalPrice < destination.price;
 
 // Formatear precios - función mejorada para manejar diferentes tipos
 const formatPrice = (price: number | string | null | undefined): string => {
@@ -85,7 +87,6 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
         
         <div class="absolute inset-0 flex items-center justify-center z-20">
           <div class="text-center px-4">
-            <!-- Contenedor de texto con fondo semi-transparente -->
             <div class="p-4 rounded-lg inline-block">
               <span class={`inline-block font-bold px-3 py-1 rounded-full mb-4 ${
                 isOffer ? 'bg-red-500 text-white' : 
@@ -105,59 +106,64 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
         </div>
         
         <!-- Información en la parte inferior -->
-        <div class="absolute bottom-0 left-0 w-full p-3 md:p-6 z-20">
-          <div class="container mx-auto">
-            <div class="bg-black/20 rounded-lg backdrop-blur-sm p-3">
-              <div class="flex flex-col md:flex-row md:justify-between md:items-end flex-wrap gap-2 md:gap-4">
-                <!-- Detalles del destino -->
-                <div class="flex flex-wrap items-center gap-3 md:gap-6 text-white text-sm md:text-base">
-                  <div class="flex items-center">
-                    <Icon name="tabler:map-pin" class="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
-                    <span>{destination.region}</span>
-                  </div>
-                  <div class="flex items-center">
-                    <Icon name="tabler:clock" class="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
-                    <span>{destination.durationText}</span>
-                  </div>
-                  <div class="flex items-center">
-                    <Icon name="tabler:star" class="w-4 h-4 md:w-5 md:h-5 text-yellow-400 mr-1 md:mr-2" />
-                    <span>{destination.rating}% recomendado</span>
-                  </div>
-                </div>
-                
-                <!-- Precio con fondo más contrastante -->
-                <div class="bg-white p-3 md:p-4 rounded-lg backdrop-blur-sm shadow-lg relative">
-                  {isOffer && (
-                    <div class="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
-                      ¡OFERTA!
-                    </div>
-                  )}
-                  
-                  <p class="text-xs md:text-sm text-gray-500">Precio por persona</p>
-                  
-                  {isOffer ? (
-                    <div>
-                      <p class="line-through text-gray-500 text-sm md:text-base font-medium">
-                        Antes: {formatPrice(originalPrice)}
-                      </p>
-                      <p class="text-xl md:text-3xl font-bold text-red-600">
-                        Ahora: {formatPrice(destination.price)}
-                      </p>
-                      <p class="text-xs text-green-600 font-medium">
-                        {Math.round(((originalPrice - destination.price) / originalPrice) * 100)}% de descuento
-                      </p>
-                    </div>
-                  ) : (
-                    <p class="text-xl md:text-3xl font-bold text-blue-600">
-                      {formatPrice(destination.price)}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
+<div class="absolute bottom-0 left-0 w-full pt-6 md:pt-6 z-20">
+  <div class="container mx-auto">
+    <div class="bg-black/20 rounded-lg backdrop-blur-sm p-3">
+      <div class="flex flex-col md:flex-row md:justify-between md:items-end flex-wrap gap-2 md:gap-4">
+
+
+        
+
+        <!-- Detalles del destino (región, duración, rating, etc.) -->
+        <div class="flex flex-wrap items-center gap-3 md:gap-6 text-white text-sm md:text-base">
+          <div class="flex items-center">
+            <Icon name="tabler:map-pin" class="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
+            <span>{destination.region}</span>
+          </div>
+          <div class="flex items-center">
+            <Icon name="tabler:clock" class="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
+            <span>{destination.durationText}</span>
+          </div>
+          <div class="flex items-center">
+            <Icon name="tabler:star" class="w-4 h-4 md:w-5 md:h-5 text-yellow-400 mr-1 md:mr-2" />
+            <span>{destination.rating}% recomendado</span>
           </div>
         </div>
+
+        <!-- Bloque de Precio con fondo contrastante -->
+        <div class="bg-white p-3 md:p-4 rounded-lg backdrop-blur-sm shadow-lg relative">
+          {isOffer && (
+            <div class="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
+              ¡OFERTA!
+            </div>
+          )}
+                  
+          <p class="text-xs md:text-sm text-gray-500">Precio por persona</p>
+                  
+          {isOffer ? (
+            <div>
+              <p class="line-through text-gray-500 text-sm md:text-base font-medium">
+                Antes: {formatPrice(destination.price)}
+              </p>
+              <p class="text-xl md:text-3xl font-bold text-red-600">
+                Ahora: {formatPrice(originalPrice)}
+              </p>
+              <p class="text-xs text-green-600 font-medium">
+                {Math.round(((destination.price - originalPrice) / destination.price) * 100)}% de descuento
+              </p>
+            </div>
+          ) : (
+            <p class="text-xl md:text-3xl font-bold text-blue-600">
+              {formatPrice(destination.price)}
+            </p>
+          )}
+        </div>
+        
       </div>
+    </div>
+  </div>
+</div>
+
     </section>
     
     <!-- Breadcrumbs -->

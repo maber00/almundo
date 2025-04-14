@@ -6,8 +6,8 @@ interface Props {
     id: string;
     name: string;
     type: string;
-    price: number;
-    originalPrice?: number | null | string;
+    price: number; // En este caso, se interpretará como el precio en oferta (más bajo)
+    originalPrice?: number | null | string; // En este caso, se interpretará como el precio regular (más alto)
     priceInUsd?: boolean;
     durationText: string;
     image: string;
@@ -20,41 +20,49 @@ interface Props {
 
 const { destination } = Astro.props;
 
-// Procesamiento seguro del precio original
-const originalPrice = destination.originalPrice 
-  ? (typeof destination.originalPrice === 'string' 
-      ? Number(destination.originalPrice) || 0
-      : destination.originalPrice) 
+// Forzamos la conversión de destination.originalPrice a un número
+const originalPriceNumber: number = destination.originalPrice != null
+  ? (typeof destination.originalPrice === 'string'
+      ? Number(destination.originalPrice.replace(/\./g, '')) || 0
+      : destination.originalPrice)
   : 0;
-
-// Verificar si es una oferta (tiene precio original mayor que el precio actual)
-const isOffer = originalPrice > 0 && originalPrice !== destination.price;
-
-// Formatear precios
+  
+// En este caso, originalPriceNumber es el precio regular y destination.price es el valor en oferta.
+const isOffer = originalPriceNumber > 0 && destination.price < originalPriceNumber;
+const discountPercentage = isOffer
+  ? Math.round(((originalPriceNumber - destination.price) / originalPriceNumber) * 100)
+  : 0;
 const formatPrice = (price: number): string => {
   return destination.priceInUsd 
     ? `USD $${price.toLocaleString('en-US')}` 
     : `$${price.toLocaleString('es-CO')}`;
 };
 
-
+console.log("destination.price (oferta):", destination.price);
+console.log("destination.originalPrice (regular):", destination.originalPrice);
+console.log("originalPriceNumber:", originalPriceNumber);
+console.log("isOffer:", isOffer);
+console.log("Discount %:", discountPercentage);
 ---
-
 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
   <div class="relative">
     <img 
       src={destination.image || '/images/placeholder.jpg'} 
-      alt={String(destination.name)}
+      alt={destination.name}
       class="w-full h-64 object-cover"
       onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
     />
     <div class="absolute top-4 right-4">
       <span class={`text-xs font-bold px-3 py-1 rounded-full ${
-        isOffer ? 'bg-red-500 text-white' : 
-        destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
-        destination.tag === 'Playa' ? 'bg-cyan-500 text-white' :
-        destination.tag === 'Cultural' ? 'bg-purple-500 text-white' :
-        'bg-blue-500 text-white'
+        isOffer 
+          ? 'bg-red-500 text-white' 
+          : destination.tag === 'Aventura' 
+            ? 'bg-green-500 text-white' 
+            : destination.tag === 'Playa' 
+              ? 'bg-cyan-500 text-white' 
+              : destination.tag === 'Cultural' 
+                ? 'bg-purple-500 text-white'
+                : 'bg-blue-500 text-white'
       }`}>
         {isOffer ? 'Oferta' : destination.tag}
       </span>
@@ -64,7 +72,11 @@ const formatPrice = (price: number): string => {
       <h3 class="text-2xl font-bold text-white">{destination.name}</h3>
     </div>
   </div>
-  
+  <div style="background: #ffe; padding: 1rem; margin-bottom: 1rem;">
+    <strong>Datos recibidos:</strong>
+    <p>destination.price: {destination.price}</p>
+    <p>destination.originalPrice: {destination.originalPrice}</p>
+  </div>
   <div class="p-6">
     <div class="flex justify-between items-center mb-4">
       <div>
@@ -72,23 +84,21 @@ const formatPrice = (price: number): string => {
         {isOffer ? (
           <div>
             <p class="line-through text-gray-400 text-sm">
-              {formatPrice(originalPrice)}
+              {formatPrice(originalPriceNumber)}
             </p>
             <p class="text-2xl font-bold text-red-600">
               {formatPrice(destination.price)}
             </p>
             <p class="text-xs text-green-600 font-medium">
-              {Math.round(((originalPrice - destination.price) / originalPrice) * 100)}% de descuento
+              {discountPercentage}% de descuento
             </p>
           </div>
         ) : (
-        <p class="text-2xl font-bold text-blue-600">
-  {formatPrice(destination.price)} <span class="text-sm font-normal">{destination.priceInUsd ? '' : 'COP'}</span>
-</p>
-
-
-
+          <p class="text-2xl font-bold text-blue-600">
+            {formatPrice(destination.price)}
+          </p>
         )}
+        
       </div>
       
       <div class="text-right">

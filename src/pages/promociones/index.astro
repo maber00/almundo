@@ -1,0 +1,171 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import DestinationCard from '../../components/destinations/DestinationCard.astro';
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+
+// Obtener todos los destinos
+const allDestinations = await getCollection('destinations');
+
+// Obtener destinos con precio de oferta
+const priceOfferDestinations = allDestinations
+  .filter(dest => {
+    const originalPrice = dest.data.originalPrice 
+      ? (typeof dest.data.originalPrice === 'string' 
+          ? Number(dest.data.originalPrice) || 0
+          : dest.data.originalPrice) 
+      : 0;
+    
+    return originalPrice > 0 && originalPrice > dest.data.price;
+  })
+  .map(entry => ({...entry.data, slug: entry.slug}));
+
+// Obtener destinos con tag "Oferta"
+const tagOfferDestinations = allDestinations
+  .filter(dest => dest.data.tag === 'Oferta')
+  .map(entry => ({...entry.data, slug: entry.slug}));
+
+// Combinar ambos conjuntos y eliminar duplicados por id
+const combinedDestinations = [...priceOfferDestinations, ...tagOfferDestinations];
+const destinations = combinedDestinations.filter((dest, index, self) => 
+  index === self.findIndex((d) => d.id === dest.id)
+);
+---
+
+<Layout title="Ofertas y Promociones | AL mundo Tour" description="Descubre nuestras mejores ofertas y promociones en destinos nacionales e internacionales con precios especiales por tiempo limitado.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-red-600 to-red-800 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <span class="inline-block bg-white text-red-600 px-4 py-1 rounded-full font-bold text-sm mb-4">
+          ¡OFERTAS ESPECIALES!
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Ofertas y Promociones</h1>
+        <p class="text-xl text-red-100 max-w-3xl mx-auto">
+          Descubre nuestras mejores ofertas y promociones en destinos nacionales e internacionales. ¡Precios especiales por tiempo limitado!
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Promociones</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Promociones destacadas -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        {destinations.length > 0 ? (
+          <>
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-2">Nuestras Ofertas Exclusivas</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+              Aprovecha estas promociones por tiempo limitado y cumple tu sueño de viajar a los mejores destinos con precios increíbles.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {destinations.map((destination) => (
+                <DestinationCard destination={destination} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">No hay promociones disponibles en este momento</h2>
+            <p class="text-lg text-gray-600 mb-6">Estamos preparando nuevas ofertas. ¡Vuelve pronto para descubrir precios increíbles!</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔍</span>
+                Ver todos los destinos
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- Suscripción a promociones -->
+    <section class="py-16 bg-red-50">
+      <div class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-lg p-8 md:p-12 max-w-4xl mx-auto">
+          <div class="text-center mb-8">
+            <div class="inline-block bg-red-100 p-4 rounded-full mb-4">
+              <Icon name="tabler:mail" class="w-10 h-10 text-red-600" />
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-3">¡Recibe nuestras ofertas antes que nadie!</h2>
+            <p class="text-lg text-gray-600">
+              Suscríbete a nuestro newsletter y sé el primero en recibir promociones exclusivas, descuentos especiales y ofertas de último minuto.
+            </p>
+          </div>
+          
+          <form class="max-w-xl mx-auto" data-netlify="true" name="newsletter-promociones">
+            <div class="flex flex-col md:flex-row gap-3">
+              <div class="flex-grow">
+                <input 
+                  type="email" 
+                  name="email" 
+                  placeholder="Tu correo electrónico" 
+                  class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  required
+                />
+              </div>
+              <button 
+                type="submit"
+                class="bg-red-600 text-white px-6 py-3 rounded-md font-medium hover:bg-red-700 transition-colors whitespace-nowrap"
+              >
+                Suscribirme a ofertas
+              </button>
+            </div>
+            <div class="mt-4 text-center text-sm text-gray-500">
+              <label class="flex items-center justify-center">
+                <input type="checkbox" name="accept_terms" required class="mr-2" />
+                Acepto recibir comunicaciones promocionales y he leído la 
+                <a href="/politica-privacidad" class="text-red-600 hover:underline mx-1">política de privacidad</a>
+              </label>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA - Asesoramiento personalizado -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Buscas un destino específico?</h2>
+        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          Nuestros asesores de viaje pueden ayudarte a encontrar la mejor oferta para tu presupuesto y preferencias.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="bg-blue-600 text-white py-3 px-8 rounded-md font-medium hover:bg-blue-700 transition-colors"
+          >
+            Solicitar asesoramiento gratuito
+          </a>
+          
+          <a 
+            href="https://wa.me/573165276338?text=Hola, estoy interesado en conocer ofertas especiales para mi próximo viaje"
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            Contactar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

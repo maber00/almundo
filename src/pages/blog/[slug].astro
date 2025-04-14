@@ -1,0 +1,271 @@
+---
+// src/pages/blog/[slug].astro
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '../../utils/formatters';
+import { Icon } from 'astro-icon/components';
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  
+  return blogEntries
+    .filter(entry => entry.data.published)
+    .map(entry => ({
+      params: { slug: entry.slug },
+      props: { entry }
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+// Obtener más posts del mismo autor o categoría para mostrar como relacionados
+const allPosts = await getCollection('blog');
+const relatedPosts = allPosts
+  .filter(post => 
+    post.slug !== entry.slug && 
+    post.data.published && 
+    (post.data.author === entry.data.author || 
+     post.data.categories.some(cat => entry.data.categories.includes(cat)))
+  )
+  .sort(() => Math.random() - 0.5) // Orden aleatorio
+  .slice(0, 3); // Limitar a 3 posts relacionados
+---
+
+<Layout title={`${entry.data.title} | Blog | AL mundo Tour`} description={entry.data.subtitle || entry.data.title}>
+  <Header />
+  
+  <main>
+    <!-- Hero image -->
+    <section class="relative pt-20">
+      <div class="h-[50vh] w-full relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80 z-10"></div>
+        <img 
+          src={entry.data.featuredImage} 
+          alt={entry.data.title} 
+          class="w-full h-full object-cover"
+        />
+        
+        <div class="absolute inset-0 flex items-center justify-center z-20">
+          <div class="container mx-auto px-4 text-center">
+            <div class="max-w-3xl mx-auto">
+              {entry.data.categories.length > 0 && (
+                <div class="mb-4">
+                  {entry.data.categories.map(category => (
+                    <a href={`/blog/categoria/${category.toLowerCase().replace(/ /g, '-')}`} class="inline-block bg-blue-600 text-white text-xs px-3 py-1 rounded-full mr-2 hover:bg-blue-700 transition-colors">
+                      {category}
+                    </a>
+                  ))}
+                </div>
+              )}
+              <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 drop-shadow-lg">{entry.data.title}</h1>
+              {entry.data.subtitle && (
+                <p class="text-xl text-white max-w-3xl mx-auto drop-shadow-lg">
+                  {entry.data.subtitle}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        <div class="absolute bottom-0 left-0 w-full p-6 z-20">
+          <div class="container mx-auto">
+            <div class="flex justify-between items-center text-white max-w-3xl mx-auto">
+              <div class="flex items-center gap-2">
+                <img 
+                  src="/images/uploads/author-avatar.jpg" 
+                  alt={entry.data.author} 
+                  class="w-10 h-10 rounded-full"
+                  onerror="this.src='/images/uploads/avatar-placeholder.jpg'; this.onerror=null;"
+                />
+                <div>
+                  <p class="font-medium">{entry.data.author}</p>
+                  <p class="text-sm text-gray-300">{formatDate(entry.data.date)}</p>
+                </div>
+              </div>
+              
+              <div class="flex gap-2">
+                <a href="#" class="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors">
+                  <Icon name="tabler:brand-facebook" class="w-5 h-5" />
+                </a>
+                <a href="#" class="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors">
+                  <Icon name="tabler:brand-twitter" class="w-5 h-5" />
+                </a>
+                <a href="#" class="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors">
+                  <Icon name="tabler:brand-whatsapp" class="w-5 h-5" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/blog" class="hover:text-blue-600">Blog</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700 truncate">{entry.data.title}</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Contenido del artículo -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <!-- Contenido principal -->
+          <div class="lg:col-span-3">
+            <article class="bg-white rounded-lg shadow-md p-6 md:p-10">
+              <div class="prose prose-lg max-w-none">
+                <Content />
+              </div>
+              
+              <!-- Tags del artículo -->
+              {entry.data.tags && entry.data.tags.length > 0 && (
+                <div class="mt-10 pt-6 border-t border-gray-200">
+                  <div class="flex flex-wrap gap-2">
+                    {entry.data.tags.map(tag => (
+                      <a href={`/blog/tag/${tag.toLowerCase().replace(/ /g, '-')}`} class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200 transition-colors">
+                        #{tag}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <!-- Compartir artículo -->
+              <div class="mt-10 pt-6 border-t border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Comparte este artículo</h3>
+                <div class="flex gap-2">
+                  <a href="#" class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition-colors">
+                    <Icon name="tabler:brand-facebook" class="w-6 h-6 text-blue-600" />
+                  </a>
+                  <a href="#" class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition-colors">
+                    <Icon name="tabler:brand-twitter" class="w-6 h-6 text-blue-600" />
+                  </a>
+                  <a href="#" class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition-colors">
+                    <Icon name="tabler:brand-whatsapp" class="w-6 h-6 text-blue-600" />
+                  </a>
+                  <a href="#" class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition-colors">
+                    <Icon name="tabler:mail" class="w-6 h-6 text-blue-600" />
+                  </a>
+                </div>
+              </div>
+            </article>
+            
+            <!-- Artículos relacionados -->
+            {relatedPosts.length > 0 && (
+              <div class="mt-10">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Artículos relacionados</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {relatedPosts.map(post => (
+                    <a href={`/blog/${post.slug}`} class="group">
+                      <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col transition-transform hover:-translate-y-1 duration-300">
+                        <div class="h-48">
+                          <img 
+                            src={post.data.featuredImage} 
+                            alt={post.data.title} 
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        </div>
+                        <div class="p-4 flex-grow">
+                          <div class="flex items-center text-xs text-gray-500 mb-2">
+                            <span>{formatDate(post.data.date)}</span>
+                          </div>
+                          <h4 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{post.data.title}</h4>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <!-- Barra lateral -->
+          <div class="lg:col-span-1">
+            <!-- Información del autor -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+              <h3 class="text-xl font-bold text-gray-900 mb-4">Sobre el autor</h3>
+              <div class="flex items-center mb-4">
+                <img 
+                  src="/images/uploads/author-avatar.jpg" 
+                  alt={entry.data.author} 
+                  class="w-16 h-16 rounded-full mr-4"
+                  onerror="this.src='/images/uploads/avatar-placeholder.jpg'; this.onerror=null;"
+                />
+                <h4 class="text-lg font-bold text-gray-900">{entry.data.author}</h4>
+              </div>
+              <p class="text-gray-600 mb-4">
+                Experto en viajes y miembro del equipo de AL mundo Tour.
+              </p>
+              <a href="/sobre-nosotros" class="text-blue-600 font-medium hover:text-blue-800">Conoce a nuestro equipo</a>
+            </div>
+            
+            <!-- Otros artículos recientes -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-4">Artículos recientes</h3>
+              <div class="space-y-4">
+                {allPosts
+                  .filter(post => post.slug !== entry.slug && post.data.published)
+                  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+                  .slice(0, 4)
+                  .map(post => (
+                    <a href={`/blog/${post.slug}`} class="flex items-center group">
+                      <div class="w-16 h-16 flex-shrink-0 rounded-md overflow-hidden mr-3">
+                        <img 
+                          src={post.data.featuredImage} 
+                          alt={post.data.title} 
+                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      </div>
+                      <div>
+                        <h4 class="text-gray-900 font-medium group-hover:text-blue-600 transition-colors line-clamp-2">{post.data.title}</h4>
+                        <p class="text-sm text-gray-500">{formatDate(post.data.date)}</p>
+                      </div>
+                    </a>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA - Explorar destinos -->
+    <section class="py-12 bg-blue-600 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Inspirado para tu próximo viaje?</h2>
+        <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+          Explora nuestros destinos y comienza a planificar tu próxima aventura con la ayuda de nuestros expertos en viajes.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/destinos" 
+            class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
+          >
+            Explorar destinos
+          </a>
+          
+          <a 
+            href="/contacto" 
+            class="bg-transparent border-2 border-white text-white py-3 px-8 rounded-md font-medium hover:bg-white/10 transition-colors"
+          >
+            Contactar asesor
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

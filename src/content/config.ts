@@ -25,7 +25,7 @@ const destinationsCollection = defineCollection({
     includes: z.array(z.string()).default([]),
     notIncludes: z.array(z.string()).default([]),
     notes: z.string().optional(),
-    // Añade estas nuevas propiedades
+    // Propiedades adicionales
     experience: z.array(z.string()).optional().default([]),
     itinerary: z.array(z.object({
       day: z.union([z.string(), z.number()]).optional(),
@@ -35,7 +35,6 @@ const destinationsCollection = defineCollection({
     requirements: z.array(z.string()).optional().default([])
   })
 });
-
 
 // Esquema para categorías
 const categoriesCollection = defineCollection({
@@ -64,9 +63,42 @@ const alliancesCollection = defineCollection({
   })
 });
 
-// Exporta las colecciones
+// Esquema para slides del hero
+const heroSlidesCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string(),
+    image: z.string(),
+    offerText: z.string(),
+    buttonText: z.string().default("Ver oferta"),
+    buttonUrl: z.string(),
+    order: z.number().default(0),
+    active: z.boolean().default(true)
+  })
+});
+
+// Esquema para blog
+const blogCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    date: z.string(),
+    author: z.string(),
+    categories: z.array(z.string()).default([]),
+    tags: z.array(z.string()).default([]),
+    featuredImage: z.string(),
+    featured: z.boolean().default(false),
+    published: z.boolean().default(true)
+  })
+});
+
+// Exportamos todas las colecciones
 export const collections = {
   destinations: destinationsCollection,
   categories: categoriesCollection,
-  alliances: alliancesCollection
+  alliances: alliancesCollection,
+  'hero-slides': heroSlidesCollection,
+  blog: blogCollection
 };

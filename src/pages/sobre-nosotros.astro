@@ -1,0 +1,329 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { Icon } from 'astro-icon/components';
+
+// Equipo de trabajo
+const team = [
+  {
+    name: "María Rodríguez",
+    position: "Fundadora y CEO",
+    bio: "Con más de 15 años de experiencia en el sector turístico, María fundó AL Mundo Tours con la misión de crear experiencias de viaje inolvidables para cada cliente.",
+    image: "/images/uploads/team-member1.jpg" // Reemplazar con imagen real
+  },
+  {
+    name: "Carlos Jiménez",
+    position: "Director de Operaciones",
+    bio: "Especialista en logística y planificación de viajes internacionales, Carlos asegura que cada detalle de tu viaje esté perfectamente coordinado.",
+    image: "/images/uploads/team-member2.jpg" // Reemplazar con imagen real
+  },
+  {
+    name: "Luisa Martínez",
+    position: "Asesora de Viajes",
+    bio: "Experta en destinos exóticos y aventuras personalizadas, Luisa ha visitado más de 30 países y comparte su pasión por los viajes con cada cliente.",
+    image: "/images/uploads/team-member3.jpg" // Reemplazar con imagen real
+  }
+];
+
+// Valores de la empresa
+const values = [
+  {
+    icon: "tabler:heart",
+    title: "Pasión por los viajes",
+    description: "Amamos lo que hacemos y compartimos esa pasión con nuestros clientes en cada viaje que organizamos."
+  },
+  {
+    icon: "tabler:bulb",
+    title: "Innovación constante",
+    description: "Buscamos constantemente nuevas formas de mejorar la experiencia de viaje de nuestros clientes."
+  },
+  {
+    icon: "tabler:certificate",
+    title: "Excelencia en el servicio",
+    description: "Nos comprometemos a ofrecer un servicio de alta calidad en cada detalle de tu viaje."
+  },
+  {
+    icon: "tabler:users",
+    title: "Atención personalizada",
+    description: "Cada viajero es único, y por eso personalizamos cada experiencia según tus necesidades y preferencias."
+  },
+  {
+    icon: "tabler:world",
+    title: "Experiencia global",
+    description: "Nuestro equipo cuenta con experiencia internacional para brindarte la mejor asesoría en tus viajes."
+  },
+  {
+    icon: "tabler:shield",
+    title: "Confianza y seguridad",
+    description: "Tu seguridad es nuestra prioridad. Trabajamos con proveedores confiables y ofrecemos asistencia 24/7."
+  }
+];
+
+// Hitos y logros
+const milestones = [
+  {
+    year: "2015",
+    title: "Fundación de AL Mundo Tours",
+    description: "Iniciamos nuestras operaciones en Tuluá con el objetivo de ofrecer viajes personalizados a destinos nacionales."
+  },
+  {
+    year: "2017",
+    title: "Expansión a destinos internacionales",
+    description: "Ampliamos nuestra oferta para incluir destinos en América Latina, el Caribe y Europa."
+  },
+  {
+    year: "2019",
+    title: "Certificación de excelencia",
+    description: "Obtuvimos reconocimiento por nuestro servicio de calidad y atención al cliente."
+  },
+  {
+    year: "2021",
+    title: "Alianzas estratégicas",
+    description: "Formamos alianzas con operadores internacionales para ofrecer mejores precios y experiencias exclusivas."
+  },
+  {
+    year: "2023",
+    title: "Lanzamiento de plataforma digital",
+    description: "Renovamos nuestra presencia online para ofrecer una mejor experiencia de reserva a nuestros clientes."
+  }
+];
+---
+
+<Layout title="Sobre Nosotros | AL mundo Tour" description="Conoce AL mundo Tour, tu agencia de viajes de confianza en Tuluá. Descubre nuestra historia, misión, visión y el equipo que hará realidad tus viajes soñados.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-blue-700 to-blue-900 py-20 pt-32 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-20">
+        <img src="/images/uploads/world-map.png" alt="Mapa del mundo" class="w-full h-full object-cover" />
+      </div>
+      <div class="container mx-auto px-4 text-center relative z-10">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Sobre Nosotros</h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+          Conoce a AL Mundo Tours, tu agencia de viajes de confianza en Tuluá.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Sobre Nosotros</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Nuestra Historia y Misión -->
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Quiénes Somos</h2>
+            <div class="space-y-4">
+              <p class="text-lg text-gray-700">
+                En <span class="font-bold text-blue-600">AL Mundo Tours</span>, nos especializamos en la planificación y organización de viajes personalizados a la medida de cada cliente. Nuestra misión es ayudar a los viajeros a planificar y disfrutar sus experiencias soñadas, encargándonos de cada detalle para que solo se enfoquen en vivir el momento.
+              </p>
+              <p class="text-lg text-gray-700">
+                Somos una agencia de viajes con sede en Tuluá, Valle del Cauca, pero con una visión global y conexiones internacionales que nos permiten ofrecer experiencias únicas en cualquier parte del mundo.
+              </p>
+              
+            </div>
+          </div>
+          <div class="relative">
+            <div class="bg-blue-50 rounded-lg p-8 relative z-10">
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Nuestra Misión</h3>
+              <p class="text-lg text-gray-700 mb-6">
+                Hacer realidad los sueños de viaje de nuestros clientes, ofreciendo experiencias personalizadas, seguras y memorables, con un servicio de calidad y atención a cada detalle.
+              </p>
+              
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Nuestra Visión</h3>
+              <p class="text-lg text-gray-700">
+                Ser reconocidos como la agencia de viajes líder en el mercado digital, distinguiéndonos por nuestra excelencia en el servicio, innovación constante y compromiso con la satisfacción del cliente.
+              </p>
+            </div>
+            <div class="absolute top-4 left-4 right-4 bottom-4 bg-blue-200 rounded-lg -z-0"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Nuestros Valores -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Nuestros Valores</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {values.map((value) => (
+            <div class="bg-white rounded-lg shadow-md p-8 transition-transform hover:-translate-y-1 duration-300">
+              <div class="inline-block bg-blue-100 p-3 rounded-full mb-4">
+                <Icon name={value.icon} class="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-3">{value.title}</h3>
+              <p class="text-gray-700">{value.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    
+    <!-- Nuestro Equipo 
+    //*<section class="py-16">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-4">Nuestro Equipo</h2>
+        <p class="text-center text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+          Conoce a las personas que harán de tu viaje una experiencia inolvidable
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {team.map((member) => (
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <div class="h-64 overflow-hidden">
+                <img 
+                  src={member.image} 
+                  alt={member.name}
+                  class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  onerror="this.src='/images/uploads/placeholder-person.jpg'; this.onerror=null;"
+                />
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-1">{member.name}</h3>
+                <p class="text-blue-600 font-medium mb-4">{member.position}</p>
+                <p class="text-gray-700">{member.bio}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    -->
+    
+    <!-- Nuestra Trayectoria
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Nuestra Trayectoria</h2>
+        
+        <div class="relative">
+          <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-200"></div>
+          
+          <div class="space-y-12">
+            {milestones.map((milestone, index) => (
+              <div class={`relative flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center`}>
+                <div class="w-5/12"></div>
+                
+                <div class="z-10 flex items-center justify-center absolute left-1/2 transform -translate-x-1/2 w-12 h-12 bg-blue-600 rounded-full text-white font-bold text-lg shadow-lg">
+                  {milestone.year.slice(-2)}
+                </div>
+                
+                <div class="w-5/12 bg-white p-6 rounded-lg shadow-md relative">
+  <h3 class="text-xl font-bold text-gray-900 mb-2">{milestone.title}</h3>
+  <p class="text-gray-700">{milestone.description}</p>
+  <div class="absolute top-6 text-3xl font-bold text-gray-200 -z-10 opacity-30">
+    {milestone.year}
+  </div>
+</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+     -->
+    
+    <!-- Sección: Por qué elegirnos -->
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2">
+            <div class="p-12 flex items-center">
+              <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">¿Por qué elegirnos?</h2>
+                <ul class="space-y-4">
+                  <li class="flex items-start">
+                    <div class="bg-green-100 p-1 rounded-full mt-1 mr-3">
+                      <Icon name="tabler:check" class="w-5 h-5 text-green-600" />
+                    </div>
+                    <span class="text-gray-700"><strong>Atención personalizada:</strong> Cada viaje se adapta a tus necesidades específicas.</span>
+                  </li>
+                  <li class="flex items-start">
+                    <div class="bg-green-100 p-1 rounded-full mt-1 mr-3">
+                      <Icon name="tabler:check" class="w-5 h-5 text-green-600" />
+                    </div>
+                    <span class="text-gray-700"><strong>Experiencia local:</strong> Conocemos el Valle del Cauca y entendemos las necesidades de nuestros clientes locales.</span>
+                  </li>
+                  <li class="flex items-start">
+                    <div class="bg-green-100 p-1 rounded-full mt-1 mr-3">
+                      <Icon name="tabler:check" class="w-5 h-5 text-green-600" />
+                    </div>
+                    <span class="text-gray-700"><strong>Destinos variados:</strong> Ofrecemos desde escapadas nacionales hasta viajes internacionales de larga duración.</span>
+                  </li>
+                  <li class="flex items-start">
+                    <div class="bg-green-100 p-1 rounded-full mt-1 mr-3">
+                      <Icon name="tabler:check" class="w-5 h-5 text-green-600" />
+                    </div>
+                    <span class="text-gray-700"><strong>Soporte 24/7:</strong> Estamos contigo antes, durante y después de tu viaje.</span>
+                  </li>
+                  <li class="flex items-start">
+                    <div class="bg-green-100 p-1 rounded-full mt-1 mr-3">
+                      <Icon name="tabler:check" class="w-5 h-5 text-green-600" />
+                    </div>
+                    <span class="text-gray-700"><strong>Facilidades de pago:</strong> Múltiples opciones para financiar tu viaje de manera cómoda.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="bg-blue-600 p-12 flex items-center">
+              <div class="text-white">
+                <h3 class="text-2xl font-bold mb-6">Nuestro compromiso</h3>
+                <p class="text-blue-100 mb-8">
+                  En AL Mundo Tours nos comprometemos a hacer de tu viaje una experiencia inolvidable, cuidando cada detalle y garantizando tu satisfacción en todo momento.
+                </p>
+                <div class="flex flex-col gap-4">
+                  <a href="/destinos" class="inline-block bg-white text-blue-600 py-3 px-6 rounded-md font-medium hover:bg-blue-50 transition-colors text-center">
+                    Explorar destinos
+                  </a>
+                  <a href="/contacto" class="inline-block bg-transparent border-2 border-white text-white py-3 px-6 rounded-md font-medium hover:bg-white/10 transition-colors text-center">
+                    Contactar con nosotros
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA - Contacto -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Listo para planear tu próxima aventura?</h2>
+        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          Nuestro equipo de expertos está listo para ayudarte a crear el viaje perfecto.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="bg-blue-600 text-white py-3 px-8 rounded-md font-medium hover:bg-blue-700 transition-colors"
+          >
+            Contactar ahora
+          </a>
+          
+          <a 
+            href="https://wa.me/573165276338?text=Hola, me gustaría obtener información sobre sus servicios"
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

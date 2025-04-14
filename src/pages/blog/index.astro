@@ -1,0 +1,187 @@
+---
+// src/pages/blog/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '../../utils/formatters';
+
+// Obtener todas las entradas de blog
+const allPosts = await getCollection('blog');
+
+// Filtrar las entradas publicadas y ordenarlas por fecha (más reciente primero)
+const posts = allPosts
+  .filter(post => post.data.published)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+// Extraer las entradas destacadas
+const featuredPosts = posts.filter(post => post.data.featured);
+
+// Obtener todas las categorías únicas
+const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
+---
+
+<Layout title="Blog | AL mundo Tour" description="Descubre consejos de viaje, destinos recomendados y experiencias únicas en nuestro blog de viajes.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Blog de Viajes</h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+          Inspiración, consejos y relatos de viaje para planificar tu próxima aventura
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Blog</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Contenido principal -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <!-- Barra lateral -->
+          <div class="lg:col-span-1">
+            <!-- Categorías -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+              <h3 class="text-xl font-bold text-gray-900 mb-4">Categorías</h3>
+              <ul class="space-y-2">
+                {allCategories.map(category => (
+                  <li>
+                    <a href={`/blog/categoria/${category.toLowerCase().replace(/ /g, '-')}`} class="text-gray-700 hover:text-blue-600 flex items-center">
+                      <span class="mr-2">•</span>
+                      {category}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <!-- Entradas populares -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-4">Más populares</h3>
+              <div class="space-y-4">
+                {posts.slice(0, 4).map(post => (
+                  <a href={`/blog/${post.slug}`} class="flex items-center group">
+                    <div class="w-16 h-16 flex-shrink-0 rounded-md overflow-hidden mr-3">
+                      <img 
+                        src={post.data.featuredImage} 
+                        alt={post.data.title} 
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+                    <div>
+                      <h4 class="text-gray-900 font-medium group-hover:text-blue-600 transition-colors line-clamp-2">{post.data.title}</h4>
+                      <p class="text-sm text-gray-500">{formatDate(post.data.date)}</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Lista de entradas -->
+          <div class="lg:col-span-3">
+            <!-- Artículos destacados -->
+            {featuredPosts.length > 0 && (
+              <div class="mb-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200">Destacados</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {featuredPosts.slice(0, 2).map(post => (
+                    <a href={`/blog/${post.slug}`} class="group">
+                      <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col transition-transform hover:-translate-y-1 duration-300">
+                        <div class="relative h-48 md:h-56">
+                          <img 
+                            src={post.data.featuredImage} 
+                            alt={post.data.title} 
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div class="absolute top-0 left-0 bg-blue-600 text-white text-xs px-3 py-1 m-2 rounded-full">
+                            Destacado
+                          </div>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                          <div class="flex-grow">
+                            <div class="flex items-center text-xs text-gray-500 mb-2">
+                              <span>{formatDate(post.data.date)}</span>
+                              <span class="mx-2">•</span>
+                              <span>{post.data.categories[0]}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{post.data.title}</h3>
+                            {post.data.subtitle && (
+                              <p class="text-gray-600 mb-4">{post.data.subtitle}</p>
+                            )}
+                          </div>
+                          <div class="mt-4 flex items-center text-blue-600 font-medium">
+                            Leer más
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            <!-- Todas las entradas -->
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200">Entradas recientes</h2>
+            {posts.length > 0 ? (
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {posts.map(post => (
+                  <a href={`/blog/${post.slug}`} class="group">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col transition-transform hover:-translate-y-1 duration-300">
+                      <div class="h-48">
+                        <img 
+                          src={post.data.featuredImage} 
+                          alt={post.data.title} 
+                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                      </div>
+                      <div class="p-6 flex-grow flex flex-col">
+                        <div class="flex-grow">
+                          <div class="flex items-center text-xs text-gray-500 mb-2">
+                            <span>{formatDate(post.data.date)}</span>
+                            <span class="mx-2">•</span>
+                            <span>{post.data.categories[0]}</span>
+                          </div>
+                          <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{post.data.title}</h3>
+                        </div>
+                        <div class="mt-4 flex items-center text-blue-600 font-medium">
+                          Leer más
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                <div class="text-6xl mb-4">📝</div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Aún no hay entradas publicadas</h2>
+                <p class="text-lg text-gray-600 mb-6">Estamos trabajando en nuevo contenido. ¡Vuelve pronto!</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

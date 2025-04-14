@@ -29,7 +29,7 @@ collections:
       - { label: "Destacado", name: "featured", widget: "boolean", default: false }
       - { label: "Puntuación", name: "rating", widget: "number", min: 0, max: 100 }
       - { label: "Disponibilidad", name: "availability", widget: "number" }
-      - { label: "Etiqueta", name: "tag", widget: "select", options: ["Oferta", "Aventura", "Playa", "Cultural"] }
+      - { label: "Etiqueta", name: "tag", widget: "select", multiple: true, options: ["Aniversario", "Aventura", "Cultural", "Ecoturismo", "Familiar", "Ocio", "Oferta", "Playa", "Romántico", "Todo Incluido"] }
       - { label: "Incluye", name: "includes", widget: "list", required: false }
       - { label: "No Incluye", name: "notIncludes", widget: "list", required: false }
       - { label: "Notas", name: "notes", widget: "text", required: false }
@@ -78,3 +78,21 @@ collections:
       - { label: "URL del Botón", name: "buttonUrl", widget: "string", hint: "Ej: /destinos/internacionales/cancun" }
       - { label: "Orden", name: "order", widget: "number", default: 0, hint: "Posición de la diapositiva (0 es la primera)" }
       - { label: "Activo", name: "active", widget: "boolean", default: true }
+
+# Colección para entradas de blog
+  - name: "blog"
+    label: "Blog"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Subtítulo", name: "subtitle", widget: "string", required: false }
+      - { label: "Fecha de publicación", name: "date", widget: "datetime" }
+      - { label: "Autor", name: "author", widget: "string", default: "Equipo AL mundo Tour" }
+      - { label: "Categorías", name: "categories", widget: "list", default: ["Viajes"] }
+      - { label: "Tags", name: "tags", widget: "list", default: ["viajes"] }
+      - { label: "Imagen destacada", name: "featuredImage", widget: "image" }
+      - { label: "Contenido", name: "body", widget: "markdown" }
+      - { label: "Destacado", name: "featured", widget: "boolean", default: false }
+      - { label: "Publicado", name: "published", widget: "boolean", default: true }
