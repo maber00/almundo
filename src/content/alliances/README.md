@@ -1,0 +1,1 @@
+echo "# Alliances\nThis directory contains alliance content files." > src/content/alliances/README.md

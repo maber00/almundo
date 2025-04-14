@@ -1,0 +1,529 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+import { Icon } from 'astro-icon/components';
+import { getDestinationById, getAllDestinations } from '../../../utils/content.js';
+
+export async function getStaticPaths() {
+  // Importar getCollection directamente aquí para evitar problemas
+  const { getCollection } = await import('astro:content');
+  const destinations = await getCollection('destinations');
+  
+  // Filtrar solo destinos nacionales
+  const internationalDestinations = destinations.filter(entry => entry.data.type === 'internacional');  
+  return internationalDestinations.map(destination => ({
+    params: { slug: destination.data.id || destination.slug },
+    props: { destination: destination.data }
+  }));
+}
+
+// Obtener los parámetros de la ruta
+const { slug } = Astro.params;
+
+// Obtener los datos del destino pasados como props o buscarlos por ID
+const destinationFromProps = Astro.props.destination;
+const destinationFromId = await getDestinationById(slug);
+
+// Usar los datos de props o de la búsqueda por ID
+const destination = destinationFromProps || destinationFromId;
+
+// Si no se encuentra el destino, redirigir a la página de destinos
+if (!destination) {
+  return Astro.redirect('/destinos');
+}
+
+// Verificar si es una oferta (tiene precio original)
+const isOffer = destination.originalPrice && destination.originalPrice > destination.price;
+
+// Formatear precios
+const formatPrice = (price: number | null | undefined): string => {
+  if (price === null || price === undefined) return '';
+  return destination.priceInUsd 
+    ? `USD $${price.toLocaleString('en-US')}` 
+    : `$${price.toLocaleString('es-CO')} COP`;
+};
+
+
+// Obtener destinos relacionados (misma región o tipo)
+const allDestinations = await getAllDestinations();
+const relatedDestinations = allDestinations
+  .filter(d => d.id !== destination.id && (d.region === destination.region || d.type === destination.type))
+  .slice(0, 3);
+
+// Galería de imágenes (usar la principal si no hay galería)
+const galleryImages = destination.gallery && destination.gallery.length > 0 
+  ? destination.gallery 
+  : [destination.image];
+---
+
+<Layout title={`${destination.name} | AL mundo Tour`} description={destination.description}>
+  <Header />
+  
+  <main>
+    <!-- Hero section del destino con imagen principal -->
+    <section class="relative pt-20">
+      <div class="h-[60vh] w-full relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50 z-10"></div>
+        <img 
+          src={destination.image} 
+          alt={destination.name} 
+          class="w-full h-full object-cover scale-105 transition-transform duration-10000 hover:scale-100"
+        />
+        
+        <div class="absolute inset-0 flex items-center justify-center z-20">
+          <div class="text-center px-4">
+            <span class={`inline-block font-bold px-3 py-1 rounded-full mb-4 ${
+              destination.tag === 'Oferta' ? 'bg-red-500 text-white' : 
+              destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
+              destination.tag === 'Playa' ? 'bg-cyan-500 text-white' :
+              destination.tag === 'Cultural' ? 'bg-purple-500 text-white' :
+              'bg-blue-500 text-white'
+            }`}>
+              {destination.tag}
+            </span>
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">{destination.name}</h1>
+            <p class="text-xl text-white max-w-3xl mx-auto drop-shadow-lg">{destination.description.split('.')[0]}.</p>
+          </div>
+        </div>
+        
+        <div class="absolute bottom-0 left-0 w-full p-6 z-20">
+          <div class="container mx-auto">
+            <div class="flex justify-between items-end flex-wrap gap-4">
+              <div class="flex items-center gap-6 text-white">
+                <div class="flex items-center">
+                  <Icon name="tabler:map-pin" class="w-5 h-5 mr-2" />
+                  <span>{destination.region}</span>
+                </div>
+                <div class="flex items-center">
+                  <Icon name="tabler:clock" class="w-5 h-5 mr-2" />
+                  <span>{destination.durationText}</span>
+                </div>
+                <div class="flex items-center">
+                  <Icon name="tabler:star" class="w-5 h-5 text-yellow-400 mr-2" />
+                  <span>{destination.rating}% recomendado</span>
+                </div>
+              </div>
+              
+              <div class="bg-white/90 p-4 rounded-lg backdrop-blur-sm">
+                <p class="text-sm text-gray-500">Precio por persona</p>
+                {isOffer ? (
+                  <div>
+                    <p class="line-through text-gray-400 text-sm">
+                      {formatPrice(destination.originalPrice)}
+                    </p>
+                    <p class="text-3xl font-bold text-red-600">
+                      {formatPrice(destination.price)}
+                    </p>
+                  </div>
+                ) : (
+                  <p class="text-3xl font-bold text-blue-600">
+                    {formatPrice(destination.price)}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <a href={`/destinos/${destination.type === 'nacional' ? 'nacionales' : 'internacionales'}`} class="hover:text-blue-600">
+            {destination.type === 'nacional' ? 'Nacionales' : 'Internacionales'}
+          </a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">{destination.name}</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Contenido principal -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Columna de información principal -->
+          <div class="lg:col-span-2">
+            <!-- Galería de imágenes con slider -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+              <div class="relative aspect-video">
+                <div id="gallery-container" class="w-full h-full">
+                  {galleryImages.map((image: string, index: number) => (
+                    <img 
+                      src={image} 
+                      alt={`${destination.name} - Imagen ${index + 1}`} 
+                      class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+                      data-gallery-index={index}
+                    />
+                  ))}
+                  
+                </div>
+                
+                {galleryImages.length > 1 && (
+                  <div class="absolute inset-0 flex items-center justify-between px-4 z-10">
+                    <button id="prev-image" class="w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70">
+                      <Icon name="tabler:chevron-left" class="w-6 h-6" />
+                    </button>
+                    <button id="next-image" class="w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70">
+                      <Icon name="tabler:chevron-right" class="w-6 h-6" />
+                    </button>
+                  </div>
+                )}
+                
+                {galleryImages.length > 1 && (
+                  <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+                    {galleryImages.map((_, index) => (
+                      <button 
+                        class={`w-3 h-3 rounded-full ${index === 0 ? 'bg-white' : 'bg-white/50'}`}
+                        data-dot-index={index}
+                      ></button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <!-- Descripción del destino -->
+            <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+              <h2 class="text-2xl font-bold text-gray-900 mb-4">Acerca de {destination.name}</h2>
+              <p class="text-gray-700 leading-relaxed mb-6">
+                {destination.description}
+              </p>
+            </div>
+            
+            <!-- Qué incluye -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <Icon name="tabler:check" class="w-6 h-6 text-green-500 mr-2" />
+                  ¿Qué incluye?
+                </h2>
+                <ul class="space-y-3">
+                  {destination.includes && destination.includes.map((item) => (
+                    <li class="flex items-start">
+                      <div class="bg-green-100 p-1 rounded-full mt-1 mr-3">
+                        <Icon name="tabler:check" class="w-4 h-4 text-green-600" />
+                      </div>
+                      <span class="text-gray-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <Icon name="tabler:x" class="w-6 h-6 text-red-500 mr-2" />
+                  ¿Qué no incluye?
+                </h2>
+                <ul class="space-y-3">
+                  {destination.notIncludes && destination.notIncludes.map((item) => (
+                    <li class="flex items-start">
+                      <div class="bg-red-100 p-1 rounded-full mt-1 mr-3">
+                        <Icon name="tabler:x" class="w-4 h-4 text-red-600" />
+                      </div>
+                      <span class="text-gray-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            
+            <!-- Notas importantes -->
+            {destination.notes && (
+              <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <Icon name="tabler:info-circle" class="w-6 h-6 text-blue-500 mr-2" />
+                  Información importante
+                </h2>
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                  <p class="text-gray-700">{destination.notes}</p>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <!-- Columna lateral con formulario y CTA -->
+          <div class="lg:col-span-1">
+            <!-- Formulario de consulta rápida -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8 sticky top-24">
+              <h3 class="text-xl font-bold text-gray-900 mb-4">¿Te interesa este destino?</h3>
+              <p class="text-gray-600 mb-4">Completa el formulario y te contactaremos a la brevedad.</p>
+              
+              <form class="space-y-4" data-netlify="true" name="destination-inquiry">
+                <input type="hidden" name="destination" value={destination.name} />
+                
+                <div>
+                  <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+                  <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+                  <input type="email" id="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                
+                <div>
+                  <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono / WhatsApp</label>
+                  <input type="tel" id="phone" name="phone" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                
+                <div>
+                  <label for="travel_date" class="block text-sm font-medium text-gray-700 mb-1">Fecha aproximada de viaje</label>
+                  <input type="date" id="travel_date" name="travel_date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                
+                <div>
+                  <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Mensaje</label>
+                  <textarea id="message" name="message" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                
+                <button type="submit" class="w-full bg-blue-600 text-white px-4 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center">
+                  <Icon name="tabler:send" class="w-5 h-5 mr-2" />
+                  Solicitar información
+                </button>
+              </form>
+              
+              <div class="mt-6 pt-6 border-t border-gray-200">
+                <p class="text-center text-gray-500 text-sm">O si prefieres, contáctanos directamente:</p>
+                
+                <div class="flex flex-col gap-3 mt-4">
+                  <a href="https://wa.me/573165276338?text=Hola, estoy interesado en el destino ${destination.name}" target="_blank" class="flex items-center justify-center bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
+                    <Icon name="tabler:brand-whatsapp" class="w-5 h-5 mr-2" />
+                    WhatsApp
+                  </a>
+                  
+                  <a href="tel:+573165276338" class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                    <Icon name="tabler:phone" class="w-5 h-5 mr-2" />
+                    Llamar ahora
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Información adicional -->
+            <div class="bg-gray-50 rounded-lg shadow-md p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-4">Detalles del viaje</h3>
+              
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="bg-blue-100 p-2 rounded-full mr-3">
+                    <Icon name="tabler:calendar" class="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-900">Duración</p>
+                    <p class="text-gray-600">{destination.durationText}</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="bg-blue-100 p-2 rounded-full mr-3">
+                    <Icon name="tabler:map-pin" class="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-900">Región</p>
+                    <p class="text-gray-600">{destination.region}</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="bg-blue-100 p-2 rounded-full mr-3">
+                    <Icon name="tabler:users" class="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-900">Disponibilidad</p>
+                    <p class="text-gray-600">Últimos {destination.availability} cupos</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="bg-blue-100 p-2 rounded-full mr-3">
+                    <Icon name="tabler:star" class="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-900">Calificación</p>
+                    <div class="flex items-center">
+                      <div class="flex">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Icon 
+                            name="tabler:star" 
+                            class={`w-4 h-4 ${i < Math.round(destination.rating / 20) ? 'text-yellow-400' : 'text-gray-300'}`} 
+                          />
+                        ))}
+                      </div>
+                      <span class="ml-2 text-gray-600">{destination.rating}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Destinos relacionados -->
+    {relatedDestinations.length > 0 && (
+      <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+          <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Destinos que también te pueden interesar</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {relatedDestinations.map((related) => (
+              <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div class="relative">
+                  <img 
+                    src={related.image} 
+                    alt={related.name} 
+                    class="w-full h-48 object-cover"
+                  />
+                  
+                  <div class="absolute top-2 right-2">
+                    <span class={`text-xs font-bold px-2 py-1 rounded-full ${
+                      related.tag === 'Oferta' ? 'bg-red-500 text-white' : 
+                      related.tag === 'Aventura' ? 'bg-green-500 text-white' : 
+                      related.tag === 'Playa' ? 'bg-cyan-500 text-white' :
+                      related.tag === 'Cultural' ? 'bg-purple-500 text-white' :
+                      'bg-blue-500 text-white'
+                    }`}>
+                      {related.tag}
+                    </span>
+                  </div>
+                  
+                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                    <h3 class="text-xl font-bold text-white">{related.name}</h3>
+                  </div>
+                </div>
+                
+                <div class="p-4">
+                  <div class="flex justify-between items-center mb-2">
+                    <p class="text-xl font-bold text-blue-600">
+                      {related.priceInUsd ? 'USD ' : ''}${related.price.toLocaleString('es-CO')} 
+                      <span class="text-sm font-normal">{related.priceInUsd ? '' : 'COP'}</span>
+                    </p>
+                    
+                    <span class="text-sm text-gray-500">{related.durationText}</span>
+                  </div>
+                  
+                  <a 
+                    href={`/destinos/${related.type === 'nacional' ? 'nacionales' : 'internacionales'}/${related.id}`}
+                    class="block w-full bg-blue-600 text-white text-center py-2 rounded-md font-medium hover:bg-blue-700 transition-colors mt-3"
+                  >
+                    Ver detalles
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+    
+    <!-- CTA final -->
+    <section class="py-12 bg-blue-600 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Listo para vivir esta experiencia?</h2>
+        <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+          Contacta con nuestros asesores especializados y comienza a planificar tu viaje a {destination.name} hoy mismo.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href={`/contacto?destino=${destination.id}`}
+            class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
+          >
+            Solicitar cotización
+          </a>
+          
+          <a 
+            href={`https://wa.me/573165276338?text=Hola, estoy interesado en el destino ${destination.name}`}
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            Contactar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<script>
+  // Para la galería de imágenes
+  document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('[data-gallery-index]');
+    const dots = document.querySelectorAll('[data-dot-index]');
+    const prevBtn = document.getElementById('prev-image');
+    const nextBtn = document.getElementById('next-image');
+    
+    if (!images.length) return;
+    
+    let currentIndex = 0;
+    
+    // Función para mostrar una imagen específica
+    function showImage(index: number) {
+  // Ajustar el índice si se sale de los límites
+  if (index < 0) index = images.length - 1;
+  if (index >= images.length) index = 0;
+  
+  // Ocultar todas las imágenes
+  images.forEach((img) => {
+    img.classList.add('opacity-0');
+    img.classList.remove('opacity-100');
+  });
+  
+  // Mostrar la imagen actual
+  images[index].classList.add('opacity-100');
+  images[index].classList.remove('opacity-0');
+  
+  // Actualizar los dots
+  dots.forEach((dot, i) => {
+    if (i === index) {
+      dot.classList.add('bg-white');
+      dot.classList.remove('bg-white/50');
+    } else {
+      dot.classList.add('bg-white/50');
+      dot.classList.remove('bg-white');
+    }
+  });
+  
+  currentIndex = index;
+}
+
+    
+    // Event listeners para los botones
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        showImage(currentIndex - 1);
+      });
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        showImage(currentIndex + 1);
+      });
+    }
+    
+    // Event listeners para los dots
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        showImage(index);
+      });
+    });
+    
+    // Auto-rotación de imágenes cada 5 segundos
+    if (images.length > 1) {
+      setInterval(() => {
+        showImage(currentIndex + 1);
+      }, 5000);
+    }
+  });
+</script>
