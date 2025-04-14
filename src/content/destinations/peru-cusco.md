@@ -9,7 +9,7 @@ priceInUsd: true
 originalPrice: ""
 duration: 6
 durationText: 6 días / 5 noches
-image: /images/uploads/fotos-peru-4.jpg
+image: /images/uploads/fotos-peru-2.jpg
 gallery:
   - /images/uploads/fotos-peru-3.jpg
 description: Puerta de entrada a Machu Picchu, este destino combina la herencia
