@@ -6,7 +6,7 @@ region: Andina
 price: 569
 currency: USD
 priceInUsd: true
-originalPrice: ""
+originalPrice: null
 duration: 6
 durationText: 6 días / 5 noches
 image: /images/uploads/fotos-peru-2.jpg
