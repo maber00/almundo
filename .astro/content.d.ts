@@ -177,6 +177,14 @@ declare module 'astro:content' {
   rendered?: RenderedContent;
   filePath?: string;
 }>;
+"hero-slides": Record<string, {
+  id: string;
+  body?: string;
+  collection: "hero-slides";
+  data: any;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
 
 	};
 
