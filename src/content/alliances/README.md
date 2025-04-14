@@ -1,12 +1,12 @@
 ---
-id: "ejemplo"
-name: "Ejemplo"
-fullName: "Ejemplo de Alianza"
-description: "Esta es una alianza de ejemplo para resolver problemas de esquema."
-logo: "/images/uploads/placeholder-logo.png"
+id: cootrabinca
+name: Cootrabinca
+fullName: Cooperativa Multiactiva de Trabajadores del Ingenio Carmelita
+description: Cooperativa comprometida en brindar apoyo a sus asociados,
+  facilitando el acceso a ofertas y servicios turísticos de calidad.
+logo: /images/uploads/contrabinca-1-.jpg
 benefits:
-  - "Beneficio 1"
-  - "Beneficio 2"
+  - Ofertas exclusivas
+  - facilidades de pago y atención personalizada en servicios turísticos.
 active: true
 ---
-
