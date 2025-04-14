@@ -6,7 +6,7 @@ region: Caribe
 price: 1050000
 currency: COP
 priceInUsd: false
-originalPrice: -2
+originalPrice: ""
 duration: 4
 durationText: "4 días / 3 noches\t"
 image: /images/uploads/foto-cartagena-5-islas-del-rosario.jpg
