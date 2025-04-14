@@ -1,1 +1,12 @@
-echo "# Alliances\nThis directory contains alliance content files." > src/content/alliances/README.md
+---
+id: "ejemplo"
+name: "Ejemplo"
+fullName: "Ejemplo de Alianza"
+description: "Esta es una alianza de ejemplo para resolver problemas de esquema."
+logo: "/images/uploads/placeholder-logo.png"
+benefits:
+  - "Beneficio 1"
+  - "Beneficio 2"
+active: true
+---
+
