@@ -15,7 +15,7 @@ gallery:
 description: Puerta de entrada a Machu Picchu, este destino combina la herencia
   inca con modernas experiencias turísticas, ideal para amantes de la cultura y
   aventura.
-featured: false
+featured: true
 rating: 95
 availability: 6
 tag: Aventura
