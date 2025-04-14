@@ -17,7 +17,9 @@ description: "Destino ecológico ideal para conectar con la naturaleza, disfruta
 featured: false
 rating: 91
 availability: 5
-tag: Aventura
+tag:
+  - Ecoturismo
+  - Aventura
 includes:
   - "- Tiquetes aéreos ida y regreso - Alojamiento 4 días 3 noches -
     Alimentación según hotel - Traslado aeropuerto–hotel–aeropuerto - Asistencia
