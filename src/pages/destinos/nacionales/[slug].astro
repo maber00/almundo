@@ -34,17 +34,26 @@ if (!destination) {
   return Astro.redirect('/destinos');
 }
 
-// Verificar si es una oferta (tiene precio original)
-const isOffer = destination.originalPrice && destination.originalPrice > destination.price;
+// Procesamiento seguro del precio original
+const originalPrice = destination.originalPrice 
+  ? (typeof destination.originalPrice === 'string' 
+      ? Number(destination.originalPrice) || 0
+      : destination.originalPrice) 
+  : 0;
 
-// Formatear precios
-const formatPrice = (price: number | null | undefined): string => {
+// Verificar si es una oferta (tiene precio original mayor que el precio actual)
+const isOffer = originalPrice > 0 && originalPrice > destination.price;
+
+// Formatear precios - función mejorada para manejar diferentes tipos
+const formatPrice = (price: number | string | null | undefined): string => {
   if (price === null || price === undefined) return '';
+  
+  const numericPrice = typeof price === 'string' ? Number(price) || 0 : price;
+  
   return destination.priceInUsd 
-    ? `USD $${price.toLocaleString('en-US')}` 
-    : `$${price.toLocaleString('es-CO')} COP`;
+    ? `USD $${numericPrice.toLocaleString('en-US')}` 
+    : `$${numericPrice.toLocaleString('es-CO')} COP`;
 };
-
 
 // Obtener destinos relacionados (misma región o tipo)
 const allDestinations = await getAllDestinations();
@@ -65,7 +74,9 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
     <!-- Hero section del destino con imagen principal -->
     <section class="relative pt-20">
       <div class="h-[60vh] w-full relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50 z-10"></div>
+        <!-- Capa de oscurecimiento mejorada -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70 z-10"></div>
+        
         <img 
           src={destination.image} 
           alt={destination.name} 
@@ -74,54 +85,74 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
         
         <div class="absolute inset-0 flex items-center justify-center z-20">
           <div class="text-center px-4">
-            <span class={`inline-block font-bold px-3 py-1 rounded-full mb-4 ${
-              destination.tag === 'Oferta' ? 'bg-red-500 text-white' : 
-              destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
-              destination.tag === 'Playa' ? 'bg-cyan-500 text-white' :
-              destination.tag === 'Cultural' ? 'bg-purple-500 text-white' :
-              'bg-blue-500 text-white'
-            }`}>
-              {destination.tag}
-            </span>
-            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">{destination.name}</h1>
-            <p class="text-xl text-white max-w-3xl mx-auto drop-shadow-lg">{destination.description.split('.')[0]}.</p>
+            <!-- Contenedor de texto con fondo semi-transparente -->
+            <div class="p-4 rounded-lg inline-block">
+              <span class={`inline-block font-bold px-3 py-1 rounded-full mb-4 ${
+                isOffer ? 'bg-red-500 text-white' : 
+                destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
+                destination.tag === 'Playa' ? 'bg-cyan-500 text-white' :
+                destination.tag === 'Cultural' ? 'bg-purple-500 text-white' :
+                'bg-blue-500 text-white'
+              }`}>
+                {isOffer ? 'Oferta' : destination.tag}
+              </span>
+              <h1 class="text-3xl md:text-4xl lg:text-6xl font-bold text-white mb-2 md:mb-4 drop-shadow-lg">{destination.name}</h1>
+              <p class="text-lg md:text-2xl text-white max-w-3xl mx-auto drop-shadow-lg line-clamp-2 md:line-clamp-none">
+                {destination.description.split('.')[0]}.
+              </p>
+            </div>
           </div>
         </div>
         
-        <div class="absolute bottom-0 left-0 w-full p-6 z-20">
+        <!-- Información en la parte inferior -->
+        <div class="absolute bottom-0 left-0 w-full p-3 md:p-6 z-20">
           <div class="container mx-auto">
-            <div class="flex justify-between items-end flex-wrap gap-4">
-              <div class="flex items-center gap-6 text-white">
-                <div class="flex items-center">
-                  <Icon name="tabler:map-pin" class="w-5 h-5 mr-2" />
-                  <span>{destination.region}</span>
+            <div class="bg-black/20 rounded-lg backdrop-blur-sm p-3">
+              <div class="flex flex-col md:flex-row md:justify-between md:items-end flex-wrap gap-2 md:gap-4">
+                <!-- Detalles del destino -->
+                <div class="flex flex-wrap items-center gap-3 md:gap-6 text-white text-sm md:text-base">
+                  <div class="flex items-center">
+                    <Icon name="tabler:map-pin" class="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
+                    <span>{destination.region}</span>
+                  </div>
+                  <div class="flex items-center">
+                    <Icon name="tabler:clock" class="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" />
+                    <span>{destination.durationText}</span>
+                  </div>
+                  <div class="flex items-center">
+                    <Icon name="tabler:star" class="w-4 h-4 md:w-5 md:h-5 text-yellow-400 mr-1 md:mr-2" />
+                    <span>{destination.rating}% recomendado</span>
+                  </div>
                 </div>
-                <div class="flex items-center">
-                  <Icon name="tabler:clock" class="w-5 h-5 mr-2" />
-                  <span>{destination.durationText}</span>
-                </div>
-                <div class="flex items-center">
-                  <Icon name="tabler:star" class="w-5 h-5 text-yellow-400 mr-2" />
-                  <span>{destination.rating}% recomendado</span>
-                </div>
-              </div>
-              
-              <div class="bg-white/90 p-4 rounded-lg backdrop-blur-sm">
-                <p class="text-sm text-gray-500">Precio por persona</p>
-                {isOffer ? (
-                  <div>
-                    <p class="line-through text-gray-400 text-sm">
-                      {formatPrice(destination.originalPrice)}
-                    </p>
-                    <p class="text-3xl font-bold text-red-600">
+                
+                <!-- Precio con fondo más contrastante -->
+                <div class="bg-white p-3 md:p-4 rounded-lg backdrop-blur-sm shadow-lg relative">
+                  {isOffer && (
+                    <div class="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
+                      ¡OFERTA!
+                    </div>
+                  )}
+                  
+                  <p class="text-xs md:text-sm text-gray-500">Precio por persona</p>
+                  
+                  {isOffer ? (
+                    <div>
+                      <p class="line-through text-gray-500 text-sm md:text-base font-medium">
+                        Antes: {formatPrice(originalPrice)}
+                      </p>
+                      <p class="text-xl md:text-3xl font-bold text-red-600">
+                        Ahora: {formatPrice(destination.price)}
+                      </p>
+                      <p class="text-xs text-green-600 font-medium">
+                        {Math.round(((originalPrice - destination.price) / originalPrice) * 100)}% de descuento
+                      </p>
+                    </div>
+                  ) : (
+                    <p class="text-xl md:text-3xl font-bold text-blue-600">
                       {formatPrice(destination.price)}
                     </p>
-                  </div>
-                ) : (
-                  <p class="text-3xl font-bold text-blue-600">
-                    {formatPrice(destination.price)}
-                  </p>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -147,13 +178,13 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
     </section>
     
     <!-- Contenido principal -->
-    <section class="py-12">
+    <section class="py-8 md:py-12">
       <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
           <!-- Columna de información principal -->
           <div class="lg:col-span-2">
             <!-- Galería de imágenes con slider -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6 md:mb-8">
               <div class="relative aspect-video">
                 <div id="gallery-container" class="w-full h-full">
                   {galleryImages.map((image: string, index: number) => (
@@ -200,36 +231,36 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
             </div>
             
             <!-- Qué incluye -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              <div class="bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <Icon name="tabler:check" class="w-6 h-6 text-green-500 mr-2" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
+              <div class="bg-white rounded-lg shadow-md p-5 md:p-8">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 flex items-center">
+                  <Icon name="tabler:check" class="w-5 h-5 md:w-6 md:h-6 text-green-500 mr-2" />
                   ¿Qué incluye?
                 </h2>
-                <ul class="space-y-3">
+                <ul class="space-y-2 md:space-y-3">
                   {destination.includes && destination.includes.map((item) => (
                     <li class="flex items-start">
-                      <div class="bg-green-100 p-1 rounded-full mt-1 mr-3">
-                        <Icon name="tabler:check" class="w-4 h-4 text-green-600" />
+                      <div class="bg-green-100 p-1 rounded-full mt-1 mr-2 md:mr-3 flex-shrink-0">
+                        <Icon name="tabler:check" class="w-3 h-3 md:w-4 md:h-4 text-green-600" />
                       </div>
-                      <span class="text-gray-700">{item}</span>
+                      <span class="text-gray-700 text-sm md:text-base">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               
-              <div class="bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <Icon name="tabler:x" class="w-6 h-6 text-red-500 mr-2" />
+              <div class="bg-white rounded-lg shadow-md p-5 md:p-8">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 flex items-center">
+                  <Icon name="tabler:x" class="w-5 h-5 md:w-6 md:h-6 text-red-500 mr-2" />
                   ¿Qué no incluye?
                 </h2>
-                <ul class="space-y-3">
+                <ul class="space-y-2 md:space-y-3">
                   {destination.notIncludes && destination.notIncludes.map((item) => (
                     <li class="flex items-start">
-                      <div class="bg-red-100 p-1 rounded-full mt-1 mr-3">
-                        <Icon name="tabler:x" class="w-4 h-4 text-red-600" />
+                      <div class="bg-red-100 p-1 rounded-full mt-1 mr-2 md:mr-3 flex-shrink-0">
+                        <Icon name="tabler:x" class="w-3 h-3 md:w-4 md:h-4 text-red-600" />
                       </div>
-                      <span class="text-gray-700">{item}</span>
+                      <span class="text-gray-700 text-sm md:text-base">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -295,7 +326,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
                 <p class="text-center text-gray-500 text-sm">O si prefieres, contáctanos directamente:</p>
                 
                 <div class="flex flex-col gap-3 mt-4">
-                  <a href="https://wa.me/573165276338?text=Hola, estoy interesado en el destino ${destination.name}" target="_blank" class="flex items-center justify-center bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
+                  <a href={`https://wa.me/573165276338?text=Hola, estoy interesado en el destino ${destination.name}`} target="_blank" class="flex items-center justify-center bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
                     <Icon name="tabler:brand-whatsapp" class="w-5 h-5 mr-2" />
                     WhatsApp
                   </a>
@@ -471,34 +502,33 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
     
     // Función para mostrar una imagen específica
     function showImage(index: number) {
-  // Ajustar el índice si se sale de los límites
-  if (index < 0) index = images.length - 1;
-  if (index >= images.length) index = 0;
-  
-  // Ocultar todas las imágenes
-  images.forEach((img) => {
-    img.classList.add('opacity-0');
-    img.classList.remove('opacity-100');
-  });
-  
-  // Mostrar la imagen actual
-  images[index].classList.add('opacity-100');
-  images[index].classList.remove('opacity-0');
-  
-  // Actualizar los dots
-  dots.forEach((dot, i) => {
-    if (i === index) {
-      dot.classList.add('bg-white');
-      dot.classList.remove('bg-white/50');
-    } else {
-      dot.classList.add('bg-white/50');
-      dot.classList.remove('bg-white');
+      // Ajustar el índice si se sale de los límites
+      if (index < 0) index = images.length - 1;
+      if (index >= images.length) index = 0;
+      
+      // Ocultar todas las imágenes
+      images.forEach((img) => {
+        img.classList.add('opacity-0');
+        img.classList.remove('opacity-100');
+      });
+      
+      // Mostrar la imagen actual
+      images[index].classList.add('opacity-100');
+      images[index].classList.remove('opacity-0');
+      
+      // Actualizar los dots
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.add('bg-white');
+          dot.classList.remove('bg-white/50');
+        } else {
+          dot.classList.add('bg-white/50');
+          dot.classList.remove('bg-white');
+        }
+      });
+      
+      currentIndex = index;
     }
-  });
-  
-  currentIndex = index;
-}
-
     
     // Event listeners para los botones
     if (prevBtn) {

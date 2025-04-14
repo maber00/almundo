@@ -7,34 +7,56 @@ interface Props {
     name: string;
     type: string;
     price: number;
+    originalPrice?: number | null | string;
+    priceInUsd?: boolean;
     durationText: string;
     image: string;
     rating: number;
     availability: number;
     tag: string;
+    region?: string;
   };
 }
 
 const { destination } = Astro.props;
+
+// Procesamiento seguro del precio original
+const originalPrice = destination.originalPrice 
+  ? (typeof destination.originalPrice === 'string' 
+      ? Number(destination.originalPrice) || 0
+      : destination.originalPrice) 
+  : 0;
+
+// Verificar si es una oferta (tiene precio original mayor que el precio actual)
+const isOffer = originalPrice > 0 && originalPrice !== destination.price;
+
+// Formatear precios
+const formatPrice = (price: number): string => {
+  return destination.priceInUsd 
+    ? `USD $${price.toLocaleString('en-US')}` 
+    : `$${price.toLocaleString('es-CO')}`;
+};
+
+
 ---
 
 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
   <div class="relative">
     <img 
-    src={destination.image || '/images/placeholder.jpg'} 
-    alt={String(destination.name)}
-    class="w-full h-64 object-cover"
-    onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
-  />
+      src={destination.image || '/images/placeholder.jpg'} 
+      alt={String(destination.name)}
+      class="w-full h-64 object-cover"
+      onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
+    />
     <div class="absolute top-4 right-4">
       <span class={`text-xs font-bold px-3 py-1 rounded-full ${
-        destination.tag === 'Oferta' ? 'bg-red-500 text-white' : 
+        isOffer ? 'bg-red-500 text-white' : 
         destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
         destination.tag === 'Playa' ? 'bg-cyan-500 text-white' :
         destination.tag === 'Cultural' ? 'bg-purple-500 text-white' :
         'bg-blue-500 text-white'
       }`}>
-        {destination.tag}
+        {isOffer ? 'Oferta' : destination.tag}
       </span>
     </div>
     
@@ -47,9 +69,26 @@ const { destination } = Astro.props;
     <div class="flex justify-between items-center mb-4">
       <div>
         <p class="text-sm text-gray-500">Desde</p>
+        {isOffer ? (
+          <div>
+            <p class="line-through text-gray-400 text-sm">
+              {formatPrice(originalPrice)}
+            </p>
+            <p class="text-2xl font-bold text-red-600">
+              {formatPrice(destination.price)}
+            </p>
+            <p class="text-xs text-green-600 font-medium">
+              {Math.round(((originalPrice - destination.price) / originalPrice) * 100)}% de descuento
+            </p>
+          </div>
+        ) : (
         <p class="text-2xl font-bold text-blue-600">
-          ${destination.price.toLocaleString('es-CO')} <span class="text-sm font-normal">COP</span>
-        </p>
+  {formatPrice(destination.price)} <span class="text-sm font-normal">{destination.priceInUsd ? '' : 'COP'}</span>
+</p>
+
+
+
+        )}
       </div>
       
       <div class="text-right">
