@@ -10,7 +10,6 @@ export async function getAllDestinations() {
     const destinations = await getCollection('destinations');
     return destinations.map(entry => ({
       ...entry.data,
-      // Asegurarnos que hay un slug disponible para las URL
       slug: entry.slug
     }));
   } catch (error) {
@@ -57,14 +56,16 @@ export async function getDestinationsByType(type) {
 }
 
 /**
- * Obtener un destino específico por ID
- * @param {string} id - ID del destino
+ * Obtener un destino específico por ID o slug
+ * @param {string} idOrSlug - ID o slug del destino
  * @returns {Promise<Object|null>} Destino o null si no se encuentra
  */
-export async function getDestinationById(id) {
+export async function getDestinationById(idOrSlug) {
   try {
     const destinations = await getCollection('destinations');
-    const destination = destinations.find(entry => entry.data.id === id);
+    const destination = destinations.find(entry => 
+      entry.data.id === idOrSlug || entry.slug === idOrSlug
+    );
     
     if (!destination) return null;
     
@@ -73,7 +74,7 @@ export async function getDestinationById(id) {
       slug: destination.slug
     };
   } catch (error) {
-    console.error(`Error al obtener destino con ID ${id}:`, error);
+    console.error(`Error al obtener destino con ID/slug ${idOrSlug}:`, error);
     return null;
   }
 }
@@ -108,6 +109,30 @@ export async function getAllAlliances() {
     }));
   } catch (error) {
     console.error('Error al obtener alianzas:', error);
+    return [];
+  }
+}
+
+/**
+ * Obtener todas las diapositivas del hero
+ * @returns {Promise<Array>} Lista de diapositivas del hero
+ */
+export async function getHeroSlides() {
+  try {
+    const slides = await getCollection('hero-slides');
+    // Ordenar por la propiedad 'order'
+    const sortedSlides = slides.sort((a, b) => 
+      (a.data.order || 0) - (b.data.order || 0)
+    );
+    // Filtrar solo las diapositivas activas
+    const activeSlides = sortedSlides.filter(slide => slide.data.active !== false);
+    
+    return activeSlides.map(entry => ({
+      ...entry.data,
+      slug: entry.slug
+    }));
+  } catch (error) {
+    console.error('Error al obtener diapositivas del hero:', error);
     return [];
   }
 }
@@ -165,6 +190,11 @@ export async function getFilteredDestinations(filters = {}) {
           entry.data.duration >= range.min && entry.data.duration <= range.max
         );
       }
+    }
+    
+    // Filtrar por fecha (si se implementa en el futuro)
+    if (filters.travel_date) {
+      // Lógica para filtrar por fecha
     }
     
     // Convertir a formato compatible con el código existente
