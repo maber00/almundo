@@ -19,6 +19,8 @@ featured: true
 rating: 87
 availability: 10
 tag: Playa
+tags:
+  - "Playa"
 includes:
   - "- Tiquetes aéreos ida y regreso - Alojamiento 4 días 3 noches -
     Alimentación (según hotel) - Traslado aeropuerto – hotel – aeropuerto -

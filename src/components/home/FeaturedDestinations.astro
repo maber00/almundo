@@ -49,23 +49,20 @@ const featuredDestinations = await getFeaturedDestinations();
                 <p class="text-sm text-gray-500">Desde</p>
                 {destination.originalPrice ? (
   <div>
-    {/* Precio regular (más alto) tachado */}
     <p class="line-through text-gray-400 text-sm">
       {destination.currency === 'USD' ? 'USD ' : ''}${destination.price.toLocaleString('es-CO')}
     </p>
-    {/* Precio en oferta (más bajo) destacado */}
     <p class="text-2xl font-bold text-red-600">
-      {destination.currency === 'USD' ? 'USD ' : ''}${destination.originalPrice.toLocaleString('es-CO')}
+      {destination.currency === 'USD' ? 'USD ' : ''}${destination.price.toLocaleString('es-CO')}
       <span class="text-sm font-normal">{destination.priceInUsd ? '' : 'COP'}</span>
     </p>
   </div>
 ) : (
   <p class="text-2xl font-bold text-blue-600">
-    {destination.priceInUsd ? 'USD ' : ''}${destination.price.toLocaleString('es-CO')}
+    {destination.priceInUsd ? 'USD ' : ''}${destination.price.toLocaleString('es-CO')} 
     <span class="text-sm font-normal">{destination.priceInUsd ? '' : 'COP'}</span>
   </p>
 )}
-
 
                 <p class="text-xs text-gray-500 mt-1">por persona</p>
               </div>

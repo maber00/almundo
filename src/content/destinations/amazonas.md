@@ -19,7 +19,7 @@ rating: 91
 availability: 5
 tag: "Aventura"
 tags:
-  - "Oferta"
+  - "Ecoturismo"
   - "Aventura"
 includes:
   - "- Tiquetes aéreos ida y regreso - Alojamiento 4 días 3 noches -

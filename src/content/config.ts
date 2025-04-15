@@ -22,7 +22,7 @@ const destinationsCollection = defineCollection({
     rating: z.number().min(0).max(100),
     availability: z.number(),
     tag: z.string(),
-    tags: z.array(z.string()).optional().default([]), // Nuevo campo para múltiples etiquetas
+    tags: z.array(z.string()).optional().default([]),  // Nuevo campo para múltiples etiquetas
     includes: z.array(z.string()).default([]),
     notIncludes: z.array(z.string()).default([]),
     notes: z.string().optional(),

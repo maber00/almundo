@@ -75,6 +75,13 @@
         "tag": {
           "type": "string"
         },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
         "includes": {
           "type": "array",
           "items": {

@@ -3,157 +3,55 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
 import DestinationCard from '../../components/destinations/DestinationCard.astro';
-import { getFilteredDestinations } from '../../utils/content.js';
+import DestinationFilters from '../../components/destinations/DestinationFilters.astro';
+import { getCollection } from 'astro:content';
 
-// Definir el tipo de destino (puedes colocarlo en un archivo separado si prefieres)
-type Destination = {
-  id: string;
-  name: string;
-  type: string;
-  price: number;
-  priceInUsd: boolean;
-  originalPrice: number | null;
-  image: string;
-  tag: string;
-  durationText: string;
-  rating: number;
-  availability: number;
-  // Otras propiedades...
-};
+// Obtener todos los destinos
+const allDestinations = await getCollection('destinations');
+const destinations = allDestinations.map(entry => ({...entry.data, slug: entry.slug}));
 
-// Obtener parámetros de búsqueda de la URL
-const { searchParams } = Astro.url;
-const destination_type = searchParams.get('destination_type') || '';
-const budget = searchParams.get('budget') || '';
-const duration = searchParams.get('duration') || '';
-const travel_date = searchParams.get('travel_date') || '';
+// Filtrar por tipo
+const nationalDestinations = destinations.filter(dest => dest.type === 'nacional').slice(0, 6);
+const internationalDestinations = destinations.filter(dest => dest.type === 'internacional').slice(0, 6);
 
-// Obtener destinos filtrados
-const destinations = await getFilteredDestinations({
-  destination_type,
-  budget,
-  duration,
-  travel_date
-}) as Destination[]; // Añadir aserción de tipo aquí
-
-// Traducir valores de los filtros para mostrarlos
-const destinationTypeLabels: Record<string, string> = {
-  'nacional': 'Nacional',
-  'internacional': 'Internacional',
-  'caribe': 'Caribe',
-  'europa': 'Europa',
-  'norteamerica': 'Norteamérica',
-  'sudamerica': 'Sudamérica',
-  'asia': 'Asia'
-};
-
-const budgetLabels: Record<string, string> = {
-  'budget-1': 'Hasta $1,000,000',
-  'budget-2': '$1,000,000 - $3,000,000',
-  'budget-3': '$3,000,000 - $5,000,000',
-  'budget-4': '$5,000,000 - $10,000,000',
-  'budget-5': 'Más de $10,000,000'
-};
-
-const durationLabels: Record<string, string> = {
-  'duration-1': '3-5 días',
-  'duration-2': '6-8 días',
-  'duration-3': '9-12 días',
-  'duration-4': '13-15 días',
-  'duration-5': 'Más de 15 días'
-};
-
-// Construir lista de filtros aplicados para mostrar
-const activeFilters = [];
-if (destination_type && destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]) {
-  activeFilters.push({
-    label: 'Tipo de destino',
-    value: destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]
-  });
-}
-
-if (budget && budgetLabels[budget as keyof typeof budgetLabels]) {
-  activeFilters.push({
-    label: 'Presupuesto',
-    value: budgetLabels[budget as keyof typeof budgetLabels]
-  });
-}
-
-if (duration && durationLabels[duration as keyof typeof durationLabels]) {
-  activeFilters.push({
-    label: 'Duración',
-    value: durationLabels[duration as keyof typeof durationLabels]
-  });
-}
-
-if (travel_date) {
-  const formattedDate = new Date(travel_date).toLocaleDateString('es-CO', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
+// Filtrar ofertas
+const offerDestinations = destinations.filter(dest => {
+  const originalPrice = dest.originalPrice 
+    ? (typeof dest.originalPrice === 'string' 
+        ? Number(dest.originalPrice) || 0
+        : dest.originalPrice) 
+    : 0;
   
-  activeFilters.push({
-    label: 'Fecha de viaje',
-    value: formattedDate
-  });
-}
-
-// Título de la página según los filtros
-let pageTitle = 'Todos nuestros destinos';
-
-if (destination_type && destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]) {
-  pageTitle = `Destinos ${destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]}`;
-}
+  return originalPrice > 0 && originalPrice > dest.price || dest.tag === 'Oferta';
+}).slice(0, 6);
 ---
 
-<Layout title={`${pageTitle} | AL mundo Tour`} description="Encuentra tu destino de viaje ideal con Amundo Tour, tu agencia de viajes de confianza en Colombia.">
+<Layout title="Destinos | AL mundo Tour" description="Explora nuestros destinos nacionales e internacionales y encuentra tu próxima aventura.">
   <Header />
   
   <main>
-    <section class="bg-blue-50 py-12">
-      <div class="container mx-auto px-4">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">{pageTitle}</h1>
-        
-        <!-- Breadcrumbs -->
-        <div class="flex items-center text-sm text-gray-500 mb-8">
-          <a href="/" class="hover:text-blue-600">Inicio</a>
-          <span class="mx-2">➡️</span>
-          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
-          
-          {destination_type && (
-            <>
-              <span class="mx-2">➡️</span>
-              <span class="text-gray-700">{destinationTypeLabels[destination_type as keyof typeof destinationTypeLabels]}</span>
-            </>
-          )}
-        </div>
-        
-        <!-- Filtros activos -->
-        {activeFilters.length > 0 && (
-          <div class="bg-white p-4 rounded-lg shadow-sm mb-8">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="font-medium text-gray-700">Filtros aplicados:</span>
-              
-              {activeFilters.map((filter) => (
-                <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
-                  <span class="font-medium mr-1">{filter.label}:</span>
-                  {filter.value}
-                </div>
-              ))}
-              
-              <a href="/destinos" class="ml-auto text-sm text-red-600 hover:text-red-800 flex items-center">
-                <span class="mr-1">❌</span>
-                Limpiar filtros
-              </a>
-            </div>
-          </div>
-        )}
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Nuestros Destinos</h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+          Explora nuestra amplia selección de destinos nacionales e internacionales para todos los gustos y presupuestos
+        </p>
       </div>
     </section>
     
-    <!-- Resultados de búsqueda -->
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Destinos</span>
+        </div>
+      </div>
+    </section>
     
+    <!-- Categorías principales -->
     <section class="py-12 bg-gray-50">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Explora nuestros destinos</h2>
@@ -253,7 +151,30 @@ if (destination_type && destinationTypeLabels[destination_type as keyof typeof d
         </div>
       </div>
     </section>
-</main>
-
-<Footer />
+    
+    <!-- Todos los destinos con filtros -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Todos nuestros destinos</h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <!-- Filtros -->
+          <div class="lg:col-span-1">
+            <DestinationFilters type="all" />
+          </div>
+          
+          <!-- Lista de destinos -->
+          <div class="lg:col-span-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {destinations.map(destination => (
+                <DestinationCard destination={destination} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
 </Layout>

@@ -19,6 +19,8 @@ featured: true
 rating: 90
 availability: 5
 tag: "Cultural"
+tags:
+  - "Cultural"
 includes:
   - "Tiquetes aéreos ida y regreso"
   - "Alojamiento 4 días 3 noches"

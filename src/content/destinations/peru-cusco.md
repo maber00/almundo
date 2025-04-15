@@ -19,6 +19,8 @@ featured: true
 rating: 95
 availability: 6
 tag: Aventura
+tags:
+  - "Aventura"
 includes:
   - "- Traslados aeropuerto–hotel - Alojamiento según programa - Tours
     programados (City tour"

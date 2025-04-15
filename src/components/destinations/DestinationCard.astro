@@ -14,6 +14,7 @@ interface Props {
     rating: number;
     availability: number;
     tag: string;
+    tags?: string[];  // Tags adicionales (opcional)
     region?: string;
   };
 }
@@ -52,20 +53,32 @@ console.log("Discount %:", discountPercentage);
       class="w-full h-64 object-cover"
       onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
     />
-    <div class="absolute top-4 right-4">
+    <div class="absolute top-4 right-4 flex flex-col gap-1 items-end">
+      <!-- Tag principal -->
       <span class={`text-xs font-bold px-3 py-1 rounded-full ${
-        isOffer 
-          ? 'bg-red-500 text-white' 
-          : destination.tag === 'Aventura' 
-            ? 'bg-green-500 text-white' 
-            : destination.tag === 'Playa' 
-              ? 'bg-cyan-500 text-white' 
-              : destination.tag === 'Cultural' 
-                ? 'bg-purple-500 text-white'
-                : 'bg-blue-500 text-white'
+        isOffer ? 'bg-red-500 text-white' : 
+        destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
+        destination.tag === 'Playa' ? 'bg-cyan-500 text-white' :
+        destination.tag === 'Cultural' ? 'bg-purple-500 text-white' :
+        'bg-blue-500 text-white'
       }`}>
         {isOffer ? 'Oferta' : destination.tag}
       </span>
+      
+      <!-- Tags adicionales -->
+      {destination.tags && destination.tags.length > 0 && 
+        destination.tags.filter(t => t !== destination.tag).slice(0, 2).map(tag => (
+          <span class={`text-xs font-medium px-2 py-0.5 rounded-full ${
+            tag === 'Aventura' ? 'bg-green-500/70 text-white' : 
+            tag === 'Playa' ? 'bg-cyan-500/70 text-white' :
+            tag === 'Cultural' ? 'bg-purple-500/70 text-white' :
+            tag === 'Romántico' ? 'bg-pink-500/70 text-white' :
+            'bg-blue-500/70 text-white'
+          }`}>
+            {tag}
+          </span>
+        ))
+      }
     </div>
     
     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
