@@ -1,0 +1,70 @@
+---
+/**
+ * Componente de filtro tipo selector para formularios
+ * Permite crear selectores estandarizados para usar en los formularios de búsqueda
+ */
+
+ import { Icon } from 'astro-icon/components';
+
+// Define las interfaces para tipado fuerte
+export interface SelectOption {
+  id: string;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface Props {
+  // Propiedades básicas
+  name: string;                    // Nombre del campo (requerido para formularios)
+  label: string;                   // Etiqueta visible para el usuario
+  options: SelectOption[];         // Opciones disponibles para seleccionar
+  
+  // Propiedades opcionales
+  placeholder?: string;            // Texto para la opción predeterminada
+  selectedValue?: string;          // Valor pre-seleccionado (si existe)
+  required?: boolean;              // Si el campo es obligatorio o no
+  disabled?: boolean;              // Si el campo está deshabilitado
+  iconName?: string;               // Ícono para mostrar (de astro-icon)
+}
+
+// Establece valores predeterminados para las propiedades
+const { 
+  name, 
+  label, 
+  options, 
+  placeholder = "Seleccionar...", 
+  selectedValue = "",
+  required = false,
+  disabled = false,
+  iconName = "tabler:chevron-down"
+} = Astro.props;
+---
+
+<div>
+  <label for={name} class="block text-sm font-medium text-gray-700 mb-1">
+    {label} {required && <span class="text-red-500">*</span>}
+  </label>
+  <div class="relative">
+    <select 
+      id={name}
+      name={name}
+      class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+      required={required}
+      disabled={disabled}
+    >
+      <option value="">{placeholder}</option>
+      {options.map((option) => (
+        <option 
+          value={option.id} 
+          selected={option.id === selectedValue}
+          disabled={option.disabled}
+        >
+          {option.label}
+        </option>
+      ))}
+    </select>
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+      <Icon name={iconName} class="w-4 h-4" />
+    </div>
+  </div>
+</div>

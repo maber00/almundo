@@ -1,0 +1,232 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+import DestinationCard from '../../../components/destinations/DestinationCard.astro';
+import SelectFilter from '../../../components/common/SelectFilter.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+// Obtener parámetros de búsqueda de la URL
+const { searchParams } = Astro.url;
+const budget = searchParams.get('budget') || '';
+const duration = searchParams.get('duration') || '';
+const travel_date = searchParams.get('travel_date') || '';
+
+// Obtener todos los destinos y filtrar solo los nacionales
+const allDestinations = await getCollection('destinations');
+let destinations = allDestinations
+  .filter(entry => entry.data.type === 'nacional')
+  .map(entry => ({ ...entry.data, slug: entry.slug }));
+
+// Aplicar filtro de presupuesto si es que se selecciona
+if (budget) {
+  const budgetRangesObj = {
+    'budget-1': { min: 0, max: 1000000 },
+    'budget-2': { min: 1000000, max: 3000000 },
+    'budget-3': { min: 3000000, max: 5000000 },
+    'budget-4': { min: 5000000, max: 10000000 },
+    'budget-5': { min: 10000000, max: Infinity }
+  };
+
+  const range = budgetRangesObj[budget as keyof typeof budgetRangesObj];
+  if (range) {
+    destinations = destinations.filter(dest => dest.price >= range.min && dest.price <= range.max);
+  }
+}
+
+// Aplicar filtro de duración si es que se selecciona
+if (duration) {
+  const durationRanges = {
+    'duration-1': { min: 3, max: 5 },
+    'duration-2': { min: 6, max: 8 },
+    'duration-3': { min: 9, max: 12 },
+    'duration-4': { min: 13, max: 15 },
+    'duration-5': { min: 16, max: Infinity }
+  };
+
+  const range = durationRanges[duration as keyof typeof durationRanges];
+  if (range) {
+    destinations = destinations.filter(dest => dest.duration >= range.min && dest.duration <= range.max);
+  }
+}
+
+// Definir rangos para el select
+const budgetRanges = [
+  { id: "budget-1", label: "Hasta $1,000,000" },
+  { id: "budget-2", label: "$1,000,000 - $3,000,000" },
+  { id: "budget-3", label: "$3,000,000 - $5,000,000" },
+  { id: "budget-4", label: "$5,000,000 - $10,000,000" },
+  { id: "budget-5", label: "Más de $10,000,000" }
+];
+
+const tripDurations = [
+  { id: "duration-1", label: "3-5 días" },
+  { id: "duration-2", label: "6-8 días" },
+  { id: "duration-3", label: "9-12 días" },
+  { id: "duration-4", label: "13-15 días" },
+  { id: "duration-5", label: "Más de 15 días" }
+];
+
+// Estadísticas
+const stats = {
+  totalDestinations: destinations.length,
+  averagePrice: destinations.length > 0 
+    ? Math.round(destinations.reduce((sum, dest) => sum + dest.price, 0) / destinations.length) 
+    : 0
+};
+---
+
+<Layout title="Destinos Nacionales | AL mundo Tour" description="Explora nuestra selección de destinos nacionales. Descubre lo mejor de Colombia en viajes a medida para todos los gustos y presupuestos.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Destinos Nacionales</h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
+          Descubre lo mejor de Colombia en nuestros destinos nacionales. Viajes diseñados a tu medida para disfrutar de nuestra tierra.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Nacionales</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Filtros horizontales -->
+    <section class="py-8 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Filtrar destinos nacionales</h2>
+          <form id="filter-form" method="get" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Presupuesto -->
+            <SelectFilter
+              name="budget"
+              label="Presupuesto"
+              options={budgetRanges}
+              placeholder="Cualquier presupuesto"
+              selectedValue={budget}
+            />
+            
+            <!-- Duración -->
+            <SelectFilter
+              name="duration"
+              label="Duración"
+              options={tripDurations}
+              placeholder="Cualquier duración"
+              selectedValue={duration}
+            />
+            
+            <!-- Fecha -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de viaje</label>
+              <input 
+                type="date"
+                name="travel_date"
+                value={travel_date}
+                class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Estadísticas -->
+    <section class="py-8 bg-blue-50">
+      <div class="container mx-auto px-4">
+        <div class="bg-blue-100 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-4xl font-bold text-blue-600 mb-2">{stats.totalDestinations}+</div>
+            <p class="text-gray-700">Destinos nacionales</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-blue-600 mb-2">
+              {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
+            </div>
+            <p class="text-gray-700">Precio promedio</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-blue-600 mb-2">¡Descúbrelos!</div>
+            <p class="text-gray-700">Viajes a medida</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Listado de destinos -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">
+          {budget || duration || travel_date 
+            ? 'Resultados de búsqueda' 
+            : 'Todos nuestros destinos nacionales'}
+        </h2>
+        
+        {destinations.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {destinations.map((destination) => (
+              <DestinationCard destination={destination} />
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">No encontramos destinos que coincidan con tu búsqueda</h2>
+            <p class="text-lg text-gray-600 mb-6">
+              Prueba aplicando otros filtros o contacta con nuestros asesores para encontrar el viaje perfecto.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos/nacionales" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔄</span>
+                Ver todos los destinos nacionales
+              </a>
+              <a href="/contacto" class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">💬</span>
+                Contactar asesor
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- CTA final -->
+    <section class="py-12 bg-blue-600 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Listo para explorar Colombia?</h2>
+        <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+          Nuestros asesores especializados están listos para ayudarte a planificar tu viaje nacional.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
+          >
+            Solicitar cotización
+          </a>
+          <a 
+            href="https://wa.me/573165276338?text=Hola, estoy interesado en un destino nacional y necesito asesoría"
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            WhatsApp directo
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

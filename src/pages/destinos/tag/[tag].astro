@@ -4,13 +4,18 @@ import Header from '../../../components/layout/Header.astro';
 import Footer from '../../../components/layout/Footer.astro';
 import DestinationCard from '../../../components/destinations/DestinationCard.astro';
 import DestinationFilters from '../../../components/destinations/DestinationFilters.astro';
+import SelectFilter from '../../../components/common/SelectFilter.astro';
+import { Icon } from 'astro-icon/components';
 import { getCollection } from 'astro:content';
+
+// Agregar esta línea para indicar que la página debe pre-renderizarse
+export const prerender = true;
 
 export async function getStaticPaths() {
   const allDestinations = await getCollection('destinations');
   
-  // Obtener todos los tags únicos
-  const allTags = [...new Set(allDestinations.map(dest => dest.data.tag))];
+  // Obtener todos los tags únicos (asegúrate de que todos los destinos tengan la propiedad 'tag')
+  const allTags = [...new Set(allDestinations.map(dest => dest.data.tag).filter(Boolean))];
   
   // Crear una ruta para cada tag
   return allTags.map(tag => {
@@ -29,29 +34,67 @@ export async function getStaticPaths() {
 const { tag } = Astro.params;
 const { destinations } = Astro.props;
 
+// Asegurarse de que destinations siempre sea un array, incluso si es undefined
+const safeDestinations = destinations || [];
+
 // Formatear el tag para mostrarlo (primera letra mayúscula)
-const formattedTag = Astro.props.tag || tag.charAt(0).toUpperCase() + tag.slice(1);
+const formattedTag = tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : '';
 
 // Título y descripción de la página según el tag
 const pageTitle = `Destinos de ${formattedTag}`;
 let pageDescription = '';
 
-switch(formattedTag) {
-  case 'Aventura':
+switch(formattedTag.toLowerCase()) {
+  case 'aventura':
     pageDescription = 'Descubre destinos increíbles llenos de adrenalina y aventuras al aire libre.';
     break;
-  case 'Playa':
+  case 'playa':
     pageDescription = 'Relájate en las playas más hermosas con arena blanca y aguas cristalinas.';
     break;
-  case 'Cultural':
+  case 'cultural':
     pageDescription = 'Explora destinos con rica historia, patrimonio cultural y experiencias auténticas.';
     break;
-  case 'Oferta':
+  case 'oferta':
     pageDescription = 'Encuentra las mejores ofertas en destinos increíbles a precios especiales.';
     break;
   default:
     pageDescription = 'Descubre destinos increíbles seleccionados especialmente para ti.';
 }
+
+// Regiones para filtros
+const regions = [
+  { id: "all", label: "Todas las regiones" },
+  { id: "caribe", label: "Caribe" },
+  { id: "andina", label: "Andina" },
+  { id: "norteamerica", label: "Norteamérica" },
+  { id: "sudamerica", label: "Sudamérica" },
+  { id: "europa", label: "Europa" },
+  { id: "asia", label: "Asia" }
+];
+
+// Presupuesto
+const budgetRanges = [
+  { id: "budget-1", label: "Hasta $1,000,000" },
+  { id: "budget-2", label: "$1,000,000 - $3,000,000" },
+  { id: "budget-3", label: "$3,000,000 - $5,000,000" },
+  { id: "budget-4", label: "$5,000,000 - $10,000,000" },
+  { id: "budget-5", label: "Más de $10,000,000" }
+];
+
+// Duraciones del viaje
+const tripDurations = [
+  { id: "duration-1", label: "3-5 días" },
+  { id: "duration-2", label: "6-8 días" },
+  { id: "duration-3", label: "9-12 días" },
+  { id: "duration-4", label: "13-15 días" },
+  { id: "duration-5", label: "Más de 15 días" }
+];
+
+// Obtener parámetros de filtro de la URL
+const { searchParams } = Astro.url;
+const selectedRegion = searchParams.get('region') || '';
+const selectedBudget = searchParams.get('budget') || '';
+const selectedDuration = searchParams.get('duration') || '';
 ---
 
 <Layout title={`${pageTitle} | AL mundo Tour`} description={pageDescription}>
@@ -81,44 +124,97 @@ switch(formattedTag) {
       </div>
     </section>
     
-    <!-- Filtros y listado de destinos -->
+    <!-- Filtros horizontales -->
+    <section class="py-8 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Filtrar destinos de {formattedTag}</h2>
+          
+          <form id="filter-form" method="get" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Región -->
+            <SelectFilter
+              name="region"
+              label="Región"
+              options={regions}
+              placeholder="Todas las regiones"
+              selectedValue={selectedRegion}
+            />
+            
+            <!-- Presupuesto -->
+            <SelectFilter
+              name="budget"
+              label="Presupuesto"
+              options={budgetRanges}
+              placeholder="Cualquier presupuesto"
+              selectedValue={selectedBudget}
+            />
+            
+            <!-- Duración -->
+            <SelectFilter
+              name="duration"
+              label="Duración"
+              options={tripDurations}
+              placeholder="Cualquier duración"
+              selectedValue={selectedDuration}
+            />
+            
+            <!-- Botones de acción -->
+            <div class="flex items-end gap-3">
+              <button
+                type="submit"
+                class="flex-grow bg-blue-600 text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+              >
+                <Icon name="tabler:filter" class="w-5 h-5 mr-2" />
+                Aplicar filtros
+              </button>
+              
+              <a 
+                href={`/destinos/tag/${tag.toLowerCase()}`}
+                class="bg-gray-100 text-gray-700 py-2 px-3 rounded-md font-medium hover:bg-gray-200 transition-colors flex items-center justify-center"
+              >
+                <Icon name="tabler:refresh" class="w-5 h-5 mr-2" />
+                Limpiar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Listado de destinos -->
     <section class="py-12">
       <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <!-- Columna de filtros -->
-          <div class="lg:col-span-1">
-            <DestinationFilters type="all" />
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">
+          {selectedRegion || selectedBudget || selectedDuration 
+            ? `Resultados filtrados: Destinos de ${formattedTag}` 
+            : `Todos los destinos de ${formattedTag}`}
+        </h2>
+        
+        {safeDestinations.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {safeDestinations.map((destination) => (
+              <DestinationCard destination={destination} />
+            ))}
           </div>
-          
-          <!-- Columna de destinos -->
-          <div class="lg:col-span-3">
-            {destinations.length > 0 ? (
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {destinations.map((destination) => (
-                  <DestinationCard destination={destination} />
-                ))}
-              </div>
-            ) : (
-              <div class="bg-white rounded-lg shadow-lg p-8 text-center">
-                <div class="text-6xl mb-4">🔍</div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">No encontramos destinos en esta categoría</h2>
-                <p class="text-lg text-gray-600 mb-6">Prueba otra categoría o contacta con nuestros asesores para encontrar el destino perfecto para ti.</p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a href="/destinos" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
-                    <span class="mr-2">🔄</span>
-                    Ver todos los destinos
-                  </a>
-                  
-                  <a href="/contacto" class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center">
-                    <span class="mr-2">💬</span>
-                    Contactar asesor
-                  </a>
-                </div>
-              </div>
-            )}
+        ) : (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">No encontramos destinos en esta categoría</h2>
+            <p class="text-lg text-gray-600 mb-6">Prueba otra categoría o contacta con nuestros asesores para encontrar el destino perfecto para ti.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔄</span>
+                Ver todos los destinos
+              </a>
+              
+              <a href="/contacto" class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">💬</span>
+                Contactar asesor
+              </a>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
     
@@ -139,7 +235,7 @@ switch(formattedTag) {
           </a>
           
           <a 
-            href="https://wa.me/573165276338?text=Hola, estoy buscando un destino de tipo ${formattedTag}"
+            href={`https://wa.me/573165276338?text=Hola, estoy buscando un destino de tipo ${formattedTag}`}
             target="_blank" 
             class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
           >

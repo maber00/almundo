@@ -5,6 +5,67 @@ import { getAllCategories } from '../../utils/content.js';
 
 // Obtener categorías desde el sistema de contenido
 const destinationCategories = await getAllCategories();
+
+// Categorías principales con imágenes del CMS
+const mainCategories = [
+  {
+    title: "Destinos Nacionales",
+    description: "Lo mejor de Colombia",
+    image: "/images/uploads/colombia-banner.jpg", // Debe cambiarse a la imagen del CMS
+    url: "/destinos/nacionales",
+    cta: "Ver todos"
+  },
+  {
+    title: "Destinos Internacionales",
+    description: "Explora el mundo",
+    image: "/images/uploads/internacional-banner.jpg", // Debe cambiarse a la imagen del CMS
+    url: "/destinos/internacionales",
+    cta: "Ver todos"
+  },
+  {
+    title: "Ofertas Especiales",
+    description: "Promociones exclusivas",
+    image: "/images/uploads/ofertas-banner.jpg", // Debe cambiarse a la imagen del CMS
+    url: "/promociones",
+    cta: "Ver ofertas"
+  }
+];
+
+// Categorías de experiencia
+const experienceCategories = [
+  {
+    title: "Aventura",
+    description: "Experiencias emocionantes",
+    icon: "🏔️",
+    bgColor: "bg-green-100",
+    textColor: "text-green-600",
+    url: "/destinos/tag/aventura"
+  },
+  {
+    title: "Playa",
+    description: "Relax junto al mar",
+    icon: "🏖️",
+    bgColor: "bg-cyan-100",
+    textColor: "text-cyan-600",
+    url: "/destinos/tag/playa"
+  },
+  {
+    title: "Romántico",
+    description: "Escapadas en pareja",
+    icon: "❤️",
+    bgColor: "bg-pink-100",
+    textColor: "text-pink-600",
+    url: "/destinos/tag/romántico"
+  },
+  {
+    title: "Cultural",
+    description: "Historia y patrimonio",
+    icon: "🏛️",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-600",
+    url: "/destinos/tag/cultural"
+  }
+];
 ---
 
 <section class="py-20 bg-gray-50">
@@ -16,6 +77,11 @@ const destinationCategories = await getAllCategories();
       </p>
     </div>
     
+    
+    
+    
+    
+    <!-- Categorías desde el CMS -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       {destinationCategories.map((category) => (
         <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -62,28 +128,6 @@ const destinationCategories = await getAllCategories();
       >
         Ver todos nuestros destinos
       </a>
-    </div>
-
-    <!-- Enlaces a tipos de experiencias -->
-    <div class="text-center mt-8">
-      <h3 class="text-xl font-bold text-gray-900 mb-4">Explora por tipo de experiencia</h3>
-      <div class="flex flex-wrap justify-center gap-3">
-        <a href="/destinos/tag/aventura" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
-          Aventura
-        </a>
-        <a href="/destinos/tag/playa" class="bg-cyan-500 text-white px-4 py-2 rounded-md hover:bg-cyan-600 transition-colors">
-          Playa
-        </a>
-        <a href="/destinos/tag/romántico" class="bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600 transition-colors">
-          Romántico
-        </a>
-        <a href="/destinos/tag/cultural" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition-colors">
-          Cultural
-        </a>
-        <a href="/promociones" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors">
-          Ofertas
-        </a>
-      </div>
     </div>
   </div>
 </section>

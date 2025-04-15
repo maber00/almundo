@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import SelectFilter from '../common/SelectFilter.astro';
 
 // Categorías de experiencia (selección múltiple)
 const experienceCategories = [
@@ -124,50 +125,24 @@ const regions = type === "nacional" ? nationalRegions :
     
     <!-- Presupuesto -->
     <div class="mb-6">
-      <h3 class="text-md font-medium text-gray-700 mb-3">Presupuesto</h3>
-      <div class="relative">
-        <select 
-          name="budget"
-          class="block appearance-none w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        >
-          <option value="">Cualquier presupuesto</option>
-          {budgetRanges.map((range) => (
-            <option 
-              value={range.id}
-              selected={activeFilters.budget === range.id}
-            >
-              {range.label}
-            </option>
-          ))}
-        </select>
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-          <Icon name="tabler:chevron-down" class="w-4 h-4" />
-        </div>
-      </div>
+      <SelectFilter
+        name="budget"
+        label="Presupuesto"
+        options={budgetRanges}
+        placeholder="Cualquier presupuesto"
+        selectedValue={typeof activeFilters.budget === 'string' ? activeFilters.budget : ''}
+      />
     </div>
     
     <!-- Duración -->
     <div class="mb-6">
-      <h3 class="text-md font-medium text-gray-700 mb-3">Duración</h3>
-      <div class="relative">
-        <select 
-          name="duration"
-          class="block appearance-none w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        >
-          <option value="">Cualquier duración</option>
-          {tripDurations.map((duration) => (
-            <option 
-              value={duration.id}
-              selected={activeFilters.duration === duration.id}
-            >
-              {duration.label}
-            </option>
-          ))}
-        </select>
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-          <Icon name="tabler:chevron-down" class="w-4 h-4" />
-        </div>
-      </div>
+      <SelectFilter
+        name="duration"
+        label="Duración"
+        options={tripDurations}
+        placeholder="Cualquier duración"
+        selectedValue={typeof activeFilters.duration === 'string' ? activeFilters.duration : ''}
+      />
     </div>
     
     <!-- Fecha de viaje -->
@@ -176,7 +151,7 @@ const regions = type === "nacional" ? nationalRegions :
       <input 
         type="date"
         name="travel_date"
-        value={activeFilters.travel_date}
+        value={typeof activeFilters.travel_date === 'string' ? activeFilters.travel_date : ''}
         class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
       />
     </div>

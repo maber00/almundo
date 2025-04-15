@@ -1,0 +1,339 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+import DestinationCard from '../../../components/destinations/DestinationCard.astro';
+import SelectFilter from '../../../components/common/SelectFilter.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+// Obtener parámetros de búsqueda de la URL
+const { searchParams } = Astro.url;
+const region = searchParams.get('region') || '';
+const budget = searchParams.get('budget') || '';
+const duration = searchParams.get('duration') || '';
+const travel_date = searchParams.get('travel_date') || '';
+
+// Obtener todos los destinos internacionales
+const allDestinations = await getCollection('destinations');
+let destinations = allDestinations
+  .filter(entry => entry.data.type === 'internacional')
+  .map(entry => ({...entry.data, slug: entry.slug}));
+
+// Aplicar filtros adicionales si hay alguno
+if (region && region !== 'all') {
+  destinations = destinations.filter(dest => dest.region === region);
+}
+
+if (budget) {
+  const budgetRanges = {
+    'budget-1': { min: 0, max: 1000000 },
+    'budget-2': { min: 1000000, max: 3000000 },
+    'budget-3': { min: 3000000, max: 5000000 },
+    'budget-4': { min: 5000000, max: 10000000 },
+    'budget-5': { min: 10000000, max: Infinity }
+  };
+  
+  const range = budgetRanges[budget as keyof typeof budgetRanges];
+  if (range) {
+    destinations = destinations.filter(dest => dest.price >= range.min && dest.price <= range.max);
+  }
+}
+
+if (duration) {
+  const durationRanges = {
+    'duration-1': { min: 3, max: 5 },
+    'duration-2': { min: 6, max: 8 },
+    'duration-3': { min: 9, max: 12 },
+    'duration-4': { min: 13, max: 15 },
+    'duration-5': { min: 16, max: Infinity }
+  };
+  
+  const range = durationRanges[duration as keyof typeof durationRanges];
+  if (range) {
+    destinations = destinations.filter(dest => dest.duration >= range.min && dest.duration <= range.max);
+  }
+}
+
+// Para filtros de regiones
+const regions = [
+  { id: "all", label: "Todas las regiones" },
+  { id: "caribe", label: "Caribe" },
+  { id: "norteamerica", label: "Norteamérica" },
+  { id: "centroamerica", label: "Centroamérica" },
+  { id: "sudamerica", label: "Sudamérica" },
+  { id: "europa", label: "Europa" },
+  { id: "asia", label: "Asia" },
+  { id: "africa", label: "África" },
+  { id: "oceania", label: "Oceanía" }
+];
+
+// Presupuesto
+const budgetRanges = [
+  { id: "budget-1", label: "Hasta $1,000,000" },
+  { id: "budget-2", label: "$1,000,000 - $3,000,000" },
+  { id: "budget-3", label: "$3,000,000 - $5,000,000" },
+  { id: "budget-4", label: "$5,000,000 - $10,000,000" },
+  { id: "budget-5", label: "Más de $10,000,000" }
+];
+
+// Duraciones de viaje
+const tripDurations = [
+  { id: "duration-1", label: "3-5 días" },
+  { id: "duration-2", label: "6-8 días" },
+  { id: "duration-3", label: "9-12 días" },
+  { id: "duration-4", label: "13-15 días" },
+  { id: "duration-5", label: "Más de 15 días" }
+];
+
+// Categorías de tipos de destinos internacionales
+const internationalCategories = [
+  {
+    title: "Caribe",
+    description: "Playas de ensueño y aguas cristalinas",
+    icon: "🏝️",
+    bgColor: "bg-cyan-100",
+    textColor: "text-cyan-600",
+    url: "/destinos/internacionales?region=caribe"
+  },
+  {
+    title: "Europa",
+    description: "Historia, cultura y arquitectura",
+    icon: "🏛️",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-600",
+    url: "/destinos/internacionales?region=europa"
+  },
+  {
+    title: "Norteamérica",
+    description: "Grandes metrópolis y paisajes impresionantes",
+    icon: "🌉",
+    bgColor: "bg-red-100",
+    textColor: "text-red-600",
+    url: "/destinos/internacionales?region=norteamerica"
+  },
+  {
+    title: "Sudamérica",
+    description: "Naturaleza exuberante y cultura vibrante",
+    icon: "🌄",
+    bgColor: "bg-green-100",
+    textColor: "text-green-600",
+    url: "/destinos/internacionales?region=sudamerica"
+  }
+];
+
+// Contadores de estadísticas
+const stats = {
+  totalDestinations: destinations.length,
+  regions: regions.length - 1, // Excluyendo "Todas las regiones"
+  averagePrice: destinations.length > 0 
+    ? Math.round(destinations.reduce((sum, dest) => sum + dest.price, 0) / destinations.length) 
+    : 0
+};
+---
+
+<Layout title="Destinos Internacionales | AL mundo Tour" description="Explora nuestra selección de destinos internacionales: Europa, Caribe, Estados Unidos, Sudamérica y más. Encuentra el viaje de tus sueños.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Destinos Internacionales</h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
+          Explora el mundo con nuestra selección de destinos internacionales. Desde las paradisíacas playas del Caribe hasta la histórica Europa y mucho más.
+        </p>
+        <div class="flex flex-wrap justify-center gap-2">
+          {regions.slice(1, 5).map((region) => (
+            <a 
+              href={`/destinos/internacionales?region=${region.id}`}
+              class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full text-sm transition-colors"
+            >
+              {region.label}
+            </a>
+          ))}
+          <a 
+            href="/destinos/internacionales"
+            class="bg-white text-blue-600 px-4 py-2 rounded-full text-sm hover:bg-blue-50 transition-colors"
+          >
+            Ver todos
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Internacionales</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Filtros horizontales -->
+    <section class="py-8 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Filtrar destinos internacionales</h2>
+          
+          <form id="filter-form" method="get" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Región -->
+            <SelectFilter
+              name="region"
+              label="Región"
+              options={regions}
+              placeholder="Todas las regiones"
+              selectedValue={region}
+            />
+            
+            <!-- Presupuesto -->
+            <SelectFilter
+              name="budget"
+              label="Presupuesto"
+              options={budgetRanges}
+              placeholder="Cualquier presupuesto"
+              selectedValue={budget}
+            />
+            
+            <!-- Duración -->
+            <SelectFilter
+              name="duration"
+              label="Duración"
+              options={tripDurations}
+              placeholder="Cualquier duración"
+              selectedValue={duration}
+            />
+            
+            <!-- Botones de acción -->
+            <div class="flex items-end gap-3">
+              <button
+                type="submit"
+                class="flex-grow bg-blue-600 text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+              >
+                <Icon name="tabler:filter" class="w-5 h-5 mr-2" />
+                Aplicar filtros
+              </button>
+              
+              <a 
+                href="/destinos/internacionales"
+                class="bg-gray-100 text-gray-700 py-2 px-3 rounded-md font-medium hover:bg-gray-200 transition-colors flex items-center justify-center"
+              >
+                <Icon name="tabler:refresh" class="w-5 h-5 mr-2" />
+                Limpiar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Categorías de destinos internacionales -->
+    {!region && !budget && !duration && !travel_date && (
+      <section class="py-12">
+        <div class="container mx-auto px-4">
+          <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Explora por región</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {internationalCategories.map((category) => (
+              <a href={category.url} class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-center">
+                <div class={`${category.bgColor} p-4 rounded-full inline-block mb-4`}>
+                  <span class={`${category.textColor} text-3xl`}>{category.icon}</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">{category.title}</h3>
+                <p class="text-gray-600">{category.description}</p>
+              </a>
+            ))}
+          </div>
+          
+          <div class="bg-blue-50 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div>
+              <div class="text-4xl font-bold text-blue-600 mb-2">{stats.totalDestinations}+</div>
+              <p class="text-gray-700">Destinos internacionales</p>
+            </div>
+            <div>
+              <div class="text-4xl font-bold text-blue-600 mb-2">{stats.regions}</div>
+              <p class="text-gray-700">Regiones disponibles</p>
+            </div>
+            <div>
+              <div class="text-4xl font-bold text-blue-600 mb-2">
+                {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
+              </div>
+              <p class="text-gray-700">Precio promedio</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+    
+    <!-- Listado de destinos -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">
+          {region || budget || duration || travel_date 
+            ? 'Resultados de búsqueda' 
+            : 'Todos nuestros destinos internacionales'}
+        </h2>
+        
+        {destinations.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {destinations.map((destination) => (
+              <DestinationCard destination={destination} />
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">No encontramos destinos que coincidan con tu búsqueda</h2>
+            <p class="text-lg text-gray-600 mb-6">Prueba aplicando otros filtros o contacta con nuestros asesores para encontrar el destino perfecto para ti.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos/internacionales" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔄</span>
+                Ver todos los destinos internacionales
+              </a>
+              
+              <a href="/contacto" class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">💬</span>
+                Contactar asesor
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- CTA final -->
+    <section class="py-12 bg-blue-600 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Buscas un destino internacional específico?</h2>
+        <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+          Nuestros asesores especializados te ayudarán a planificar tu viaje ideal según tus preferencias y presupuesto.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
+          >
+            Solicitar asesoramiento
+          </a>
+          
+          <a 
+            href="https://wa.me/573165276338?text=Hola, estoy interesado en un destino internacional y necesito asesoría"
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            WhatsApp directo
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

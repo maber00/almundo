@@ -6,45 +6,47 @@ interface Props {
     id: string;
     name: string;
     type: string;
-    price: number; // En este caso, se interpretará como el precio en oferta (más bajo)
-    originalPrice?: number | null | string; // En este caso, se interpretará como el precio regular (más alto)
+    price: number; // Precio en oferta
+    originalPrice?: number | null | string; // Precio regular mayor
     priceInUsd?: boolean;
     durationText: string;
     image: string;
     rating: number;
     availability: number;
     tag: string;
-    tags?: string[];  // Tags adicionales (opcional)
+    tags?: string[];
     region?: string;
   };
 }
 
 const { destination } = Astro.props;
 
-// Forzamos la conversión de destination.originalPrice a un número
+// Convertir originalPrice a número, eliminando puntos y comas en caso de que estén presentes
 const originalPriceNumber: number = destination.originalPrice != null
   ? (typeof destination.originalPrice === 'string'
-      ? Number(destination.originalPrice.replace(/\./g, '')) || 0
+      ? Number(destination.originalPrice.replace(/[.,]/g, '')) || 0
       : destination.originalPrice)
   : 0;
-  
-// En este caso, originalPriceNumber es el precio regular y destination.price es el valor en oferta.
+
+// Determinar si existe oferta
 const isOffer = originalPriceNumber > 0 && destination.price < originalPriceNumber;
 const discountPercentage = isOffer
   ? Math.round(((originalPriceNumber - destination.price) / originalPriceNumber) * 100)
   : 0;
+
 const formatPrice = (price: number): string => {
   return destination.priceInUsd 
     ? `USD $${price.toLocaleString('en-US')}` 
     : `$${price.toLocaleString('es-CO')}`;
 };
 
-console.log("destination.price (oferta):", destination.price);
-console.log("destination.originalPrice (regular):", destination.originalPrice);
-console.log("originalPriceNumber:", originalPriceNumber);
+// Opcional: Depuración
+console.log("Original Price:", originalPriceNumber);
+console.log("Precio de Oferta:", destination.price);
 console.log("isOffer:", isOffer);
-console.log("Discount %:", discountPercentage);
+console.log("Descuento (%):", discountPercentage);
 ---
+
 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
   <div class="relative">
     <img 
@@ -54,7 +56,7 @@ console.log("Discount %:", discountPercentage);
       onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
     />
     <div class="absolute top-4 right-4 flex flex-col gap-1 items-end">
-      <!-- Tag principal -->
+      <!-- Tag principal: Muestra "Oferta" si se cumple la condición -->
       <span class={`text-xs font-bold px-3 py-1 rounded-full ${
         isOffer ? 'bg-red-500 text-white' : 
         destination.tag === 'Aventura' ? 'bg-green-500 text-white' : 
@@ -65,7 +67,7 @@ console.log("Discount %:", discountPercentage);
         {isOffer ? 'Oferta' : destination.tag}
       </span>
       
-      <!-- Tags adicionales -->
+      <!-- Tags adicionales si existen -->
       {destination.tags && destination.tags.length > 0 && 
         destination.tags.filter(t => t !== destination.tag).slice(0, 2).map(tag => (
           <span class={`text-xs font-medium px-2 py-0.5 rounded-full ${
@@ -85,11 +87,7 @@ console.log("Discount %:", discountPercentage);
       <h3 class="text-2xl font-bold text-white">{destination.name}</h3>
     </div>
   </div>
-  <div style="background: #ffe; padding: 1rem; margin-bottom: 1rem;">
-    <strong>Datos recibidos:</strong>
-    <p>destination.price: {destination.price}</p>
-    <p>destination.originalPrice: {destination.originalPrice}</p>
-  </div>
+  
   <div class="p-6">
     <div class="flex justify-between items-center mb-4">
       <div>
@@ -111,7 +109,7 @@ console.log("Discount %:", discountPercentage);
             {formatPrice(destination.price)}
           </p>
         )}
-        
+        <p class="text-xs text-gray-500 mt-1">por persona</p>
       </div>
       
       <div class="text-right">
