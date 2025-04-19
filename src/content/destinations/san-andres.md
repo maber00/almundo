@@ -22,8 +22,7 @@ featured: true
 rating: 95
 availability: 12
 tag:
-  - Oferta
-  - Aventura
+  - Playa
 includes:
   - "- Tiquetes aéreos ida y regreso - Alojamiento 4 días 3 noches -
     Alimentación (según hotel) - Traslado aeropuerto – hotel – aeropuerto -
@@ -32,5 +31,7 @@ notIncludes:
   - "- Gastos no especificados en el plan - Seguro hotelero"
 notes: Paquete sujeto a cotización. (¡Este es el destino en promoción!)
 tags:
-  - Playa
+  - Oferta
+  - Aventura
+
 ---
