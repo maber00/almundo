@@ -21,9 +21,9 @@ description: San Andrés es el destino predilecto de los amantes de las playas d
 featured: true
 rating: 95
 availability: 12
-tag: Playa
-tags:
-  - "Playa"
+tag:
+  - Oferta
+  - Aventura
 includes:
   - "- Tiquetes aéreos ida y regreso - Alojamiento 4 días 3 noches -
     Alimentación (según hotel) - Traslado aeropuerto – hotel – aeropuerto -
@@ -31,4 +31,6 @@ includes:
 notIncludes:
   - "- Gastos no especificados en el plan - Seguro hotelero"
 notes: Paquete sujeto a cotización. (¡Este es el destino en promoción!)
+tags:
+  - Playa
 ---
