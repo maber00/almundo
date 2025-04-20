@@ -1,52 +1,100 @@
 ---
-import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import { getAllCategories } from '../../utils/content.js';
+import { getCollection } from 'astro:content';
+import { getDestinationsByTag } from '../../utils/content.js';
 
-// Definir interfaces para el tipado
-interface Destination {
-  id: string;
-  name: string;
-  type: string;
-  price?: number;
-  originalPrice?: number | string | null;
-  priceInUsd?: boolean;
-  durationText?: string;
-  image?: string;
-  rating?: number;
-  availability?: number;
-  tag?: string;
-  tags?: string[];
-  region?: string;
-  slug?: string;
-}
+// Definir las categorías basadas en experiencias con sus correspondientes tags
+const experienceCategories = [
+  {
+    title: "Aventura",
+    description: "Experiencias emocionantes para los amantes de la adrenalina",
+    icon: "🏔️",
+    tag: "Aventura",
+    bgColor: "bg-green-100",
+    textColor: "text-green-600",
+    url: "/destinos/tag/aventura"
+  },
+  {
+    title: "Playa",
+    description: "Relax y descanso junto al mar",
+    icon: "🏖️",
+    tag: "Playa",
+    bgColor: "bg-cyan-100",
+    textColor: "text-cyan-600",
+    url: "/destinos/tag/playa"
+  },
+  {
+    title: "Romántico",
+    description: "Escapadas perfectas para parejas",
+    icon: "❤️",
+    tag: "Romántico",
+    bgColor: "bg-pink-100",
+    textColor: "text-pink-600",
+    url: "/destinos/tag/romántico"
+  },
+  {
+    title: "Cultural",
+    description: "Historia, patrimonio y experiencias auténticas",
+    icon: "🏛️",
+    tag: "Cultural",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-600",
+    url: "/destinos/tag/cultural"
+  },
+  {
+    title: "Ecoturismo",
+    description: "Viajes responsables y sostenibles en la naturaleza",
+    icon: "🌿",
+    tag: "Ecoturismo",
+    bgColor: "bg-emerald-100",
+    textColor: "text-emerald-600",
+    url: "/destinos/tag/ecoturismo"
+  },
+  {
+    title: "Familiar",
+    description: "Destinos ideales para viajar con niños",
+    icon: "👨‍👩‍👧‍👦",
+    tag: "Familiar",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-600",
+    url: "/destinos/tag/familiar"
+  },
+  {
+    title: "Todo Incluido",
+    description: "Paquetes completos sin preocupaciones",
+    icon: "🏨",
+    tag: "Todo incluido",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-600",
+    url: "/destinos/tag/todo-incluido"
+  },
+  {
+    title: "Cruceros",
+    description: "Experiencias a bordo por los mejores destinos",
+    icon: "🚢",
+    tag: "Crucero",
+    bgColor: "bg-indigo-100",
+    textColor: "text-indigo-600",
+    url: "/destinos/cruceros"
+  }
+];
 
-interface Category {
-  title: string;
-  description: string;
-  image: string;
-  url: string;
-  destinations?: string[];
-  slug?: string;
-}
-
-// Obtener categorías desde el sistema de contenido
-const destinationCategories = await getAllCategories();
-
-// Categorías principales con imágenes del CMS
+// Obtener las principales categorías de destinos (nacional/internacional)
 const mainCategories = [
   {
     title: "Destinos Nacionales",
-    description: "Lo mejor de Colombia",
+    description: "Descubre la belleza de Colombia",
     image: "/images/uploads/colombia-banner.jpg",
     url: "/destinos/nacionales",
+    tag: "nacional",
     cta: "Ver todos"
   },
   {
     title: "Destinos Internacionales",
-    description: "Explora el mundo",
+    description: "Explora el mundo con nosotros",
     image: "/images/uploads/internacional-banner.jpg",
     url: "/destinos/internacionales",
+    tag: "internacional",
     cta: "Ver todos"
   },
   {
@@ -54,45 +102,42 @@ const mainCategories = [
     description: "Promociones exclusivas",
     image: "/images/uploads/ofertas-banner.jpg",
     url: "/promociones",
+    tag: "Oferta",
     cta: "Ver ofertas"
   }
 ];
 
-// Categorías de experiencia
-const experienceCategories = [
-  {
-    title: "Aventura",
-    description: "Experiencias emocionantes",
-    icon: "🏔️",
-    bgColor: "bg-green-100",
-    textColor: "text-green-600",
-    url: "/destinos/tag/aventura"
-  },
-  {
-    title: "Playa",
-    description: "Relax junto al mar",
-    icon: "🏖️",
-    bgColor: "bg-cyan-100",
-    textColor: "text-cyan-600",
-    url: "/destinos/tag/playa"
-  },
-  {
-    title: "Romántico",
-    description: "Escapadas en pareja",
-    icon: "❤️",
-    bgColor: "bg-pink-100",
-    textColor: "text-pink-600",
-    url: "/destinos/tag/romántico"
-  },
-  {
-    title: "Cultural",
-    description: "Historia y patrimonio",
-    icon: "🏛️",
-    bgColor: "bg-purple-100",
-    textColor: "text-purple-600",
-    url: "/destinos/tag/cultural"
-  }
-];
+// Contar cuántos destinos hay por cada categoría
+const destinationCounts = new Map();
+
+// Obtener todos los destinos y contar por categoría
+try {
+  const allDestinations = await getCollection('destinations');
+  
+  // Inicializar contador para cada tag
+  experienceCategories.forEach(category => {
+    destinationCounts.set(category.tag, 0);
+  });
+  
+  // Contar destinos por tag
+  allDestinations.forEach(destination => {
+    // Verificar tag principal
+    if (destination.data.tag) {
+      const count = destinationCounts.get(destination.data.tag) || 0;
+      destinationCounts.set(destination.data.tag, count + 1);
+    }
+    
+    // Verificar tags adicionales
+    if (Array.isArray(destination.data.tags)) {
+      destination.data.tags.forEach(tag => {
+        const count = destinationCounts.get(tag) || 0;
+        destinationCounts.set(tag, count + 1);
+      });
+    }
+  });
+} catch (error) {
+  console.error('Error al calcular conteo de destinos por categoría:', error);
+}
 ---
 
 <section class="py-20 bg-gray-50">
@@ -104,69 +149,58 @@ const experienceCategories = [
       </p>
     </div>
     
-    <!-- Categorías principales -->
-   
-    
-    <!-- Categorías desde el CMS -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      {destinationCategories.map((category: Category) => (
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
-          <div class="relative h-56 overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+    <!-- Categorías principales: Nacional/Internacional/Ofertas -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+      {mainCategories.map((category) => (
+        <div class="group relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
+          <div class="relative h-64 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20 z-10"></div>
             <img 
               src={category.image} 
-              alt={String(category.title)} 
-              class="w-full h-full object-cover transition duration-500 hover:scale-110"
+              alt={category.title} 
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
             />
-          </div>
-          
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">{category.title}</h3>
-            <p class="text-gray-600 mb-4">{category.description}</p>
-            
-            <div class="mb-6">
-              <h4 class="text-sm font-semibold text-gray-700 mb-2">Destinos populares:</h4>
-              <div class="flex flex-wrap gap-2">
-                {category.destinations && category.destinations.map((destination: string) => (
-                  <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                    {String(destination)}
-                  </span>
-                ))}
-              </div>
+            <div class="absolute inset-0 flex flex-col justify-end p-6 text-white z-20">
+              <h3 class="text-3xl font-bold mb-2">{category.title}</h3>
+              <p class="text-lg text-gray-100 mb-4">{category.description}</p>
+              <a 
+                href={category.url}
+                class="inline-flex items-center bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-blue-50 transition-colors"
+              >
+                {category.cta}
+                <Icon name="tabler:arrow-right" class="w-4 h-4 ml-2" />
+              </a>
             </div>
-            
-            <a 
-              href={category.url}
-              class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
-            >
-              Ver todos los destinos
-              <Icon name="tabler:arrow-right" class="w-4 h-4 ml-1" />
-            </a>
           </div>
         </div>
       ))}
     </div>
     
-    <!-- Categorías por tipo de experiencia -->
-    <div class="mt-16">
-      <h3 class="text-2xl font-bold text-center text-gray-900 mb-8">Viaja según tu estilo</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {experienceCategories.map((category) => (
-          <a 
-            href={category.url} 
-            class="bg-white rounded-lg shadow-md p-6 flex items-center hover:shadow-lg transition-shadow"
-          >
-            <div class={`${category.bgColor} bg-green-100 p-3 rounded-full mr-4`}>
-              <span class="text-2xl">{category.icon}</span>
+    <!-- Categorías de experiencia -->
+    <h3 class="text-2xl font-bold text-center text-gray-900 mb-8">Viaja según tu estilo</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {experienceCategories.map((category) => (
+        <a 
+          href={category.url} 
+          class="bg-white rounded-lg shadow-md p-6 flex items-center hover:shadow-lg transition-shadow transform hover:-translate-y-1 duration-300"
+        >
+          <div class={`${category.bgColor} p-3 rounded-full mr-4`}>
+            <span class={`${category.textColor} text-2xl`}>{category.icon}</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold text-gray-900">{category.title}</h3>
+              {destinationCounts.get(category.tag) > 0 && (
+                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">
+                  {destinationCounts.get(category.tag)} destinos
+                </span>
+              )}
             </div>
-            <div>
-            <h3 class={`font-bold text-gray-900 ${category.textColor} `}>{category.title}</h3>
             <p class="text-sm text-gray-600">{category.description}</p>
           </div>
-            
-          </a>
-        ))}
-      </div>
+        </a>
+      ))}
     </div>
     
     <div class="text-center mt-12">
