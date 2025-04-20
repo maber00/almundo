@@ -25,11 +25,7 @@ const navItems = [
 ];
 
 
-// Opciones de moneda
-const currencies = [
-  { code: "COP", symbol: "$" },
-  { code: "USD", symbol: "US$" }
-];
+
 ---
 
 <header class="fixed w-full z-50 transition-all duration-300 bg-white shadow-md">
@@ -76,15 +72,7 @@ const currencies = [
 
       <!-- Botones de acción -->
       <div class="hidden md:flex items-center space-x-3">
-        <!-- Selector de moneda -->
-        <div class="relative">
-          <select class="appearance-none bg-gray-100 py-1 px-3 pr-8 rounded-md text-sm focus:outline-none">
-            {currencies.map((currency) => (
-              <option value={currency.code}>{currency.code}</option>
-            ))}
-          </select>
-          <Icon name="tabler:chevron-down" class="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none" />
-        </div>
+       
 
         <!-- Botón de cotización -->
         <a 

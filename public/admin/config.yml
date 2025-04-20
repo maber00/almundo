@@ -38,21 +38,32 @@ collections:
       - { label: "Barco (para cruceros)", name: "ship", widget: "string", required: false }
       - { label: "Puertos (para cruceros)", name: "ports", widget: "list", required: false }
 
-  # Colección para categorías de destinos
-  - name: "destination-categories"
-    label: "Categorías de destinos"
-    folder: "src/content/destination-categories"
+  # Colección para rutas populares de cruceros
+  - name: "cruise-routes"
+    label: "Rutas populares de cruceros"
+    folder: "src/content/cruise-routes"
     create: true
-    slug: "{{id}}"
+    slug: "{{slug}}"
     fields:
-      - { label: "ID", name: "id", widget: "string" }
-      - { label: "Título", name: "title", widget: "string" }
-      - { label: "Descripción", name: "description", widget: "text" }
+      - { label: "Nombre de la ruta", name: "name", widget: "string" }
+      - { label: "Descripción", name: "description", widget: "string" }
       - { label: "Imagen", name: "image", widget: "image" }
-      - { label: "URL", name: "url", widget: "string" }
-      - { label: "Texto del botón", name: "buttonText", widget: "string", default: "Ver todos" }
-      - { label: "Orden", name: "order", widget: "number", default: 0 }
+      - { label: "Duración", name: "duration", widget: "string", hint: "Ej: 7-10 días" }
       - { label: "Activo", name: "active", widget: "boolean", default: true }
+      - { label: "Orden", name: "order", widget: "number", default: 0 }    
+
+   # Colección para bancos aliados y financieras
+  - name: "financing-partners"
+    label: "Bancos Aliados"
+    folder: "src/content/financing-partners"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nombre", name: "name", widget: "string", hint: "Nombre de la entidad financiera" }
+      - { label: "Logo", name: "logo", widget: "image", hint: "Logo de la entidad financiera" }
+      - { label: "Activo", name: "active", widget: "boolean", default: true, hint: "Mostrar u ocultar este banco" }
+      - { label: "Orden", name: "order", widget: "number", default: 0, hint: "Posición de visualización (0 primero)" }
+
 
   # Colección para categorías
   - name: "categories"

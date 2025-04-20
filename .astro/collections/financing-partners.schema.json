@@ -1,0 +1,65 @@
+{
+  "$ref": "#/definitions/financing-partners",
+  "definitions": {
+    "financing-partners": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "logo": {
+          "type": "string"
+        },
+        "interestRate": {
+          "type": "string",
+          "default": "0%"
+        },
+        "installmentOptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "3",
+            "6",
+            "12"
+          ]
+        },
+        "requirementsText": {
+          "type": "string"
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "active": {
+          "type": "boolean",
+          "default": true
+        },
+        "order": {
+          "type": "number",
+          "default": 0
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "logo"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

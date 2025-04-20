@@ -1,78 +1,35 @@
 ---
+import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
+import { getAllCategories } from '../../utils/content.js';
 
-// Definir la interfaz para categorías de destino
-interface DestinationCategory {
-  title: string;
-  description: string;
-  image: string;
-  url: string;
-  buttonText: string;
-}
+// Obtener categorías desde el sistema de contenido
+const destinationCategories = await getAllCategories();
 
-// Inicializar la variable con el tipo correcto
-let activeCategories: DestinationCategory[] = [];
-
-try {
-  // Importar getCollection de forma dinámica
-  const { getCollection } = await import('astro:content');
-  
-  try {
-    // Intentar obtener la colección destination-categories si existe
-    const destinationCategories = await getCollection('destination-categories');
-    
-    // Mapear los datos a un formato consistente con nuestra interfaz
-    activeCategories = destinationCategories
-      .filter(category => category.data.active !== false)
-      .sort((a, b) => (a.data.order || 0) - (b.data.order || 0))
-      .map(cat => ({
-        title: cat.data.title,
-        description: cat.data.description,
-        image: cat.data.image,
-        url: cat.data.url,
-        buttonText: cat.data.buttonText || "Ver todos"
-      }));
-  } catch (error) {
-    console.log('La colección destination-categories no existe o está vacía');
-  }
-} catch (error) {
-  console.error('Error al cargar datos de categorías:', error);
-}
-
-// Datos predeterminados con el tipo correcto
-const defaultCategories: DestinationCategory[] = [
+// Categorías principales con imágenes del CMS
+const mainCategories = [
   {
     title: "Destinos Nacionales",
     description: "Lo mejor de Colombia",
-    image: "/images/uploads/colombia-banner.jpg",
+    image: "/images/uploads/colombia-banner.jpg", // Debe cambiarse a la imagen del CMS
     url: "/destinos/nacionales",
-    buttonText: "Ver todos"
+    cta: "Ver todos"
   },
   {
     title: "Destinos Internacionales",
     description: "Explora el mundo",
-    image: "/images/uploads/internacional-banner.jpg",
+    image: "/images/uploads/internacional-banner.jpg", // Debe cambiarse a la imagen del CMS
     url: "/destinos/internacionales",
-    buttonText: "Ver todos"
+    cta: "Ver todos"
   },
   {
     title: "Ofertas Especiales",
     description: "Promociones exclusivas",
-    image: "/images/uploads/ofertas-banner.jpg",
+    image: "/images/uploads/ofertas-banner.jpg", // Debe cambiarse a la imagen del CMS
     url: "/promociones",
-    buttonText: "Ver ofertas"
-  },
-  {
-    title: "Cruceros",
-    description: "Navega por el mundo",
-    image: "/images/uploads/cruceros-banner.jpg", 
-    url: "/destinos/cruceros",
-    buttonText: "Ver cruceros"
+    cta: "Ver ofertas"
   }
 ];
-
-// Usar categorías del CMS si existen, de lo contrario usar las predeterminadas
-const categories = activeCategories.length > 0 ? activeCategories : defaultCategories;
 
 // Categorías de experiencia
 const experienceCategories = [
@@ -98,7 +55,7 @@ const experienceCategories = [
     icon: "❤️",
     bgColor: "bg-pink-100",
     textColor: "text-pink-600",
-    url: "/destinos/tag/romantico"
+    url: "/destinos/tag/romántico"
   },
   {
     title: "Cultural",
@@ -114,59 +71,57 @@ const experienceCategories = [
 <section class="py-20 bg-gray-50">
   <div class="container mx-auto px-4">
     <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold text-gray-900 mb-4">Explora nuestros destinos</h2>
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Explora nuestras categorías de destinos</h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">
         Encuentra el viaje perfecto entre nuestra selección de destinos para todos los gustos y presupuestos
       </p>
     </div>
     
-    <!-- Categorías principales -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
-      {categories.map((category) => (
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-2">
-          <div class="relative h-48 overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+    
+    
+    
+    
+    <!-- Categorías desde el CMS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {destinationCategories.map((category) => (
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
+          <div class="relative h-56 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
             <img 
               src={category.image} 
-              alt={category.title} 
+              alt={String(category.title)} 
               class="w-full h-full object-cover transition duration-500 hover:scale-110"
             />
-            <div class="absolute bottom-0 left-0 w-full p-6 z-20">
-              <h3 class="text-2xl font-bold text-white mb-1">{category.title}</h3>
-              <p class="text-white/90 mb-4">{category.description}</p>
-              <a 
-                href={category.url}
-                class="inline-block bg-white/20 backdrop-blur-sm text-white border border-white/30 px-4 py-2 rounded-md font-medium hover:bg-white/30 transition-colors"
-              >
-                {category.buttonText}
-              </a>
+          </div>
+          
+          <div class="p-6">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">{category.title}</h3>
+            <p class="text-gray-600 mb-4">{category.description}</p>
+            
+            <div class="mb-6">
+              <h4 class="text-sm font-semibold text-gray-700 mb-2">Destinos populares:</h4>
+              <div class="flex flex-wrap gap-2">
+                {category.destinations && category.destinations.map((destination: string) => (
+                  <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    {String(destination)}
+                  </span>
+                ))}
+              </div>
             </div>
+            
+            <a 
+              href={category.url}
+              class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
+            >
+              Ver todos los destinos
+              <Icon name="tabler:arrow-right" class="w-4 h-4 ml-1" />
+            </a>
           </div>
         </div>
       ))}
     </div>
     
-    <!-- Experiencias de viaje -->
-    <div class="bg-white rounded-lg shadow-lg p-8 mb-16">
-      <h3 class="text-2xl font-bold text-center text-gray-900 mb-8">Elige tu tipo de experiencia</h3>
-      
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {experienceCategories.map((cat) => (
-          <a 
-            href={cat.url}
-            class="flex flex-col items-center p-6 rounded-lg transition-all duration-300 hover:shadow-md hover:-translate-y-1"
-          >
-            <div class={`${cat.bgColor} p-4 rounded-full mb-4`}>
-              <span class={`${cat.textColor} text-3xl`}>{cat.icon}</span>
-            </div>
-            <h4 class="text-xl font-bold text-gray-900 mb-2">{cat.title}</h4>
-            <p class="text-gray-600 text-center">{cat.description}</p>
-          </a>
-        ))}
-      </div>
-    </div>
-    
-    <div class="text-center">
+    <div class="text-center mt-12">
       <a 
         href="/destinos"
         class="inline-block bg-blue-600 text-white py-3 px-8 rounded-md text-lg font-medium hover:bg-blue-700 transition-colors"

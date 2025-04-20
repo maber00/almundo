@@ -8,18 +8,17 @@ import { Icon } from 'astro-icon/components';
 import { getCollection } from 'astro:content';
 
 // Definir tipos de datos
-type DestinationType = "nacional" | "internacional" | "crucero";
 type BudgetRangeKey = 'budget-1' | 'budget-2' | 'budget-3' | 'budget-4' | 'budget-5';
 type DurationRangeKey = 'duration-1' | 'duration-2' | 'duration-3' | 'duration-4' | 'duration-5';
 
 interface Destination {
   id: string;
   name: string;
-  type: DestinationType;
+  type: string;
   region: string;
   price: number;
   priceInUsd?: boolean;
-  originalPrice?: number;
+  originalPrice?: number | null;
   duration: number;
   durationText: string;
   image: string;
@@ -36,38 +35,68 @@ interface Destination {
   slug: string;
 }
 
-// Obtener todos los destinos 
-const allDestinations = await getCollection('destinations');
-
-// Función auxiliar para verificar si un destino tiene un tag específico
-function hasTag(entry: any, tagName: string): boolean {
-  const hasMainTag = entry.data.tag && 
-    entry.data.tag.toLowerCase() === tagName.toLowerCase();
-  
-  const hasExtraTag = Array.isArray(entry.data.tags) && 
-    entry.data.tags.some((t: string) => t && t.toLowerCase() === tagName.toLowerCase());
-  
-  return hasMainTag || hasExtraTag;
+interface PopularRoute {
+  name: string;
+  description: string;
+  image: string;
+  duration: string;
 }
 
-// Filtrar destinos de tipo crucero y convertir a formato común
-let destinations: Destination[] = [];
+// Obtener los destinos de crucero
+let cruiseDestinations: Destination[] = [];
 try {
-  destinations = allDestinations
-    .filter(entry => 
-      // Incluir destinos marcados como tipo "crucero" o con tag "Crucero"
-      (entry.data.type === "crucero" || hasTag(entry, "Crucero"))
-    )
+  const allDestinations = await getCollection('destinations');
+  
+  cruiseDestinations = allDestinations
+    .filter(entry => {
+      // Verificar si es un crucero por tipo o tag
+      const hasCruiseType = entry.data.type === 'crucero';
+      const hasCruiseTag = entry.data.tag === 'Crucero';
+      const hasCruiseInTags = Array.isArray(entry.data.tags) && 
+        entry.data.tags.some(tag => tag === 'Crucero');
+      
+      return hasCruiseType || hasCruiseTag || hasCruiseInTags;
+    })
     .map(entry => ({
       ...entry.data,
       slug: entry.slug,
+      // Asegurar que los campos opcionales existan
       cruiseLine: entry.data.cruiseLine || undefined,
       ship: entry.data.ship || undefined,
-      ports: entry.data.ports || undefined
+      ports: entry.data.ports || []
     } as Destination));
 } catch (error) {
-  console.error("Error filtrando destinos de crucero:", error);
+  console.error('Error al cargar destinos de crucero:', error);
 }
+
+// Obtener las rutas populares de cruceros
+const popularRoutes: PopularRoute[] = [
+  {
+    name: "Caribe",
+    description: "Islas paradisíacas y playas de ensueño",
+    image: "/images/uploads/crucero-caribe.jpg",
+    duration: "7-10 días"
+  },
+  {
+    name: "Mediterráneo",
+    description: "Historia, cultura y gastronomía",
+    image: "/images/uploads/crucero-mediterraneo.jpg",
+    duration: "8-14 días"
+  },
+  {
+    name: "Alaska",
+    description: "Paisajes impresionantes y fauna salvaje",
+    image: "/images/uploads/crucero-alaska.jpg",
+    duration: "7-14 días"
+  },
+  {
+    name: "Sudamérica",
+    description: "Diversidad natural y cultural",
+    image: "/images/uploads/crucero-sudamerica.jpg",
+    duration: "10-16 días"
+  }
+];
+
 
 // Obtener parámetros de búsqueda de la URL
 const { searchParams } = Astro.url;
@@ -77,7 +106,7 @@ const selectedDuration = searchParams.get('duration') || '';
 const selectedNaviera = searchParams.get('cruiseLine') || '';
 
 // Aplicar filtros si están presentes
-let filteredDestinations = [...destinations];
+let filteredDestinations = [...cruiseDestinations];
 
 // Filtrar por región
 if (selectedRegion && selectedRegion !== 'all') {
@@ -129,9 +158,9 @@ if (selectedNaviera) {
 
 // Estadísticas
 const stats = {
-  totalDestinations: destinations.length,
-  averagePrice: destinations.length > 0 
-    ? Math.round(destinations.reduce((sum, dest) => sum + dest.price, 0) / destinations.length) 
+  totalDestinations: cruiseDestinations.length,
+  averagePrice: cruiseDestinations.length > 0 
+    ? Math.round(cruiseDestinations.reduce((sum, dest) => sum + dest.price, 0) / cruiseDestinations.length) 
     : 0
 };
 
@@ -164,45 +193,17 @@ const tripDurations = [
   { id: "duration-5", label: "Más de 15 días" }
 ];
 
-// Navieras principales (para cuando no hay datos)
-const defaultCruiseLines = [
-  "Royal Caribbean", "MSC Cruceros", "Norwegian Cruise Line", 
-  "Carnival", "Celebrity Cruises", "Princess Cruises"
-];
-
 // Extraer navieras únicas de los destinos disponibles
 const availableCruiseLines = [...new Set(
-  destinations
+  cruiseDestinations
     .filter(dest => dest.cruiseLine)
     .map(dest => dest.cruiseLine as string)
 )];
 
-// Rutas populares de cruceros (solo visuales, se puede personalizar en el CMS)
-const popularRoutes = [
-  {
-    name: "Caribe",
-    description: "Islas paradisíacas y playas de ensueño",
-    image: "/images/uploads/crucero-caribe.jpg",
-    duration: "7-10 días"
-  },
-  {
-    name: "Mediterráneo",
-    description: "Historia, cultura y gastronomía",
-    image: "/images/uploads/crucero-mediterraneo.jpg",
-    duration: "8-14 días"
-  },
-  {
-    name: "Alaska",
-    description: "Paisajes impresionantes y fauna salvaje",
-    image: "/images/uploads/crucero-alaska.jpg",
-    duration: "7-14 días"
-  },
-  {
-    name: "Sudamérica",
-    description: "Diversidad natural y cultural",
-    image: "/images/uploads/crucero-sudamerica.jpg",
-    duration: "10-16 días"
-  }
+// Navieras predeterminadas si no hay datos
+const defaultCruiseLines = [
+  "Royal Caribbean", "MSC Cruceros", "Norwegian Cruise Line", 
+  "Carnival", "Celebrity Cruises", "Princess Cruises"
 ];
 ---
 

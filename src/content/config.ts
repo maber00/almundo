@@ -83,6 +83,19 @@ const alliancesCollection = defineCollection({
   })
 });
 
+const cruiseRoutesCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    name: z.string(),
+    description: z.string(),
+    image: z.string(),
+    duration: z.string(),
+    active: z.boolean().default(true),
+    order: z.number().default(0)
+  })
+});
+
+
 // Esquema para slides del hero
 const heroSlidesCollection = defineCollection({
   type: 'content',
@@ -113,12 +126,30 @@ const blogCollection = defineCollection({
     published: z.boolean().default(true)
   })
 });
+const financingPartnersCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string().optional(),
+    logo: z.string(),
+    interestRate: z.string().default("0%"),
+    installmentOptions: z.array(z.string()).default(["3", "6", "12"]),
+    requirementsText: z.string().optional(),
+    requirements: z.array(z.string()).default([]),
+    active: z.boolean().default(true),
+    order: z.number().default(0)
+  })
+});
+
 
 // Exportamos todas las colecciones
 export const collections = {
   destinations: destinationsCollection,
   categories: categoriesCollection,
-  'destination-categories': destinationCategoriesCollection, // Nueva colección añadida
+  'destination-categories': destinationCategoriesCollection,
+  'cruise-routes': cruiseRoutesCollection, // Aquí está el error
+  'financing-partners': financingPartnersCollection, // Agregamos la nueva colección
   alliances: alliancesCollection,
   'hero-slides': heroSlidesCollection,
   blog: blogCollection

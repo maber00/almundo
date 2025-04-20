@@ -177,6 +177,16 @@ declare module 'astro:content' {
   rendered?: RenderedContent;
   filePath?: string;
 }>;
+"cruise-routes": Record<string, {
+  id: string;
+  render(): Render[".md"];
+  slug: string;
+  body: string;
+  collection: "cruise-routes";
+  data: InferEntrySchema<"cruise-routes">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
 "destination-categories": Record<string, {
   id: string;
   render(): Render[".md"];
@@ -194,6 +204,16 @@ declare module 'astro:content' {
   body: string;
   collection: "destinations";
   data: InferEntrySchema<"destinations">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+"financing-partners": Record<string, {
+  id: string;
+  render(): Render[".md"];
+  slug: string;
+  body: string;
+  collection: "financing-partners";
+  data: InferEntrySchema<"financing-partners">;
   rendered?: RenderedContent;
   filePath?: string;
 }>;

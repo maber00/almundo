@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
 
 // Opciones de financiamiento
 const financingOptions = [
@@ -29,13 +30,28 @@ const financingOptions = [
   }
 ];
 
-// Bancos aliados
-const bankPartners = [
-  { name: "Bancolombia", logo: "/images/logos/bancolombia.png" },
-  { name: "Davivienda", logo: "/images/logos/davivienda.png" },
-  { name: "Banco de Bogotá", logo: "/images/logos/bogota.png" },
-  { name: "Banco Popular", logo: "/images/logos/popular.png" }
-];
+// Obtener bancos aliados del CMS
+let bankPartners = [];
+try {
+  const partnersCollection = await getCollection('financing-partners');
+  bankPartners = partnersCollection
+    .filter(partner => partner.data.active !== false)
+    .sort((a, b) => (a.data.order || 0) - (b.data.order || 0))
+    .map(partner => ({
+      name: partner.data.name,
+      logo: partner.data.logo
+    }));
+} catch (error) {
+  console.log('No se pudieron cargar las financieras:', error);
+  
+  // Bancos aliados predeterminados
+  bankPartners = [
+    { name: "Bancolombia", logo: "/images/logos/bancolombia.png" },
+    { name: "Davivienda", logo: "/images/logos/davivienda.png" },
+    { name: "Banco de Bogotá", logo: "/images/logos/bogota.png" },
+    { name: "Banco Popular", logo: "/images/logos/popular.png" }
+  ];
+}
 ---
 
 <section class="py-20 bg-white">
