@@ -5,33 +5,38 @@ import Footer from '../../components/layout/Footer.astro';
 import DestinationCard from '../../components/destinations/DestinationCard.astro';
 import { getCollection } from 'astro:content';
 import { Icon } from 'astro-icon/components';
+import { hasTag, getOfferDestinations } from '../../utils/content';
 
-// Obtener todos los destinos
-const allDestinations = await getCollection('destinations');
+// Obtener todos los destinos en oferta utilizando la función mejorada
+const offerDestinations = await getOfferDestinations();
 
-// Obtener destinos con precio de oferta
-const priceOfferDestinations = allDestinations
+// Contabilizar destinos por tipo
+const nationalOffers = offerDestinations.filter(dest => dest.type === 'nacional').length;
+const internationalOffers = offerDestinations.filter(dest => dest.type === 'internacional').length;
+
+// Calcular ahorro promedio
+const savings = offerDestinations
   .filter(dest => {
-    const originalPrice = dest.data.originalPrice 
-      ? (typeof dest.data.originalPrice === 'string' 
-          ? Number(dest.data.originalPrice) || 0
-          : dest.data.originalPrice) 
+    const originalPrice = dest.originalPrice 
+      ? (typeof dest.originalPrice === 'string' 
+          ? Number(String(dest.originalPrice).replace(/\./g, '')) 
+          : dest.originalPrice) 
       : 0;
     
-    return originalPrice > 0 && originalPrice > dest.data.price;
+    return originalPrice > 0 && originalPrice > dest.price;
   })
-  .map(entry => ({...entry.data, slug: entry.slug}));
+  .map(dest => {
+    const originalPrice = dest.originalPrice 
+      ? (typeof dest.originalPrice === 'string' 
+          ? Number(String(dest.originalPrice).replace(/\./g, '')) 
+          : dest.originalPrice) 
+      : 0;
+    return originalPrice - dest.price;
+  });
 
-// Obtener destinos con tag "Oferta"
-const tagOfferDestinations = allDestinations
-  .filter(dest => dest.data.tag === 'Oferta')
-  .map(entry => ({...entry.data, slug: entry.slug}));
-
-// Combinar ambos conjuntos y eliminar duplicados por id
-const combinedDestinations = [...priceOfferDestinations, ...tagOfferDestinations];
-const destinations = combinedDestinations.filter((dest, index, self) => 
-  index === self.findIndex((d) => d.id === dest.id)
-);
+const averageSaving = savings.length > 0 
+  ? Math.round(savings.reduce((sum, value) => sum + value, 0) / savings.length) 
+  : 0;
 ---
 
 <Layout title="Ofertas y Promociones | AL mundo Tour" description="Descubre nuestras mejores ofertas y promociones en destinos nacionales e internacionales con precios especiales por tiempo limitado.">
@@ -62,10 +67,34 @@ const destinations = combinedDestinations.filter((dest, index, self) =>
       </div>
     </section>
     
+    <!-- Contador de ofertas y stats -->
+    <section class="py-8 bg-red-50">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-4xl font-bold text-red-600 mb-2">{offerDestinations.length}</div>
+            <p class="text-gray-700">Ofertas disponibles</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-4xl font-bold text-red-600 mb-2">
+              {nationalOffers} / {internationalOffers}
+            </div>
+            <p class="text-gray-700">Nacionales / Internacionales</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-4xl font-bold text-red-600 mb-2">
+              ${averageSaving.toLocaleString('es-CO')}
+            </div>
+            <p class="text-gray-700">Ahorro promedio</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
     <!-- Promociones destacadas -->
     <section class="py-12">
       <div class="container mx-auto px-4">
-        {destinations.length > 0 ? (
+        {offerDestinations.length > 0 ? (
           <>
             <h2 class="text-3xl font-bold text-center text-gray-900 mb-2">Nuestras Ofertas Exclusivas</h2>
             <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
@@ -73,7 +102,7 @@ const destinations = combinedDestinations.filter((dest, index, self) =>
             </p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {destinations.map((destination) => (
+              {offerDestinations.map((destination) => (
                 <DestinationCard destination={destination} />
               ))}
             </div>
@@ -95,6 +124,44 @@ const destinations = combinedDestinations.filter((dest, index, self) =>
       </div>
     </section>
     
+    <!-- Cómo funcionan nuestras promociones -->
+    <section class="py-12 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Cómo aprovechar nuestras ofertas</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+              <span class="text-red-600 text-2xl font-bold">1</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Elige tu destino</h3>
+            <p class="text-gray-600">
+              Explora nuestras ofertas y selecciona el destino que más te interese. ¡Verifica los precios y el porcentaje de descuento!
+            </p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+              <span class="text-red-600 text-2xl font-bold">2</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Contáctanos</h3>
+            <p class="text-gray-600">
+              Comunícate con nuestros asesores por teléfono, WhatsApp o completando el formulario para verificar disponibilidad.
+            </p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+              <span class="text-red-600 text-2xl font-bold">3</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Reserva con anticipación</h3>
+            <p class="text-gray-600">
+              Asegura tu oferta con un depósito y aprovecha nuestras facilidades de pago. ¡Las promociones son por tiempo limitado!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>   
     <!-- Suscripción a promociones -->
     <section class="py-16 bg-red-50">
       <div class="container mx-auto px-4">

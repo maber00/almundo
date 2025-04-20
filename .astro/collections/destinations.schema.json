@@ -14,7 +14,8 @@
           "type": "string",
           "enum": [
             "nacional",
-            "internacional"
+            "internacional",
+            "crucero"
           ]
         },
         "region": {
@@ -135,6 +136,19 @@
           "default": []
         },
         "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "cruiseLine": {
+          "type": "string"
+        },
+        "ship": {
+          "type": "string"
+        },
+        "ports": {
           "type": "array",
           "items": {
             "type": "string"

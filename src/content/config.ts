@@ -7,7 +7,7 @@ const destinationsCollection = defineCollection({
   schema: z.object({
     id: z.string(),
     name: z.string(),
-    type: z.enum(['nacional', 'internacional']),
+    type: z.enum(['nacional', 'internacional', 'crucero']), // Añadido 'crucero'
     region: z.string(),
     price: z.number(),
     currency: z.enum(['COP', 'USD']).default('COP'),
@@ -22,7 +22,7 @@ const destinationsCollection = defineCollection({
     rating: z.number().min(0).max(100),
     availability: z.number(),
     tag: z.string(),
-    tags: z.array(z.string()).optional().default([]),  // Nuevo campo para múltiples etiquetas
+    tags: z.array(z.string()).optional().default([]),
     includes: z.array(z.string()).default([]),
     notIncludes: z.array(z.string()).default([]),
     notes: z.string().optional(),
@@ -33,7 +33,11 @@ const destinationsCollection = defineCollection({
       title: z.string(),
       activities: z.array(z.string()).optional()
     })).optional().default([]),
-    requirements: z.array(z.string()).optional().default([])
+    requirements: z.array(z.string()).optional().default([]),
+    // Propiedades específicas para cruceros
+    cruiseLine: z.string().optional(),
+    ship: z.string().optional(),
+    ports: z.array(z.string()).optional().default([])
   })
 });
 
@@ -47,6 +51,21 @@ const categoriesCollection = defineCollection({
     image: z.string(),
     destinations: z.array(z.string()),
     url: z.string()
+  })
+});
+
+// Esquema para categorías de destino (NUEVA COLECCIÓN)
+const destinationCategoriesCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string(),
+    image: z.string(),
+    url: z.string(),
+    buttonText: z.string().optional().default("Ver todos"),
+    order: z.number().default(0),
+    active: z.boolean().default(true)
   })
 });
 
@@ -99,6 +118,7 @@ const blogCollection = defineCollection({
 export const collections = {
   destinations: destinationsCollection,
   categories: categoriesCollection,
+  'destination-categories': destinationCategoriesCollection, // Nueva colección añadida
   alliances: alliancesCollection,
   'hero-slides': heroSlidesCollection,
   blog: blogCollection

@@ -3,48 +3,96 @@ import Layout from '../../../layouts/Layout.astro';
 import Header from '../../../components/layout/Header.astro';
 import Footer from '../../../components/layout/Footer.astro';
 import DestinationCard from '../../../components/destinations/DestinationCard.astro';
-import DestinationFilters from '../../../components/destinations/DestinationFilters.astro';
 import SelectFilter from '../../../components/common/SelectFilter.astro';
 import { Icon } from 'astro-icon/components';
 import { getCollection } from 'astro:content';
+import { hasTag } from '../../../utils/content';
 
-// Agregar esta línea para indicar que la página debe pre-renderizarse
-export const prerender = true;
+// Definir tipos para los rangos de presupuesto y duración
+type BudgetKey = 'budget-1' | 'budget-2' | 'budget-3' | 'budget-4' | 'budget-5';
+type DurationKey = 'duration-1' | 'duration-2' | 'duration-3' | 'duration-4' | 'duration-5';
 
+// IMPORTANTE: Esta configuración permite la construcción de rutas dinámicas
+export const prerender = false;
+
+// Esta función se ha simplificado para evitar errores en la generación de rutas estáticas
 export async function getStaticPaths() {
   const allDestinations = await getCollection('destinations');
   
-  // Obtener todos los tags únicos (asegúrate de que todos los destinos tengan la propiedad 'tag')
-  const allTags = [...new Set(allDestinations.map(dest => dest.data.tag).filter(Boolean))];
+  // Recopilamos todos los tags posibles
+  const tagSet = new Set<string>();
   
-  // Crear una ruta para cada tag
+  // Recopilar tags principales
+  allDestinations.forEach(dest => {
+    if (dest.data.tag) {
+      tagSet.add(dest.data.tag.toLowerCase());
+    }
+  });
+  
+  // Recopilar tags adicionales
+  allDestinations.forEach(dest => {
+    if (Array.isArray(dest.data.tags)) {
+      dest.data.tags.forEach(tag => {
+        if (tag) tagSet.add(tag.toLowerCase());
+      });
+    }
+  });
+  
+  // Añadir manualmente los tags importantes para asegurar su existencia
+  const importantTags = ['aventura', 'playa', 'cultural', 'romantico', 'romántico', 'oferta', 'todo incluido'];
+  importantTags.forEach(tag => tagSet.add(tag));
+  
+  // Convertir a array y generar paths
+  const allTags = Array.from(tagSet);
+  
   return allTags.map(tag => {
-    // Filtrar destinos por este tag
-    const destinations = allDestinations
-      .filter(dest => dest.data.tag === tag)
-      .map(entry => ({...entry.data, slug: entry.slug}));
+    // Filtrar destinos por este tag (insensible a mayúsculas/minúsculas)
+    const tagDestinations = allDestinations.filter(dest => {
+      // Verificar tag principal
+      const mainTagMatch = dest.data.tag && 
+        dest.data.tag.toLowerCase() === tag.toLowerCase();
+      
+      // Verificar tags adicionales
+      const additionalTagMatch = Array.isArray(dest.data.tags) && 
+        dest.data.tags.some(t => t && t.toLowerCase() === tag.toLowerCase());
+      
+      return mainTagMatch || additionalTagMatch;
+    });
+    
+    // Preparar destinos para la renderización
+    const destinations = tagDestinations.map(entry => ({
+      ...entry.data,
+      slug: entry.slug
+    }));
     
     return {
-      params: { tag: tag.toLowerCase() },
+      params: { tag },
       props: { tag, destinations }
     };
   });
 }
 
+// Obtener parámetros y props
 const { tag } = Astro.params;
 const { destinations } = Astro.props;
 
-// Asegurarse de que destinations siempre sea un array, incluso si es undefined
+// Asegurarnos de que destinations siempre sea un array
 const safeDestinations = destinations || [];
 
 // Formatear el tag para mostrarlo (primera letra mayúscula)
-const formattedTag = tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : '';
+// Se utiliza type assertion para asegurar que TypeScript sepa que tag es un string
+const formattedTag = tag ? 
+  ((tag as string).charAt(0).toUpperCase() + (tag as string).slice(1)).replace('-', ' ') : 
+  '';
 
 // Título y descripción de la página según el tag
 const pageTitle = `Destinos de ${formattedTag}`;
 let pageDescription = '';
 
-switch(formattedTag.toLowerCase()) {
+// Se utiliza type assertion para evitar error con toLowerCase()
+const tagLower = tag ? (tag as string).toLowerCase() : '';
+
+switch(tagLower) {
   case 'aventura':
     pageDescription = 'Descubre destinos increíbles llenos de adrenalina y aventuras al aire libre.';
     break;
@@ -56,6 +104,14 @@ switch(formattedTag.toLowerCase()) {
     break;
   case 'oferta':
     pageDescription = 'Encuentra las mejores ofertas en destinos increíbles a precios especiales.';
+    break;
+  case 'romantico':
+  case 'romántico':
+    pageDescription = 'Escápate con tu pareja a los destinos más románticos y crea recuerdos inolvidables.';
+    break;
+  case 'todo-incluido':
+  case 'todo incluido':
+    pageDescription = 'Disfruta de vacaciones sin preocupaciones con paquetes que incluyen todo lo que necesitas.';
     break;
   default:
     pageDescription = 'Descubre destinos increíbles seleccionados especialmente para ti.';
@@ -95,17 +151,94 @@ const { searchParams } = Astro.url;
 const selectedRegion = searchParams.get('region') || '';
 const selectedBudget = searchParams.get('budget') || '';
 const selectedDuration = searchParams.get('duration') || '';
+const travel_date = searchParams.get('travel_date') || '';
+
+// Aplicar filtros adicionales si están presentes
+let filteredDestinations = safeDestinations;
+
+// Filtrar por región
+if (selectedRegion && selectedRegion !== 'all') {
+  filteredDestinations = filteredDestinations.filter(dest => dest.region === selectedRegion);
+}
+
+// Definir mapas de rangos con tipos específicos
+const budgetRangeMap: Record<BudgetKey, {min: number, max: number}> = {
+  'budget-1': { min: 0, max: 1000000 },
+  'budget-2': { min: 1000000, max: 3000000 },
+  'budget-3': { min: 3000000, max: 5000000 },
+  'budget-4': { min: 5000000, max: 10000000 },
+  'budget-5': { min: 10000000, max: Infinity }
+};
+
+// Filtrar por presupuesto usando comprobación segura de tipos
+if (selectedBudget && Object.keys(budgetRangeMap).includes(selectedBudget)) {
+  const range = budgetRangeMap[selectedBudget as BudgetKey];
+  filteredDestinations = filteredDestinations.filter(dest => 
+    dest.price >= range.min && dest.price <= range.max
+  );
+}
+
+// Definir rangos de duración con tipos específicos
+const durationRangeMap: Record<DurationKey, {min: number, max: number}> = {
+  'duration-1': { min: 3, max: 5 },
+  'duration-2': { min: 6, max: 8 },
+  'duration-3': { min: 9, max: 12 },
+  'duration-4': { min: 13, max: 15 },
+  'duration-5': { min: 16, max: Infinity }
+};
+
+// Filtrar por duración usando comprobación segura de tipos
+if (selectedDuration && Object.keys(durationRangeMap).includes(selectedDuration)) {
+  const range = durationRangeMap[selectedDuration as DurationKey];
+  filteredDestinations = filteredDestinations.filter(dest => 
+    dest.duration >= range.min && dest.duration <= range.max
+  );
+}
+
+// Determinar el color de fondo y tema según el tag
+let heroGradient = 'from-blue-600 to-blue-800';
+let buttonColor = 'bg-blue-600 hover:bg-blue-700';
+
+// Usar tagLower que ya hemos definido antes
+switch(tagLower) {
+  case 'aventura':
+    heroGradient = 'from-green-600 to-green-800';
+    buttonColor = 'bg-green-600 hover:bg-green-700';
+    break;
+  case 'playa':
+    heroGradient = 'from-cyan-500 to-blue-500';
+    buttonColor = 'bg-cyan-600 hover:bg-cyan-700';
+    break;
+  case 'cultural':
+    heroGradient = 'from-purple-600 to-purple-800';
+    buttonColor = 'bg-purple-600 hover:bg-purple-700';
+    break;
+  case 'romantico':
+  case 'romántico':
+    heroGradient = 'from-pink-600 to-pink-800';
+    buttonColor = 'bg-pink-600 hover:bg-pink-700';
+    break;
+  case 'oferta':
+    heroGradient = 'from-red-600 to-red-800';
+    buttonColor = 'bg-red-600 hover:bg-red-700';
+    break;
+  case 'todo-incluido':
+  case 'todo incluido':
+    heroGradient = 'from-yellow-600 to-yellow-800';
+    buttonColor = 'bg-yellow-600 hover:bg-yellow-700';
+    break;
+}
 ---
 
 <Layout title={`${pageTitle} | AL mundo Tour`} description={pageDescription}>
   <Header />
   
   <main>
-    <!-- Hero section con fondo relacionado al tag -->
-    <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-20 pt-32">
+    <!-- Hero section -->
+    <section class={`bg-gradient-to-r ${heroGradient} py-20 pt-32`}>
       <div class="container mx-auto px-4 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">{pageTitle}</h1>
-        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+        <p class="text-xl text-white/90 max-w-3xl mx-auto">
           {pageDescription}
         </p>
       </div>
@@ -162,14 +295,14 @@ const selectedDuration = searchParams.get('duration') || '';
             <div class="flex items-end gap-3">
               <button
                 type="submit"
-                class="flex-grow bg-blue-600 text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+                class={`flex-grow ${buttonColor} text-white py-2 px-3 rounded-md font-medium transition-colors flex items-center justify-center`}
               >
                 <Icon name="tabler:filter" class="w-5 h-5 mr-2" />
                 Aplicar filtros
               </button>
               
               <a 
-                href={`/destinos/tag/${tag.toLowerCase()}`}
+                href={`/destinos/tag/${tag}`}
                 class="bg-gray-100 text-gray-700 py-2 px-3 rounded-md font-medium hover:bg-gray-200 transition-colors flex items-center justify-center"
               >
                 <Icon name="tabler:refresh" class="w-5 h-5 mr-2" />
@@ -190,9 +323,9 @@ const selectedDuration = searchParams.get('duration') || '';
             : `Todos los destinos de ${formattedTag}`}
         </h2>
         
-        {safeDestinations.length > 0 ? (
+        {filteredDestinations.length > 0 ? (
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {safeDestinations.map((destination) => (
+            {filteredDestinations.map((destination) => (
               <DestinationCard destination={destination} />
             ))}
           </div>
@@ -203,7 +336,7 @@ const selectedDuration = searchParams.get('duration') || '';
             <p class="text-lg text-gray-600 mb-6">Prueba otra categoría o contacta con nuestros asesores para encontrar el destino perfecto para ti.</p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/destinos" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+              <a href="/destinos" class={`${buttonColor} text-white py-3 px-6 rounded-md font-medium transition-colors inline-flex items-center justify-center`}>
                 <span class="mr-2">🔄</span>
                 Ver todos los destinos
               </a>
@@ -229,7 +362,7 @@ const selectedDuration = searchParams.get('duration') || '';
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a 
             href="/contacto" 
-            class="bg-blue-600 text-white py-3 px-8 rounded-md font-medium hover:bg-blue-700 transition-colors"
+            class={`${buttonColor} text-white py-3 px-8 rounded-md font-medium transition-colors`}
           >
             Solicitar asesoramiento gratuito
           </a>

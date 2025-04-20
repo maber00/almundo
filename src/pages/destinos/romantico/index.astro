@@ -1,0 +1,198 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+import DestinationCard from '../../../components/destinations/DestinationCard.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+// Obtener todos los destinos
+const allDestinations = await getCollection('destinations');
+
+// Filtrar destinos por el tag de Romántico (puede estar en tag principal o en tags adicionales)
+const romanticoDestinations = allDestinations
+  .filter(dest => 
+    dest.data.tag === 'Romántico' || 
+    (dest.data.tags && dest.data.tags.includes('Romántico'))
+  )
+  .map(entry => ({...entry.data, slug: entry.slug}));
+
+// Estadísticas
+const stats = {
+  totalDestinations: romanticoDestinations.length,
+  averagePrice: romanticoDestinations.length > 0 
+    ? Math.round(romanticoDestinations.reduce((sum, dest) => sum + dest.price, 0) / romanticoDestinations.length) 
+    : 0
+};
+
+// Características de los destinos románticos
+const features = [
+  {
+    icon: "🌅",
+    title: "Atardeceres Inolvidables",
+    description: "Disfruta de los mejores atardeceres del mundo"
+  },
+  {
+    icon: "🍷",
+    title: "Experiencias Gastronómicas",
+    description: "Cenas exclusivas y degustaciones románticas"
+  },
+  {
+    icon: "🏝️",
+    title: "Playas Privadas",
+    description: "Momentos íntimos en playas paradisíacas"
+  },
+  {
+    icon: "💑",
+    title: "Actividades en Pareja",
+    description: "Experiencias diseñadas para disfrutar juntos"
+  }
+];
+
+// Ocasiones especiales 
+const occasions = [
+  "Aniversarios", "Lunas de Miel", "Pedidas de Mano", "San Valentín", "Escapadas Sorpresa"
+];
+---
+
+<Layout title="Destinos Románticos | AL mundo Tour" description="Escápate con tu pareja a los destinos más románticos. Playas paradisíacas, paisajes de ensueño y experiencias exclusivas para parejas.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-pink-600 to-pink-800 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Destinos Románticos</h1>
+        <p class="text-xl text-pink-100 max-w-3xl mx-auto">
+          Escápate con tu pareja a los destinos más románticos del mundo. Desde playas paradisíacas hasta ciudades llenas de encanto y magia.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-pink-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-pink-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Romántico</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Ocasiones especiales -->
+    <section class="py-8 bg-pink-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">Ocasiones especiales</h2>
+        <div class="flex flex-wrap justify-center gap-4">
+          {occasions.map(occasion => (
+            <span class="bg-white text-pink-600 px-4 py-2 rounded-full shadow-sm text-sm font-medium">
+              {occasion}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+    
+    <!-- Características de los viajes románticos -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Experiencias románticas</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {features.map((feature) => (
+            <div class="bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-center">
+              <div class="text-4xl mb-4">{feature.icon}</div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
+              <p class="text-gray-600">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+        
+        <!-- Estadísticas -->
+        <div class="bg-pink-100 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-4xl font-bold text-pink-600 mb-2">{stats.totalDestinations}+</div>
+            <p class="text-gray-700">Destinos románticos</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-pink-600 mb-2">
+              {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
+            </div>
+            <p class="text-gray-700">Precio promedio</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-pink-600 mb-2">♥️</div>
+            <p class="text-gray-700">Momentos inolvidables</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Listado de destinos -->
+    <section class="py-12 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">
+          Nuestros destinos románticos
+        </h2>
+        
+        {romanticoDestinations.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {romanticoDestinations.map((destination) => (
+              <DestinationCard destination={destination} />
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">💌</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Preparando destinos románticos</h2>
+            <p class="text-lg text-gray-600 mb-6">Estamos seleccionando los mejores lugares para que compartas con tu pareja. ¡Vuelve pronto!</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos" class="bg-pink-600 text-white py-3 px-6 rounded-md font-medium hover:bg-pink-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔄</span>
+                Ver todos los destinos
+              </a>
+              
+              <a href="/contacto" class="bg-blue-500 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-600 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">💬</span>
+                Contactar asesor
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- CTA final -->
+    <section class="py-12 bg-pink-600 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Planeas sorprender a tu pareja?</h2>
+        <p class="text-xl text-pink-100 mb-8 max-w-3xl mx-auto">
+          Nuestros asesores te ayudarán a crear el viaje romántico perfecto para cualquier ocasión especial.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="bg-white text-pink-600 py-3 px-8 rounded-md font-medium hover:bg-pink-50 transition-colors"
+          >
+            Solicitar asesoramiento
+          </a>
+          
+          <a 
+            href="https://wa.me/573165276338?text=Hola, estoy interesado en un destino romántico"
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            WhatsApp directo
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

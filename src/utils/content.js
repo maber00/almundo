@@ -2,6 +2,31 @@
 import { getCollection, getEntry } from 'astro:content';
 
 /**
+ * Verifica si un destino tiene una etiqueta específica
+ * @param {Object} destination - Objeto de destino o datos de destino
+ * @param {string} tagName - Nombre de la etiqueta a buscar
+ * @returns {boolean} - true si el destino tiene la etiqueta, false en caso contrario
+ */
+export function hasTag(destination, tagName) {
+  if (!destination) return false;
+  
+  // Si recibimos un objeto de entrada de Astro, accedemos a sus datos
+  const data = destination.data || destination;
+  
+  // Verificar en la etiqueta principal (case insensitive)
+  if (data.tag && data.tag.toLowerCase() === tagName.toLowerCase()) {
+    return true;
+  }
+  
+  // Verificar en el array de tags adicionales (si existe)
+  if (Array.isArray(data.tags) && data.tags.some(tag => tag.toLowerCase() === tagName.toLowerCase())) {
+    return true;
+  }
+  
+  return false;
+}
+
+/**
  * Obtener todos los destinos
  * @returns {Promise<Array>} Lista de destinos
  */
@@ -51,6 +76,66 @@ export async function getDestinationsByType(type) {
     }));
   } catch (error) {
     console.error(`Error al obtener destinos de tipo ${type}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Obtener destinos por tag
+ * @param {string} tagName - Nombre del tag a buscar
+ * @returns {Promise<Array>} Lista de destinos que tienen ese tag
+ */
+export async function getDestinationsByTag(tagName) {
+  try {
+    const destinations = await getCollection('destinations');
+    const filtered = destinations.filter(entry => hasTag(entry, tagName));
+    return filtered.map(entry => ({
+      ...entry.data,
+      slug: entry.slug
+    }));
+  } catch (error) {
+    console.error(`Error al obtener destinos con tag ${tagName}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Obtener destinos en oferta
+ * @returns {Promise<Array>} Lista de destinos en oferta
+ */
+export async function getOfferDestinations() {
+  try {
+    const destinations = await getCollection('destinations');
+    
+    // Función para verificar si un destino está en oferta por precio
+    const isOfferByPrice = (dest) => {
+      const originalPrice = dest.data.originalPrice 
+        ? (typeof dest.data.originalPrice === 'string' 
+            ? Number(String(dest.data.originalPrice).replace(/\./g, '')) || 0
+            : dest.data.originalPrice) 
+        : 0;
+      
+      return originalPrice > 0 && originalPrice > dest.data.price;
+    };
+    
+    // Obtener destinos con precio de oferta
+    const priceOfferDestinations = destinations.filter(dest => isOfferByPrice(dest));
+    
+    // Obtener destinos con tag "Oferta"
+    const tagOfferDestinations = destinations.filter(dest => hasTag(dest, 'Oferta'));
+    
+    // Combinar ambos conjuntos y eliminar duplicados por id
+    const combinedDestinations = [...priceOfferDestinations, ...tagOfferDestinations];
+    const offerDestinations = combinedDestinations.filter((dest, index, self) => 
+      index === self.findIndex((d) => d.data.id === dest.data.id)
+    );
+    
+    return offerDestinations.map(entry => ({
+      ...entry.data,
+      slug: entry.slug
+    }));
+  } catch (error) {
+    console.error('Error al obtener destinos en oferta:', error);
     return [];
   }
 }
@@ -190,6 +275,13 @@ export async function getFilteredDestinations(filters = {}) {
           entry.data.duration >= range.min && entry.data.duration <= range.max
         );
       }
+    }
+    
+    // Filtrar por tag
+    if (filters.tag) {
+      results = results.filter(entry => 
+        hasTag(entry, filters.tag)
+      );
     }
     
     // Filtrar por fecha (si se implementa en el futuro)

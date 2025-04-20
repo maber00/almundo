@@ -1,0 +1,234 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+import DestinationCard from '../../../components/destinations/DestinationCard.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+// Obtener todos los destinos
+const allDestinations = await getCollection('destinations');
+
+// Filtrar destinos por el tag de Ocio (puede estar en tag principal o en tags adicionales)
+const ocioDestinations = allDestinations
+  .filter(dest => 
+    dest.data.tag === 'Ocio' || 
+    (dest.data.tags && dest.data.tags.includes('Ocio'))
+  )
+  .map(entry => ({...entry.data, slug: entry.slug}));
+
+// Estadísticas
+const stats = {
+  totalDestinations: ocioDestinations.length,
+  averagePrice: ocioDestinations.length > 0 
+    ? Math.round(ocioDestinations.reduce((sum, dest) => sum + dest.price, 0) / ocioDestinations.length) 
+    : 0
+};
+
+// Actividades de ocio
+const leisureActivities = [
+  {
+    icon: "🏖️",
+    title: "Descanso en playa",
+    description: "Relájate en playas paradisíacas con todas las comodidades"
+  },
+  {
+    icon: "🧖‍♀️",
+    title: "Spa y bienestar",
+    description: "Tratamientos y terapias para rejuvenecer cuerpo y mente"
+  },
+  {
+    icon: "🍹",
+    title: "Gastronomía y cócteles",
+    description: "Experiencias culinarias y bebidas premium incluidas"
+  },
+  {
+    icon: "🌅",
+    title: "Desconexión total",
+    description: "Ambientes diseñados para olvidar el estrés cotidiano"
+  }
+];
+
+// Tipos de destinos de ocio
+const leisureTypes = [
+  "Resorts de lujo", "Spa & Wellness", "Escapadas urbanas", 
+  "Islas paradisíacas", "Viajes gastronómicos", "Destinos de relax"
+];
+---
+
+<Layout title="Destinos de Ocio y Relax | AL mundo Tour" description="Relájate y desconecta en nuestros destinos diseñados para el ocio. Playas paradisíacas, spas de lujo y experiencias de bienestar para recargar energías.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-cyan-500 to-blue-500 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Destinos de Ocio y Relax</h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+          Desconecta de la rutina y regálate un tiempo para ti. Destinos diseñados para el descanso, el relax y el placer de no hacer nada.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-cyan-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-cyan-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Ocio</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Tipos de ocio -->
+    <section class="py-8 bg-cyan-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">Experiencias de descanso</h2>
+        <div class="flex flex-wrap justify-center gap-4">
+          {leisureTypes.map(type => (
+            <span class="bg-white text-cyan-600 px-4 py-2 rounded-full shadow-sm text-sm font-medium">
+              {type}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+    
+    <!-- Actividades de ocio -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Disfruta tu tiempo al máximo</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {leisureActivities.map((activity) => (
+            <div class="bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-center">
+              <div class="text-4xl mb-4">{activity.icon}</div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">{activity.title}</h3>
+              <p class="text-gray-600">{activity.description}</p>
+            </div>
+          ))}
+        </div>
+        
+        <!-- Estadísticas -->
+        <div class="bg-cyan-100 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-4xl font-bold text-cyan-600 mb-2">{stats.totalDestinations}+</div>
+            <p class="text-gray-700">Destinos de relax</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-cyan-600 mb-2">
+              {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
+            </div>
+            <p class="text-gray-700">Precio promedio</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-cyan-600 mb-2">🧘‍♀️</div>
+            <p class="text-gray-700">Máximo bienestar</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Listado de destinos -->
+    <section class="py-12 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">
+          Nuestros destinos de ocio
+        </h2>
+        
+        {ocioDestinations.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {ocioDestinations.map((destination) => (
+              <DestinationCard destination={destination} />
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🏝️</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Próximamente nuevos destinos de relax</h2>
+            <p class="text-lg text-gray-600 mb-6">Estamos seleccionando los mejores lugares para tu descanso. ¡Vuelve pronto!</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos" class="bg-cyan-600 text-white py-3 px-6 rounded-md font-medium hover:bg-cyan-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔄</span>
+                Ver todos los destinos
+              </a>
+              
+              <a href="/contacto" class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">💬</span>
+                Contactar asesor
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- Beneficios del descanso -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">
+          Beneficios de un viaje de ocio
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-3xl mb-4">🧠</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Reduce el estrés</h3>
+            <p class="text-gray-600">
+              Los viajes de ocio ayudan a disminuir los niveles de cortisol (hormona del estrés) y mejorar tu bienestar mental.
+            </p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-3xl mb-4">⚡</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Recarga energías</h3>
+            <p class="text-gray-600">
+              Desconectar completamente te permite volver a tu rutina con más vitalidad y mejor rendimiento.
+            </p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-3xl mb-4">❤️</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Mejora la salud</h3>
+            <p class="text-gray-600">
+              Descansar adecuadamente fortalece el sistema inmunológico y reduce el riesgo de enfermedades relacionadas con el estrés.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA final -->
+    <section class="py-12 bg-cyan-600 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Necesitas un descanso?</h2>
+        <p class="text-xl text-cyan-100 mb-8 max-w-3xl mx-auto">
+          Nuestros expertos te ayudarán a encontrar el destino perfecto para desconectar y recargar energías.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="bg-white text-cyan-600 py-3 px-8 rounded-md font-medium hover:bg-cyan-50 transition-colors"
+          >
+            Solicitar asesoramiento
+          </a>
+          
+          <a 
+            href="https://wa.me/573165276338?text=Hola, necesito un destino para descansar y relajarme"
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            WhatsApp directo
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

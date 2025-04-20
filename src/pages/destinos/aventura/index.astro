@@ -1,0 +1,179 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+import DestinationCard from '../../../components/destinations/DestinationCard.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+// Obtener todos los destinos
+const allDestinations = await getCollection('destinations');
+
+// Filtrar destinos por el tag de Aventura (puede estar en tag principal o en tags adicionales)
+const aventuraDestinations = allDestinations
+  .filter(dest => 
+    dest.data.tag === 'Aventura' || 
+    (dest.data.tags && dest.data.tags.includes('Aventura'))
+  )
+  .map(entry => ({...entry.data, slug: entry.slug}));
+
+// Estadísticas
+const stats = {
+  totalDestinations: aventuraDestinations.length,
+  averagePrice: aventuraDestinations.length > 0 
+    ? Math.round(aventuraDestinations.reduce((sum, dest) => sum + dest.price, 0) / aventuraDestinations.length) 
+    : 0
+};
+
+// Características de los destinos de aventura
+const features = [
+  {
+    icon: "🏔️",
+    title: "Senderismo y Trekking",
+    description: "Rutas espectaculares para todos los niveles"
+  },
+  {
+    icon: "🚣",
+    title: "Deportes Acuáticos",
+    description: "Rafting, kayak y más aventuras acuáticas"
+  },
+  {
+    icon: "🧗",
+    title: "Escalada",
+    description: "Desafía tus límites en paredes naturales"
+  },
+  {
+    icon: "🏄",
+    title: "Surfing",
+    description: "Las mejores olas para surfistas"
+  }
+];
+---
+
+<Layout title="Destinos de Aventura | AL mundo Tour" description="Descubre destinos increíbles llenos de adrenalina y aventuras al aire libre. Ofertas exclusivas en viajes de aventura.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-green-600 to-green-800 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Destinos de Aventura</h1>
+        <p class="text-xl text-green-100 max-w-3xl mx-auto">
+          Descubre destinos increíbles llenos de adrenalina y aventuras al aire libre. Experiencias que desafiarán tus límites y te conectarán con la naturaleza.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-green-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-green-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Aventura</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Características de los viajes de aventura -->
+    <section class="py-12 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Experiencias que te esperan</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {features.map((feature) => (
+            <div class="bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-center">
+              <div class="text-4xl mb-4">{feature.icon}</div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
+              <p class="text-gray-600">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+        
+        <!-- Estadísticas -->
+        <div class="bg-green-100 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-4xl font-bold text-green-600 mb-2">{stats.totalDestinations}+</div>
+            <p class="text-gray-700">Destinos de aventura</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-green-600 mb-2">
+              {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
+            </div>
+            <p class="text-gray-700">Precio promedio</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-green-600 mb-2">100%</div>
+            <p class="text-gray-700">Aventura y adrenalina</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Listado de destinos -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">
+          Nuestros destinos de aventura
+        </h2>
+        
+        {aventuraDestinations.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {aventuraDestinations.map((destination) => (
+              <DestinationCard destination={destination} />
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">No encontramos destinos en esta categoría</h2>
+            <p class="text-lg text-gray-600 mb-6">Estamos trabajando en nuevas opciones de aventura. ¡Vuelve pronto!</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos" class="bg-green-600 text-white py-3 px-6 rounded-md font-medium hover:bg-green-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔄</span>
+                Ver todos los destinos
+              </a>
+              
+              <a href="/contacto" class="bg-blue-500 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-600 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">💬</span>
+                Contactar asesor
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- CTA final -->
+    <section class="py-12 bg-green-600 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Listo para tu próxima aventura?</h2>
+        <p class="text-xl text-green-100 mb-8 max-w-3xl mx-auto">
+          Nuestros asesores especializados en turismo de aventura están listos para ayudarte a planificar tu viaje ideal.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="bg-white text-green-600 py-3 px-8 rounded-md font-medium hover:bg-green-50 transition-colors"
+          >
+            Solicitar asesoramiento
+          </a>
+          
+          <a 
+            href="https://wa.me/573165276338?text=Hola, estoy interesado en un destino de aventura"
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            WhatsApp directo
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

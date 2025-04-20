@@ -1,0 +1,242 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+import DestinationCard from '../../../components/destinations/DestinationCard.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+// Obtener todos los destinos
+const allDestinations = await getCollection('destinations');
+
+// Filtrar destinos por el tag de Familia (puede estar en tag principal o en tags adicionales)
+const familiaDestinations = allDestinations
+  .filter(dest => 
+    dest.data.tag === 'Familia' || 
+    (dest.data.tags && dest.data.tags.includes('Familia'))
+  )
+  .map(entry => ({...entry.data, slug: entry.slug}));
+
+// Estadísticas
+const stats = {
+  totalDestinations: familiaDestinations.length,
+  averagePrice: familiaDestinations.length > 0 
+    ? Math.round(familiaDestinations.reduce((sum, dest) => sum + dest.price, 0) / familiaDestinations.length) 
+    : 0
+};
+
+// Beneficios de viajar en familia
+const familyBenefits = [
+  {
+    icon: "👨‍👩‍👧‍👦",
+    title: "Fortalece lazos familiares",
+    description: "Crea recuerdos y experiencias compartidas que perdurarán para siempre"
+  },
+  {
+    icon: "🎮",
+    title: "Diversión para todas las edades",
+    description: "Actividades diseñadas para que todos los miembros de la familia disfruten"
+  },
+  {
+    icon: "🧠",
+    title: "Aprendizaje vivencial",
+    description: "Experiencias educativas que amplían la visión del mundo de los niños"
+  },
+  {
+    icon: "🛡️",
+    title: "Viajes seguros",
+    description: "Destinos y alojamientos seleccionados pensando en la seguridad familiar"
+  }
+];
+
+// Tipos de destinos familiares
+const familyDestinationTypes = [
+  "Parques temáticos", "Playas", "Todo incluido", "Naturaleza",
+  "Ciudades familiares", "Cruceros"
+];
+---
+
+<Layout title="Destinos para Familias | AL mundo Tour" description="Viajes diseñados especialmente para familias con niños de todas las edades. Descubre destinos seguros y divertidos para unas vacaciones inolvidables en familia.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-blue-500 to-teal-500 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Viajes Familiares</h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+          Descubre destinos y experiencias diseñadas especialmente para que toda la familia disfrute de unas vacaciones inolvidables.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Familia</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Tipos de destinos familiares -->
+    <section class="py-8 bg-blue-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">Opciones para toda la familia</h2>
+        <div class="flex flex-wrap justify-center gap-4">
+          {familyDestinationTypes.map(type => (
+            <span class="bg-white text-blue-600 px-4 py-2 rounded-full shadow-sm text-sm font-medium">
+              {type}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+    
+    <!-- Beneficios de viajar en familia -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">¿Por qué viajar en familia?</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {familyBenefits.map((benefit) => (
+                <div class="bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-center">
+                  <div class="text-4xl mb-4">{benefit.icon}</div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-2">{benefit.title}</h3>
+                  <p class="text-gray-600">{benefit.description}</p>
+                </div>
+              ))}
+              </div>
+              
+              <!-- Estadísticas -->
+              <div class="bg-blue-100 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div>
+                  <div class="text-4xl font-bold text-blue-600 mb-2">{stats.totalDestinations}+</div>
+                  <p class="text-gray-700">Destinos familiares</p>
+                </div>
+                <div>
+                  <div class="text-4xl font-bold text-blue-600 mb-2">
+                    {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
+                  </div>
+                  <p class="text-gray-700">Precio promedio</p>
+                </div>
+                <div>
+                  <div class="text-4xl font-bold text-blue-600 mb-2">👶👧🧒👦</div>
+                  <p class="text-gray-700">Para todas las edades</p>
+                </div>
+              </div>
+              </div>
+              </section>
+              
+              <!-- Listado de destinos -->
+              <section class="py-12 bg-gray-50">
+              <div class="container mx-auto px-4">
+              <h2 class="text-3xl font-bold text-gray-900 mb-8">
+                Destinos recomendados para familias
+              </h2>
+              
+              {familiaDestinations.length > 0 ? (
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {familiaDestinations.map((destination) => (
+                    <DestinationCard destination={destination} />
+                  ))}
+                </div>
+              ) : (
+                <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                  <div class="text-6xl mb-4">👨‍👩‍👧‍👦</div>
+                  <h2 class="text-2xl font-bold text-gray-900 mb-4">Próximamente nuevos destinos familiares</h2>
+                  <p class="text-lg text-gray-600 mb-6">Estamos preparando las mejores opciones para que disfrutes con tu familia. ¡Vuelve pronto!</p>
+                  
+                  <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/destinos" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+                      <span class="mr-2">🔄</span>
+                      Ver todos los destinos
+                    </a>
+                    
+                    <a href="/contacto" class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center">
+                      <span class="mr-2">💬</span>
+                      Contactar asesor
+                    </a>
+                  </div>
+                </div>
+              )}
+              </div>
+              </section>
+              
+              <!-- Consejos para viajar con niños -->
+              <section class="py-12">
+              <div class="container mx-auto px-4">
+              <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">
+                Consejos para viajar con niños
+              </h2>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                  <div class="text-3xl mb-4">🎒</div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-2">Prepara tu equipaje con anticipación</h3>
+                  <p class="text-gray-600">
+                    Haz una lista de todo lo necesario para los niños: medicamentos, ropa extra, snacks favoritos y juguetes o dispositivos para entretenerlos durante el viaje.
+                  </p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                  <div class="text-3xl mb-4">⏰</div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-2">Respeta los horarios habituales</h3>
+                  <p class="text-gray-600">
+                    Intenta mantener las rutinas de sueño y comidas de los niños para evitar el cansancio excesivo y los cambios de humor.
+                  </p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                  <div class="text-3xl mb-4">🏊</div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-2">Elige hoteles family-friendly</h3>
+                  <p class="text-gray-600">
+                    Busca alojamientos con instalaciones para niños como piscinas infantiles, clubes de actividades o menús especiales.
+                  </p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                  <div class="text-3xl mb-4">🧩</div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-2">Planifica actividades variadas</h3>
+                  <p class="text-gray-600">
+                    Combina momentos de diversión intensa con períodos de descanso y actividades relajadas para que todos disfruten sin agotarse.
+                  </p>
+                </div>
+              </div>
+              </div>
+              </section>
+              
+              <!-- CTA final -->
+              <section class="py-12 bg-blue-600 text-white">
+              <div class="container mx-auto px-4 text-center">
+              <h2 class="text-3xl font-bold mb-4">¿Listo para planear tus próximas vacaciones familiares?</h2>
+              <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+                Nuestros asesores especializados en viajes familiares te ayudarán a crear la experiencia perfecta para grandes y pequeños.
+              </p>
+              
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a 
+                  href="/contacto" 
+                  class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
+                >
+                  Solicitar asesoramiento
+                </a>
+                
+                <a 
+                  href="https://wa.me/573165276338?text=Hola, estoy interesado en un viaje familiar"
+                  target="_blank" 
+                  class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+                >
+                  WhatsApp directo
+                </a>
+              </div>
+              </div>
+              </section>
+              </main>
+              
+              <Footer />
+              </Layout>

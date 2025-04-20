@@ -1,0 +1,300 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+import DestinationCard from '../../../components/destinations/DestinationCard.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+// Obtener todos los destinos
+const allDestinations = await getCollection('destinations');
+
+// Filtrar destinos por el tag de Todo incluido (puede estar en tag principal o en tags adicionales)
+const todoIncluidoDestinations = allDestinations
+  .filter(dest => 
+    dest.data.tag === 'Todo incluido' || 
+    (dest.data.tags && dest.data.tags.includes('Todo incluido'))
+  )
+  .map(entry => ({...entry.data, slug: entry.slug}));
+
+// Estadísticas
+const stats = {
+  totalDestinations: todoIncluidoDestinations.length,
+  averagePrice: todoIncluidoDestinations.length > 0 
+    ? Math.round(todoIncluidoDestinations.reduce((sum, dest) => sum + dest.price, 0) / todoIncluidoDestinations.length) 
+    : 0
+};
+
+// Beneficios de los paquetes todo incluido
+const allInclusiveBenefits = [
+  {
+    icon: "🍽️",
+    title: "Gastronomía completa",
+    description: "Todas las comidas, snacks y bebidas incluidas durante toda tu estancia"
+  },
+  {
+    icon: "🏊",
+    title: "Actividades ilimitadas",
+    description: "Acceso a todas las instalaciones y entretenimiento del resort"
+  },
+  {
+    icon: "💳",
+    title: "Sin preocupaciones",
+    description: "Olvídate de sacar la billetera, todo está pagado por adelantado"
+  },
+  {
+    icon: "⚡",
+    title: "Máxima comodidad",
+    description: "Todo lo que necesitas en un solo lugar, sin necesidad de desplazamientos"
+  }
+];
+
+// Destinos populares todo incluido
+const popularAllInclusiveDestinations = [
+  "Cancún", "Punta Cana", "Jamaica", "Riviera Maya", 
+  "Cartagena", "San Andrés", "Santa Marta", "Barú"
+];
+---
+
+<Layout title="Destinos Todo Incluido | AL mundo Tour" description="Descubre nuestros paquetes vacacionales todo incluido. Alojamiento, comidas, bebidas y actividades sin preocupaciones de costos adicionales.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-yellow-500 to-yellow-700 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Destinos Todo Incluido</h1>
+        <p class="text-xl text-yellow-100 max-w-3xl mx-auto">
+          Disfruta de unas vacaciones sin preocupaciones donde todo está cubierto: alojamiento, comidas, bebidas y actividades en un solo precio.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-yellow-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-yellow-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Todo incluido</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Destinos populares -->
+    <section class="py-8 bg-yellow-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">Destinos populares todo incluido</h2>
+        <div class="flex flex-wrap justify-center gap-4">
+          {popularAllInclusiveDestinations.map(destination => (
+            <span class="bg-white text-yellow-600 px-4 py-2 rounded-full shadow-sm text-sm font-medium">
+              {destination}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+    
+    <!-- Beneficios del todo incluido -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">¿Por qué elegir Todo Incluido?</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {allInclusiveBenefits.map((benefit) => (
+            <div class="bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-center">
+              <div class="text-4xl mb-4">{benefit.icon}</div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">{benefit.title}</h3>
+              <p class="text-gray-600">{benefit.description}</p>
+            </div>
+          ))}
+        </div>
+        
+        <!-- Estadísticas -->
+        <div class="bg-yellow-100 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-4xl font-bold text-yellow-600 mb-2">{stats.totalDestinations}+</div>
+            <p class="text-gray-700">Resorts todo incluido</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-yellow-600 mb-2">
+              {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
+            </div>
+            <p class="text-gray-700">Precio promedio</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-yellow-600 mb-2">🔄</div>
+            <p class="text-gray-700">Renovación anual</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Listado de destinos -->
+    <section class="py-12 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">
+          Nuestros paquetes todo incluido
+        </h2>
+        
+        {todoIncluidoDestinations.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {todoIncluidoDestinations.map((destination) => (
+              <DestinationCard destination={destination} />
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🏨</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Próximamente nuevos resorts todo incluido</h2>
+            <p class="text-lg text-gray-600 mb-6">Estamos seleccionando los mejores resorts para tus vacaciones. ¡Vuelve pronto!</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos" class="bg-yellow-600 text-white py-3 px-6 rounded-md font-medium hover:bg-yellow-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔄</span>
+                Ver todos los destinos
+              </a>
+              
+              <a href="/contacto" class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">💬</span>
+                Contactar asesor
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- ¿Qué incluye? -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">
+          ¿Qué incluyen nuestros paquetes?
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-green-600 mb-4 flex items-center">
+              <Icon name="tabler:check" class="w-6 h-6 mr-2" />
+              Siempre incluido
+            </h3>
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <div class="bg-green-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:check" class="w-4 h-4 text-green-600" />
+                </div>
+                <span>Habitación en hotel o resort seleccionado</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-green-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:check" class="w-4 h-4 text-green-600" />
+                </div>
+                <span>Todas las comidas (desayuno, almuerzo, cena)</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-green-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:check" class="w-4 h-4 text-green-600" />
+                </div>
+                <span>Snacks y aperitivos durante todo el día</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-green-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:check" class="w-4 h-4 text-green-600" />
+                </div>
+                <span>Bebidas nacionales e internacionales ilimitadas</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-green-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:check" class="w-4 h-4 text-green-600" />
+                </div>
+                <span>Actividades diarias y entretenimiento nocturno</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-green-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:check" class="w-4 h-4 text-green-600" />
+                </div>
+                <span>Uso de todas las instalaciones del resort</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-red-600 mb-4 flex items-center">
+              <Icon name="tabler:x" class="w-6 h-6 mr-2" />
+              No incluido generalmente
+            </h3>
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <div class="bg-red-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:x" class="w-4 h-4 text-red-600" />
+                </div>
+                <span>Boletos aéreos (se pueden agregar al paquete)</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-red-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:x" class="w-4 h-4 text-red-600" />
+                </div>
+                <span>Servicios de spa y tratamientos de belleza</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-red-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:x" class="w-4 h-4 text-red-600" />
+                </div>
+                <span>Excursiones y tours opcionales</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-red-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:x" class="w-4 h-4 text-red-600" />
+                </div>
+                <span>Compras en tiendas del resort</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-red-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:x" class="w-4 h-4 text-red-600" />
+                </div>
+                <span>Llamadas telefónicas y servicio de lavandería</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-red-100 p-1 rounded-full mr-3 mt-1">
+                  <Icon name="tabler:x" class="w-4 h-4 text-red-600" />
+                </div>
+                <span>Propinas (aunque son opcionales en la mayoría de resorts)</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA final -->
+    <section class="py-12 bg-yellow-600 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Listo para disfrutar sin preocupaciones?</h2>
+        <p class="text-xl text-yellow-100 mb-8 max-w-3xl mx-auto">
+          Nuestros expertos te ayudarán a encontrar el resort todo incluido perfecto para tus vacaciones.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="bg-white text-yellow-600 py-3 px-8 rounded-md font-medium hover:bg-yellow-50 transition-colors"
+          >
+            Solicitar asesoramiento
+          </a>
+          
+          <a 
+            href="https://wa.me/573165276338?text=Hola, estoy interesado en un paquete todo incluido"
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            WhatsApp directo
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

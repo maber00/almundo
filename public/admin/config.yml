@@ -15,7 +15,7 @@ collections:
     fields:
       - { label: "ID", name: "id", widget: "string" }
       - { label: "Nombre", name: "name", widget: "string" }
-      - { label: "Tipo", name: "type", widget: "select", options: ["nacional", "internacional"] }
+      - { label: "Tipo", name: "type", widget: "select", options: ["nacional", "internacional", "crucero"] }
       - { label: "Región", name: "region", widget: "string" }
       - { label: "Precio", name: "price", widget: "number" }
       - { label: "Moneda", name: "currency", widget: "select", options: ["COP", "USD"], default: "COP" }
@@ -29,10 +29,30 @@ collections:
       - { label: "Destacado", name: "featured", widget: "boolean", default: false }
       - { label: "Puntuación", name: "rating", widget: "number", min: 0, max: 100 }
       - { label: "Disponibilidad", name: "availability", widget: "number" }
-      - { label: "Etiqueta", name: "tag", widget: "select", multiple: true, options: ["Aniversario", "Aventura", "Cultural", "Ecoturismo", "Familiar", "Ocio", "Oferta", "Playa", "Romántico", "Todo Incluido"] }
+      - { label: "Etiqueta Principal", name: "tag", widget: "select", options: ["Aniversario", "Aventura", "Cultural", "Ecoturismo", "Familiar", "Ocio", "Oferta", "Playa", "Romántico", "Todo Incluido", "Crucero"] }
+      - { label: "Etiquetas Adicionales", name: "tags", widget: "select", options: ["Aniversario", "Aventura", "Cultural", "Ecoturismo", "Familiar", "Ocio", "Oferta", "Playa", "Romántico", "Todo Incluido", "Crucero"], multiple: true, required: false }
       - { label: "Incluye", name: "includes", widget: "list", required: false }
       - { label: "No Incluye", name: "notIncludes", widget: "list", required: false }
       - { label: "Notas", name: "notes", widget: "text", required: false }
+      - { label: "Naviera (para cruceros)", name: "cruiseLine", widget: "string", required: false }
+      - { label: "Barco (para cruceros)", name: "ship", widget: "string", required: false }
+      - { label: "Puertos (para cruceros)", name: "ports", widget: "list", required: false }
+
+  # Colección para categorías de destinos
+  - name: "destination-categories"
+    label: "Categorías de destinos"
+    folder: "src/content/destination-categories"
+    create: true
+    slug: "{{id}}"
+    fields:
+      - { label: "ID", name: "id", widget: "string" }
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Descripción", name: "description", widget: "text" }
+      - { label: "Imagen", name: "image", widget: "image" }
+      - { label: "URL", name: "url", widget: "string" }
+      - { label: "Texto del botón", name: "buttonText", widget: "string", default: "Ver todos" }
+      - { label: "Orden", name: "order", widget: "number", default: 0 }
+      - { label: "Activo", name: "active", widget: "boolean", default: true }
 
   # Colección para categorías
   - name: "categories"
@@ -79,7 +99,7 @@ collections:
       - { label: "Orden", name: "order", widget: "number", default: 0, hint: "Posición de la diapositiva (0 es la primera)" }
       - { label: "Activo", name: "active", widget: "boolean", default: true }
 
-# Colección para entradas de blog
+  # Colección para entradas de blog
   - name: "blog"
     label: "Blog"
     folder: "src/content/blog"

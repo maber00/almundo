@@ -1,0 +1,233 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+import DestinationCard from '../../../components/destinations/DestinationCard.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+// Obtener todos los destinos
+const allDestinations = await getCollection('destinations');
+
+// Filtrar destinos por el tag de Ecoturismo (puede estar en tag principal o en tags adicionales)
+const ecoturismoDestinations = allDestinations
+  .filter(dest => 
+    dest.data.tag === 'Ecoturismo' || 
+    (dest.data.tags && dest.data.tags.includes('Ecoturismo'))
+  )
+  .map(entry => ({...entry.data, slug: entry.slug}));
+
+// Estadísticas
+const stats = {
+  totalDestinations: ecoturismoDestinations.length,
+  averagePrice: ecoturismoDestinations.length > 0 
+    ? Math.round(ecoturismoDestinations.reduce((sum, dest) => sum + dest.price, 0) / ecoturismoDestinations.length) 
+    : 0
+};
+
+// Principios del ecoturismo
+const ecoPrinciples = [
+  {
+    icon: "🌿",
+    title: "Mínimo impacto ambiental",
+    description: "Viajes diseñados para conservar los ecosistemas"
+  },
+  {
+    icon: "🧠",
+    title: "Educación ambiental",
+    description: "Experiencias que promueven la conciencia ecológica"
+  },
+  {
+    icon: "👥",
+    title: "Beneficio para comunidades",
+    description: "Apoyo a economías locales y pueblos indígenas"
+  },
+  {
+    icon: "♻️",
+    title: "Sostenibilidad",
+    description: "Prácticas responsables en toda la cadena turística"
+  }
+];
+
+// Ecosistemas populares
+const ecosystems = [
+  "Selva", "Arrecifes", "Montañas", "Desiertos", "Humedales", "Bosques"
+];
+---
+
+<Layout title="Ecoturismo | AL mundo Tour" description="Viaja de forma sostenible y responsable con nuestros destinos de ecoturismo. Experiencias únicas en contacto con la naturaleza y respetando los ecosistemas.">
+  <Header />
+  
+  <main>
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-green-700 to-green-900 py-20 pt-32">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Ecoturismo</h1>
+        <p class="text-xl text-green-100 max-w-3xl mx-auto">
+          Viaja de forma sostenible con experiencias turísticas respetuosas con el medio ambiente y las comunidades locales.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4 border-b border-gray-200">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center text-sm text-gray-500">
+          <a href="/" class="hover:text-green-600">Inicio</a>
+          <span class="mx-2">➡️</span>
+          <a href="/destinos" class="hover:text-green-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">Ecoturismo</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Ecosistemas -->
+    <section class="py-8 bg-green-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">Descubre diversos ecosistemas</h2>
+        <div class="flex flex-wrap justify-center gap-4">
+          {ecosystems.map(ecosystem => (
+            <span class="bg-white text-green-600 px-4 py-2 rounded-full shadow-sm text-sm font-medium">
+              {ecosystem}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+    
+    <!-- Principios del ecoturismo -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Principios del ecoturismo</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {ecoPrinciples.map((principle) => (
+            <div class="bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-center">
+              <div class="text-4xl mb-4">{principle.icon}</div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">{principle.title}</h3>
+              <p class="text-gray-600">{principle.description}</p>
+            </div>
+          ))}
+        </div>
+        
+        <!-- Estadísticas -->
+        <div class="bg-green-100 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-4xl font-bold text-green-600 mb-2">{stats.totalDestinations}+</div>
+            <p class="text-gray-700">Destinos sostenibles</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-green-600 mb-2">
+              {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
+            </div>
+            <p class="text-gray-700">Precio promedio</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-green-600 mb-2">🌎</div>
+            <p class="text-gray-700">Turismo responsable</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Listado de destinos -->
+    <section class="py-12 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">
+          Nuestros destinos de ecoturismo
+        </h2>
+        
+        {ecoturismoDestinations.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {ecoturismoDestinations.map((destination) => (
+              <DestinationCard destination={destination} />
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="text-6xl mb-4">🌲</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Próximamente nuevos destinos sostenibles</h2>
+            <p class="text-lg text-gray-600 mb-6">Estamos preparando las mejores opciones de ecoturismo para ti. ¡Vuelve pronto!</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/destinos" class="bg-green-600 text-white py-3 px-6 rounded-md font-medium hover:bg-green-700 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">🔄</span>
+                Ver todos los destinos
+              </a>
+              
+              <a href="/contacto" class="bg-blue-500 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-600 transition-colors inline-flex items-center justify-center">
+                <span class="mr-2">💬</span>
+                Contactar asesor
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- Impacto del ecoturismo -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">
+          El impacto positivo del ecoturismo
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-3xl mb-4">🦋</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Conservación de ecosistemas</h3>
+            <p class="text-gray-600">
+              Contribuye a la preservación de áreas naturales y la protección de especies en peligro de extinción.
+            </p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-3xl mb-4">👨‍👩‍👧‍👦</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Apoyo a comunidades locales</h3>
+            <p class="text-gray-600">
+              Genera empleo y beneficios económicos directos para las poblaciones de las zonas visitadas.
+            </p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="text-3xl mb-4">🧠</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Conciencia ambiental</h3>
+            <p class="text-gray-600">
+              Promueve la educación sobre la importancia de la conservación y las prácticas sostenibles.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA final -->
+    <section class="py-12 bg-green-600 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">Viaja de forma responsable</h2>
+        <p class="text-xl text-green-100 mb-8 max-w-3xl mx-auto">
+          Nuestros expertos en ecoturismo te ayudarán a planificar una experiencia inolvidable que respeta y conserva el medio ambiente.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contacto" 
+            class="bg-white text-green-600 py-3 px-8 rounded-md font-medium hover:bg-green-50 transition-colors"
+          >
+            Solicitar asesoramiento
+          </a>
+          
+          <a 
+            href="https://wa.me/573165276338?text=Hola, estoy interesado en un destino de ecoturismo"
+            target="_blank" 
+            class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            WhatsApp directo
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
