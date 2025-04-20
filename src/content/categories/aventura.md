@@ -9,4 +9,7 @@ destinations:
   - Amazonas
   - Cusco
 url: aventura
+tag: Aventura
+tags:
+  - Ecoturismo
 ---
