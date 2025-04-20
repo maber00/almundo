@@ -59,6 +59,7 @@ collections:
     create: true
     slug: "{{slug}}"
     fields:
+      - { label: "ID", name: "id", widget: "string", required: true }
       - { label: "Nombre", name: "name", widget: "string", hint: "Nombre de la entidad financiera" }
       - { label: "Logo", name: "logo", widget: "image", hint: "Logo de la entidad financiera" }
       - { label: "Activo", name: "active", widget: "boolean", default: true, hint: "Mostrar u ocultar este banco" }
