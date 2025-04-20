@@ -72,6 +72,10 @@ const referralOptions = [
   { value: "recomendacion", label: "Recomendación de un amigo" },
   { value: "otro", label: "Otro" }
 ];
+
+// Obtener destino de URL si existe
+const { searchParams } = Astro.url;
+const preselectedDestino = searchParams.get('destino') || '';
 ---
 
 <div class="bg-white shadow-xl rounded-lg overflow-hidden">
@@ -81,384 +85,391 @@ const referralOptions = [
     <p class="text-xl text-blue-100 max-w-2xl mx-auto">Cuéntanos sobre tus intereses y un asesor te contactará con la mejor propuesta personalizada.</p>
   </div>
 
-  
- <!-- Cambia el form para usar Netlify Forms -->
- <form 
- id="lead-capture-form" 
- class="p-8 md:p-10"
- name="contact"
- method="POST"
- data-netlify="true"
- netlify-honeypot="bot-field"
->
- <p class="hidden">
-   <label>No llenes esto si eres humano: <input name="bot-field" /></label>
- </p>
-       <!-- Sección: Datos Básicos -->
-      <div class="mb-12">
-        <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-200">Datos Básicos</h3>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Nombre completo -->
-          <div class="col-span-2 md:col-span-1">
-            <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">
-              Nombre completo <span class="text-red-500">*</span>
-            </label>
-            <input 
-              type="text" 
-              id="full_name" 
-              name="full_name" 
-              required 
-              minlength="3"
-              class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Ingresa tu nombre completo"
-            />
-          </div>
-          
-          <!-- Correo electrónico -->
-          <div class="col-span-2 md:col-span-1">
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-              Correo electrónico <span class="text-red-500">*</span>
-            </label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              required
-              class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="ejemplo@correo.com"
-            />
-          </div>
-          
-          <!-- Teléfono -->
-          <div class="col-span-2">
-            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
-              Teléfono (WhatsApp) <span class="text-red-500">*</span>
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span class="text-gray-500">+57</span>
-              </div>
-              <input 
-                type="tel" 
-                id="phone" 
-                name="phone" 
-                required
-                class="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                placeholder="300 123 4567"
-                pattern="[0-9]{10}"
-                title="Ingresa un número de teléfono válido de 10 dígitos"
-              />
-            </div>
-            <p class="mt-2 text-xs text-gray-500">Formato: 10 dígitos sin espacios ni guiones</p>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Sección: Preferencias de Viaje -->
-      <div class="mb-12">
-        <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-200">Preferencias de Viaje</h3>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Destino interesado -->
-          <div>
-            <label for="destination" class="block text-sm font-medium text-gray-700 mb-2">
-              ¿Qué destino te interesa?
-            </label>
-            <div class="relative">
-              <select 
-                id="destination" 
-                name="destination"
-                class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
-              >
-                <option value="">Selecciona un destino...</option>
-                {destinationOptions.map(option => (
-                  <option value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                <span class="text-xl">▼</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Cuándo planea viajar -->
-          <div>
-            <label for="travel_time" class="block text-sm font-medium text-gray-700 mb-2">
-              ¿Cuándo planeas viajar?
-            </label>
-            <div class="relative">
-              <select 
-                id="travel_time" 
-                name="travel_time"
-                class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
-              >
-                <option value="">Selecciona una opción...</option>
-                {travelTimeOptions.map(option => (
-                  <option value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                <span class="text-xl">▼</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Presupuesto -->
-          <div>
-            <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">
-              Presupuesto aproximado por persona
-            </label>
-            <div class="relative">
-              <select 
-                id="budget" 
-                name="budget"
-                class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
-              >
-                <option value="">Selecciona una opción...</option>
-                {budgetOptions.map(option => (
-                  <option value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                <span class="text-xl">▼</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Con quién viajaría -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-3">
-              ¿Con quién viajarías?
-            </label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {travelWithOptions.map(option => (
-                <div class="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    id={`travel_with_${option.value}`} 
-                    name="travel_with" 
-                    value={option.value}
-                    class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label for={`travel_with_${option.value}`} class="ml-3 text-sm text-gray-700">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          <!-- Tipo de experiencia -->
-          <div class="col-span-1 md:col-span-2 mt-2">
-            <label class="block text-sm font-medium text-gray-700 mb-3">
-              ¿Qué tipo de experiencia buscas?
-            </label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-              {experienceOptions.map(option => (
-                <div class="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    id={`experience_${option.value}`} 
-                    name="experience" 
-                    value={option.value}
-                    class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label for={`experience_${option.value}`} class="ml-3 text-sm text-gray-700">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Sección: Preguntas de Calificación -->
-      <div class="mb-12">
-        <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-200">Información Adicional</h3>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Viajes anteriores -->
-          <div>
-            <label for="previous_travel" class="block text-sm font-medium text-gray-700 mb-2">
-              ¿Has viajado al exterior anteriormente?
-            </label>
-            <div class="relative">
-              <select 
-                id="previous_travel" 
-                name="previous_travel"
-                class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
-              >
-                <option value="">Selecciona una opción...</option>
-                {previousTravelOptions.map(option => (
-                  <option value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                <span class="text-xl">▼</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Método de contacto -->
-          <div>
-            <label for="contact_method" class="block text-sm font-medium text-gray-700 mb-2">
-              ¿Cómo prefieres que te contactemos? <span class="text-red-500">*</span>
-            </label>
-            <div class="relative">
-              <select 
-                id="contact_method" 
-                name="contact_method"
-                required
-                class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
-              >
-                <option value="">Selecciona una opción...</option>
-                {contactMethodOptions.map(option => (
-                  <option value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                <span class="text-xl">▼</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Horario de contacto -->
-          <div>
-            <label for="contact_time" class="block text-sm font-medium text-gray-700 mb-2">
-              ¿En qué horario prefieres que te contactemos?
-            </label>
-            <div class="relative">
-              <select 
-                id="contact_time" 
-                name="contact_time"
-                class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
-              >
-                <option value="">Selecciona una opción...</option>
-                {contactTimeOptions.map(option => (
-                  <option value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                <span class="text-xl">▼</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Cómo nos conoció -->
-          <div>
-            <label for="referral_source" class="block text-sm font-medium text-gray-700 mb-2">
-              ¿Cómo nos conociste?
-            </label>
-            <div class="relative">
-              <select 
-                id="referral_source" 
-                name="referral_source"
-                class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
-              >
-                <option value="">Selecciona una opción...</option>
-                {referralOptions.map(option => (
-                  <option value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                <span class="text-xl">▼</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Detalles adicionales -->
-          <div class="col-span-1 md:col-span-2 mt-2">
-            <label for="additional_info" class="block text-sm font-medium text-gray-700 mb-2">
-              ¿Hay algo específico que debamos saber sobre tu viaje soñado?
-            </label>
-            <textarea 
-              id="additional_info" 
-              name="additional_info"
-              rows="5"
-              maxlength="500"
-              class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Cuéntanos cualquier detalle adicional o requisito especial para tu viaje..."
-            ></textarea>
-            <p class="mt-2 text-xs text-gray-500">Máximo 500 caracteres</p>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Sección: Consentimiento -->
-      <div class="mb-12">
-        <div class="space-y-5">
-          <div class="flex items-start">
-            <input 
-              type="checkbox" 
-              id="receive_promotions" 
-              name="receive_promotions" 
-              value="yes"
-              class="h-5 w-5 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <label for="receive_promotions" class="ml-3 text-base text-gray-700">
-              Quiero recibir promociones y ofertas exclusivas de viajes
-            </label>
-          </div>
-          
-          <div class="flex items-start">
-            <input 
-              type="checkbox" 
-              id="accept_communications" 
-              name="accept_communications" 
-              value="yes"
-              required
-              class="h-5 w-5 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <label for="accept_communications" class="ml-3 text-base text-gray-700">
-              Acepto recibir comunicaciones de AL mundo Tour y he leído la 
-              <a href="/politica-privacidad" class="text-blue-600 hover:underline">política de privacidad</a>
-              <span class="text-red-500">*</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Botón de envío -->
-      <div class="flex justify-center">
-        <button 
-          type="submit"
-          class="bg-blue-600 text-white px-10 py-4 rounded-md font-bold text-lg hover:bg-blue-700 transition-colors flex items-center"
-        >
-          <span class="mr-3 text-xl">📤</span>
-          Enviar solicitud
-        </button>
-      </div>
-
-      
-      <!-- Mensaje de estado -->
-      <div id="form-status" class="mt-8 text-center hidden">
-        <div id="form-success" class="bg-green-50 text-green-700 p-6 rounded-lg shadow-sm hidden">
-          <div class="text-5xl mb-4">✅</div>
-          <p class="text-lg font-medium">¡Hemos recibido tu información! Un asesor se pondrá en contacto contigo pronto.</p>
-        </div>
-        
-        <div id="form-error" class="bg-red-50 text-red-700 p-6 rounded-lg shadow-sm hidden">
-          <div class="text-5xl mb-4">⚠️</div>
-          <p class="text-lg font-medium">Hubo un problema al enviar tu información. Por favor, intenta nuevamente.</p>
-        </div>
-      </div>
-    </form>
-  </div>
-  
-
-  <script>
-    // Este script maneja la respuesta del formulario con Netlify
-    const formElement = document.getElementById('lead-capture-form');
+  <!-- Formulario con Netlify Forms -->
+  <form 
+    id="lead-capture-form" 
+    class="p-8 md:p-10"
+    name="contacto"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+  >
+    <!-- Campo oculto anti-spam para Netlify -->
+    <p class="hidden">
+      <label>No llenes esto si eres humano: <input name="bot-field" /></label>
+    </p>
     
-    if (formElement) {
-      formElement.addEventListener('submit', function(e) {
-        // No necesitas prevenir el evento por defecto cuando usas Netlify Forms
+    <!-- Campo oculto para destino preseleccionado si viene desde una página de destino -->
+    {preselectedDestino && <input type="hidden" name="destino_preseleccionado" value={preselectedDestino} />}
+    
+    <!-- Sección: Datos Básicos -->
+    <div class="mb-12">
+      <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-200">Datos Básicos</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Nombre completo -->
+        <div class="col-span-2 md:col-span-1">
+          <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">
+            Nombre completo <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="full_name" 
+            name="full_name" 
+            required 
+            minlength="3"
+            class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Ingresa tu nombre completo"
+          />
+        </div>
         
-        // Pero puedes mostrar un mensaje de éxito después del envío
-        document.getElementById('form-success')?.classList.remove('hidden');
-        document.getElementById('form-status')?.classList.remove('hidden');
+        <!-- Correo electrónico -->
+        <div class="col-span-2 md:col-span-1">
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            Correo electrónico <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            required
+            class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="ejemplo@correo.com"
+          />
+        </div>
+        
+        <!-- Teléfono -->
+        <div class="col-span-2">
+          <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+            Teléfono (WhatsApp) <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500">+57</span>
+            </div>
+            <input 
+              type="tel" 
+              id="phone" 
+              name="phone" 
+              required
+              class="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="300 123 4567"
+              pattern="[0-9]{10}"
+              title="Ingresa un número de teléfono válido de 10 dígitos"
+            />
+          </div>
+          <p class="mt-2 text-xs text-gray-500">Formato: 10 dígitos sin espacios ni guiones</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sección: Preferencias de Viaje -->
+    <div class="mb-12">
+      <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-200">Preferencias de Viaje</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Destino interesado -->
+        <div>
+          <label for="destination" class="block text-sm font-medium text-gray-700 mb-2">
+            ¿Qué destino te interesa?
+          </label>
+          <div class="relative">
+            <select 
+              id="destination" 
+              name="destination"
+              class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="">Selecciona un destino...</option>
+              {destinationOptions.map(option => (
+                <option value={option.value} selected={preselectedDestino === option.value}>{option.label}</option>
+              ))}
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+              <span class="text-xl">▼</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Cuándo planea viajar -->
+        <div>
+          <label for="travel_time" class="block text-sm font-medium text-gray-700 mb-2">
+            ¿Cuándo planeas viajar?
+          </label>
+          <div class="relative">
+            <select 
+              id="travel_time" 
+              name="travel_time"
+              class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="">Selecciona una opción...</option>
+              {travelTimeOptions.map(option => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+              <span class="text-xl">▼</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Presupuesto -->
+        <div>
+          <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">
+            Presupuesto aproximado por persona
+          </label>
+          <div class="relative">
+            <select 
+              id="budget" 
+              name="budget"
+              class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="">Selecciona una opción...</option>
+              {budgetOptions.map(option => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+              <span class="text-xl">▼</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Con quién viajaría -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-3">
+            ¿Con quién viajarías?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {travelWithOptions.map(option => (
+              <div class="flex items-center">
+                <input 
+                  type="checkbox" 
+                  id={`travel_with_${option.value}`} 
+                  name="travel_with" 
+                  value={option.value}
+                  class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label for={`travel_with_${option.value}`} class="ml-3 text-sm text-gray-700">
+                  {option.label}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <!-- Tipo de experiencia -->
+        <div class="col-span-1 md:col-span-2 mt-2">
+          <label class="block text-sm font-medium text-gray-700 mb-3">
+            ¿Qué tipo de experiencia buscas?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+            {experienceOptions.map(option => (
+              <div class="flex items-center">
+                <input 
+                  type="checkbox" 
+                  id={`experience_${option.value}`} 
+                  name="experience" 
+                  value={option.value}
+                  class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label for={`experience_${option.value}`} class="ml-3 text-sm text-gray-700">
+                  {option.label}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sección: Preguntas de Calificación -->
+    <div class="mb-12">
+      <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-200">Información Adicional</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Viajes anteriores -->
+        <div>
+          <label for="previous_travel" class="block text-sm font-medium text-gray-700 mb-2">
+            ¿Has viajado al exterior anteriormente?
+          </label>
+          <div class="relative">
+            <select 
+              id="previous_travel" 
+              name="previous_travel"
+              class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="">Selecciona una opción...</option>
+              {previousTravelOptions.map(option => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+              <span class="text-xl">▼</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Método de contacto -->
+        <div>
+          <label for="contact_method" class="block text-sm font-medium text-gray-700 mb-2">
+            ¿Cómo prefieres que te contactemos? <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <select 
+              id="contact_method" 
+              name="contact_method"
+              required
+              class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="">Selecciona una opción...</option>
+              {contactMethodOptions.map(option => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+              <span class="text-xl">▼</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Horario de contacto -->
+        <div>
+          <label for="contact_time" class="block text-sm font-medium text-gray-700 mb-2">
+            ¿En qué horario prefieres que te contactemos?
+          </label>
+          <div class="relative">
+            <select 
+              id="contact_time" 
+              name="contact_time"
+              class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="">Selecciona una opción...</option>
+              {contactTimeOptions.map(option => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+              <span class="text-xl">▼</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Cómo nos conoció -->
+        <div>
+          <label for="referral_source" class="block text-sm font-medium text-gray-700 mb-2">
+            ¿Cómo nos conociste?
+          </label>
+          <div class="relative">
+            <select 
+              id="referral_source" 
+              name="referral_source"
+              class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="">Selecciona una opción...</option>
+              {referralOptions.map(option => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+              <span class="text-xl">▼</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Detalles adicionales -->
+        <div class="col-span-1 md:col-span-2 mt-2">
+          <label for="additional_info" class="block text-sm font-medium text-gray-700 mb-2">
+            ¿Hay algo específico que debamos saber sobre tu viaje soñado?
+          </label>
+          <textarea 
+            id="additional_info" 
+            name="additional_info"
+            rows="5"
+            maxlength="500"
+            class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Cuéntanos cualquier detalle adicional o requisito especial para tu viaje..."
+          ></textarea>
+          <p class="mt-2 text-xs text-gray-500">Máximo 500 caracteres</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sección: Consentimiento -->
+    <div class="mb-12">
+      <div class="space-y-5">
+        <div class="flex items-start">
+          <input 
+            type="checkbox" 
+            id="receive_promotions" 
+            name="receive_promotions" 
+            value="yes"
+            class="h-5 w-5 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <label for="receive_promotions" class="ml-3 text-base text-gray-700">
+            Quiero recibir promociones y ofertas exclusivas de viajes
+          </label>
+        </div>
+        
+        <div class="flex items-start">
+          <input 
+            type="checkbox" 
+            id="accept_communications" 
+            name="accept_communications" 
+            value="yes"
+            required
+            class="h-5 w-5 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <label for="accept_communications" class="ml-3 text-base text-gray-700">
+            Acepto recibir comunicaciones de AL mundo Tour y he leído la 
+            <a href="/politica-privacidad" class="text-blue-600 hover:underline">política de privacidad</a>
+            <span class="text-red-500">*</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Botón de envío -->
+    <div class="flex justify-center">
+      <button 
+        type="submit"
+        class="bg-blue-600 text-white px-10 py-4 rounded-md font-bold text-lg hover:bg-blue-700 transition-colors flex items-center"
+      >
+        <span class="mr-3 text-xl">📤</span>
+        Enviar solicitud
+      </button>
+    </div>
+    
+    <!-- Mensaje de estado -->
+    <div id="form-status" class="mt-8 text-center hidden">
+      <div id="form-success" class="bg-green-50 text-green-700 p-6 rounded-lg shadow-sm hidden">
+        <div class="text-5xl mb-4">✅</div>
+        <p class="text-lg font-medium">¡Hemos recibido tu información! Un asesor se pondrá en contacto contigo pronto.</p>
+      </div>
+      
+      <div id="form-error" class="bg-red-50 text-red-700 p-6 rounded-lg shadow-sm hidden">
+        <div class="text-5xl mb-4">⚠️</div>
+        <p class="text-lg font-medium">Hubo un problema al enviar tu información. Por favor, intenta nuevamente.</p>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Mostrar mensaje de éxito después del envío del formulario
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('lead-capture-form');
+    const formStatus = document.getElementById('form-status');
+    const formSuccess = document.getElementById('form-success');
+    
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        // El formulario será procesado por Netlify Forms
+        // Solo mostramos el mensaje visual de éxito después de un breve retraso
+        setTimeout(() => {
+          if (formStatus) formStatus.classList.remove('hidden');
+          if (formSuccess) formSuccess.classList.remove('hidden');
+        }, 1000);
       });
     }
-  </script>
+  });
+</script>

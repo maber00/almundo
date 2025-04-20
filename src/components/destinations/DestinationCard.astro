@@ -21,6 +21,8 @@ interface Props {
   };
 }
 
+type Destination = Props['destination'];
+
 const { destination } = Astro.props;
 
 // Convertir originalPrice (precio oferta) a número
@@ -64,6 +66,7 @@ const getTagClasses = (tag: string) => {
     default: return 'bg-blue-500 text-white';
   }
 };
+
 const getSecondaryTagClasses = (tag: string) => {
   switch (tag) {
     case 'Aventura': return 'bg-green-500/70 text-white';
@@ -73,6 +76,27 @@ const getSecondaryTagClasses = (tag: string) => {
     case 'Todo incluido': return 'bg-yellow-500/70 text-white';
     default: return 'bg-blue-500/70 text-white';
   }
+};
+
+// Construir la URL de destino correcta
+const getDestinationUrl = (destination: Destination) => {
+  if (!destination || !destination.id) return '#';
+  
+  // Determinar la ruta base según el tipo de destino
+  let basePath = '/destinos/';
+  if (destination.type === 'nacional') {
+    basePath += 'nacionales/';
+  } else if (destination.type === 'internacional') {
+    basePath += 'internacionales/';
+  } else if (destination.type === 'crucero') {
+    basePath += 'cruceros/';
+  } else {
+    // Para otros tipos, usar el tipo como parte de la ruta
+    basePath += `${destination.type}s/`;
+  }
+  
+  // Añadir el ID del destino para completar la URL
+  return `${basePath}${destination.id}`;
 };
 ---
 
@@ -140,8 +164,8 @@ const getSecondaryTagClasses = (tag: string) => {
       </div>
     </div>
 
-    <a
-      href={`/destinos/${destination.type === 'nacional' ? 'nacionales' : 'internacionales'}/${destination.id}`}
+    
+      href={getDestinationUrl(destination)}
       class="block w-full bg-blue-600 text-white text-center py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
     >Ver detalles</a>
   </div>

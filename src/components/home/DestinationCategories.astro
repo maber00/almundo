@@ -3,6 +3,33 @@ import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import { getAllCategories } from '../../utils/content.js';
 
+// Definir interfaces para el tipado
+interface Destination {
+  id: string;
+  name: string;
+  type: string;
+  price?: number;
+  originalPrice?: number | string | null;
+  priceInUsd?: boolean;
+  durationText?: string;
+  image?: string;
+  rating?: number;
+  availability?: number;
+  tag?: string;
+  tags?: string[];
+  region?: string;
+  slug?: string;
+}
+
+interface Category {
+  title: string;
+  description: string;
+  image: string;
+  url: string;
+  destinations?: string[];
+  slug?: string;
+}
+
 // Obtener categorías desde el sistema de contenido
 const destinationCategories = await getAllCategories();
 
@@ -11,21 +38,21 @@ const mainCategories = [
   {
     title: "Destinos Nacionales",
     description: "Lo mejor de Colombia",
-    image: "/images/uploads/colombia-banner.jpg", // Debe cambiarse a la imagen del CMS
+    image: "/images/uploads/colombia-banner.jpg",
     url: "/destinos/nacionales",
     cta: "Ver todos"
   },
   {
     title: "Destinos Internacionales",
     description: "Explora el mundo",
-    image: "/images/uploads/internacional-banner.jpg", // Debe cambiarse a la imagen del CMS
+    image: "/images/uploads/internacional-banner.jpg",
     url: "/destinos/internacionales",
     cta: "Ver todos"
   },
   {
     title: "Ofertas Especiales",
     description: "Promociones exclusivas",
-    image: "/images/uploads/ofertas-banner.jpg", // Debe cambiarse a la imagen del CMS
+    image: "/images/uploads/ofertas-banner.jpg",
     url: "/promociones",
     cta: "Ver ofertas"
   }
@@ -77,13 +104,12 @@ const experienceCategories = [
       </p>
     </div>
     
-    
-    
-    
+    <!-- Categorías principales -->
+   
     
     <!-- Categorías desde el CMS -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      {destinationCategories.map((category) => (
+      {destinationCategories.map((category: Category) => (
         <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
           <div class="relative h-56 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
@@ -119,6 +145,28 @@ const experienceCategories = [
           </div>
         </div>
       ))}
+    </div>
+    
+    <!-- Categorías por tipo de experiencia -->
+    <div class="mt-16">
+      <h3 class="text-2xl font-bold text-center text-gray-900 mb-8">Viaja según tu estilo</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {experienceCategories.map((category) => (
+          <a 
+            href={category.url} 
+            class="bg-white rounded-lg shadow-md p-6 flex items-center hover:shadow-lg transition-shadow"
+          >
+            <div class={`${category.bgColor} bg-green-100 p-3 rounded-full mr-4`}>
+              <span class="text-2xl">{category.icon}</span>
+            </div>
+            <div>
+            <h3 class={`font-bold text-gray-900 ${category.textColor} `}>{category.title}</h3>
+            <p class="text-sm text-gray-600">{category.description}</p>
+          </div>
+            
+          </a>
+        ))}
+      </div>
     </div>
     
     <div class="text-center mt-12">
