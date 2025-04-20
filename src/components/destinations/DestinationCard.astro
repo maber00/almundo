@@ -7,8 +7,8 @@ interface Props {
     id: string;
     name: string;
     type: string;
-    price: number; // Precio actual
-    originalPrice?: number | null | string; // Precio original (si es una oferta)
+    price: number; // Precio original si hay oferta
+    originalPrice?: number | null | string; // Precio en oferta
     priceInUsd?: boolean;
     durationText: string;
     image: string;
@@ -17,125 +17,101 @@ interface Props {
     tag?: string;
     tags?: string[];
     region?: string;
+    currency?: 'USD' | 'COP';
   };
 }
 
 const { destination } = Astro.props;
 
-// Convertir originalPrice a número, eliminando puntos y comas en caso de que estén presentes
-const originalPriceNumber: number = destination.originalPrice != null
-  ? (typeof destination.originalPrice === 'string'
-      ? Number(String(destination.originalPrice).replace(/[.,]/g, '')) || 0
-      : destination.originalPrice)
+// Convertir originalPrice (precio oferta) a número
+const offerPrice: number = destination.originalPrice
+  ? typeof destination.originalPrice === 'string'
+    ? Number(destination.originalPrice.replace(/[.,]/g, '')) || 0
+    : destination.originalPrice
   : 0;
 
-// Determinar si existe oferta por precio
-const isPriceOffer = originalPriceNumber > 0 && destination.price < originalPriceNumber;
-
-// Determinar si tiene tag de oferta
+// Determinar si hay oferta: offerPrice menor que price
+const isPriceOffer = offerPrice > 0 && offerPrice < destination.price;
 const hasOfferTag = hasTag(destination, 'Oferta');
-
-// Un destino es oferta si tiene precio reducido o el tag "Oferta"
 const isOffer = isPriceOffer || hasOfferTag;
 
-// Calcular descuento si hay oferta por precio
+// Calcular porcentaje de descuento si es oferta de precio
 const discountPercentage = isPriceOffer
-  ? Math.round(((originalPriceNumber - destination.price) / originalPriceNumber) * 100)
+  ? Math.round(((destination.price - offerPrice) / destination.price) * 100)
   : 0;
 
-const formatPrice = (price: number): string => {
-  return destination.priceInUsd 
-    ? `USD $${price.toLocaleString('en-US')}` 
-    : `$${price.toLocaleString('es-CO')}`;
-};
+// Formatear precios
+const formatPrice = (value: number): string =>
+  destination.priceInUsd
+    ? `USD $${value.toLocaleString('en-US')}`
+    : `$${value.toLocaleString('es-CO')} COP`;
 
-// Determinar el tag principal a mostrar
+// Tags principales y secundarios
 const mainTag = isOffer ? 'Oferta' : destination.tag;
-
-// Obtener tags secundarios, excluyendo el tag principal y el tag "Oferta" si es una oferta
-const secondaryTags = destination.tags 
-  ? destination.tags.filter(t => t !== destination.tag && (isOffer ? t !== 'Oferta' : true)) 
+const secondaryTags = destination.tags
+  ? destination.tags.filter(t => t !== destination.tag && (!isOffer || t !== 'Oferta'))
   : [];
 
-// Función para obtener las clases CSS según el tag
+// Clases CSS para tags
 const getTagClasses = (tag: string) => {
-  switch(tag) {
-    case 'Oferta':
-      return 'bg-red-500 text-white';
-    case 'Aventura':
-      return 'bg-green-500 text-white';
-    case 'Playa':
-      return 'bg-cyan-500 text-white';
-    case 'Cultural':
-      return 'bg-purple-500 text-white';
-    case 'Romántico':
-      return 'bg-pink-500 text-white';
-    case 'Todo incluido':
-      return 'bg-yellow-500 text-white';
-    default:
-      return 'bg-blue-500 text-white';
+  switch (tag) {
+    case 'Oferta': return 'bg-red-500 text-white';
+    case 'Aventura': return 'bg-green-500 text-white';
+    case 'Playa': return 'bg-cyan-500 text-white';
+    case 'Cultural': return 'bg-purple-500 text-white';
+    case 'Romántico': return 'bg-pink-500 text-white';
+    case 'Todo incluido': return 'bg-yellow-500 text-white';
+    default: return 'bg-blue-500 text-white';
   }
 };
-
-// Función para obtener las clases CSS para tags secundarios (más transparentes)
 const getSecondaryTagClasses = (tag: string) => {
-  switch(tag) {
-    case 'Aventura':
-      return 'bg-green-500/70 text-white';
-    case 'Playa':
-      return 'bg-cyan-500/70 text-white';
-    case 'Cultural':
-      return 'bg-purple-500/70 text-white';
-    case 'Romántico':
-      return 'bg-pink-500/70 text-white';
-    case 'Todo incluido':
-      return 'bg-yellow-500/70 text-white';
-    default:
-      return 'bg-blue-500/70 text-white';
+  switch (tag) {
+    case 'Aventura': return 'bg-green-500/70 text-white';
+    case 'Playa': return 'bg-cyan-500/70 text-white';
+    case 'Cultural': return 'bg-purple-500/70 text-white';
+    case 'Romántico': return 'bg-pink-500/70 text-white';
+    case 'Todo incluido': return 'bg-yellow-500/70 text-white';
+    default: return 'bg-blue-500/70 text-white';
   }
 };
 ---
 
 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
   <div class="relative">
-    <img 
-      src={destination.image || '/images/placeholder.jpg'} 
+    <img
+      src={destination.image || '/images/placeholder.jpg'}
       alt={destination.name}
       class="w-full h-64 object-cover"
       onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
     />
     <div class="absolute top-4 right-4 flex flex-col gap-1 items-end">
-      <!-- Tag principal -->
       {mainTag && (
         <span class={`text-xs font-bold px-3 py-1 rounded-full ${getTagClasses(mainTag)}`}>
           {mainTag}
         </span>
       )}
-      
-      <!-- Tags secundarios (máximo 2) -->
       {secondaryTags.slice(0, 2).map(tag => (
         <span class={`text-xs font-medium px-2 py-0.5 rounded-full ${getSecondaryTagClasses(tag)}`}>
           {tag}
         </span>
       ))}
     </div>
-    
     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
       <h3 class="text-2xl font-bold text-white">{destination.name}</h3>
     </div>
   </div>
-  
+
   <div class="p-6">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-start mb-4">
       <div>
-        <p class="text-sm text-gray-500">Desde</p>
-        {isOffer && isPriceOffer ? (
+        <p class="text-sm text-gray-500">Precio por persona</p>
+        {isOffer ? (
           <div>
             <p class="line-through text-gray-400 text-sm">
-              {formatPrice(originalPriceNumber)}
+              {formatPrice(destination.price)}
             </p>
             <p class="text-2xl font-bold text-red-600">
-              {formatPrice(destination.price)}
+              {formatPrice(offerPrice)}
             </p>
             <p class="text-xs text-green-600 font-medium">
               {discountPercentage}% de descuento
@@ -146,9 +122,7 @@ const getSecondaryTagClasses = (tag: string) => {
             {formatPrice(destination.price)}
           </p>
         )}
-        <p class="text-xs text-gray-500 mt-1">por persona</p>
       </div>
-      
       <div class="text-right">
         <p class="text-sm text-gray-500">Duración</p>
         <p class="font-medium">{destination.durationText}</p>
@@ -158,24 +132,17 @@ const getSecondaryTagClasses = (tag: string) => {
     <div class="flex justify-between items-center mb-6">
       <div class="flex items-center">
         <Icon name="tabler:star" class="w-5 h-5 text-yellow-500" />
-        <span class="ml-1 text-sm font-medium">
-          {destination.rating}% de recomendación
-        </span>
+        <span class="ml-1 text-sm font-medium">{destination.rating}% recomendado</span>
       </div>
-
       <div class="flex items-center">
         <Icon name="tabler:users" class="w-5 h-5 text-gray-500" />
-        <span class="ml-1 text-sm font-medium">
-          Últimos {destination.availability} cupos
-        </span>
+        <span class="ml-1 text-sm font-medium">Últimos {destination.availability} cupos</span>
       </div>
     </div>
 
-    <a 
+    <a
       href={`/destinos/${destination.type === 'nacional' ? 'nacionales' : 'internacionales'}/${destination.id}`}
       class="block w-full bg-blue-600 text-white text-center py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
-    >
-      Ver detalles
-    </a>
+    >Ver detalles</a>
   </div>
 </div>
