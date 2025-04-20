@@ -98,17 +98,19 @@ const contactTimeOptions = [
             </div>
             
             <!-- Formulario con Netlify Forms -->
-            <form 
-              class="p-8 md:p-10"
-              name="cotizacion"
-              method="POST"
-              data-netlify="true"
-              netlify-honeypot="bot-field"
-            >
-              <p class="hidden">
-                <label>No llenes esto si eres humano: <input name="bot-field" /></label>
-              </p>
-              
+           
+<form 
+  class="p-8 md:p-10"
+  name="cotizacion"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+>
+  <input type="hidden" name="form-name" value="cotizacion" />
+  
+  <p class="hidden">
+    <label>No llenes esto si eres humano: <input name="bot-field" /></label>
+  </p>
               <!-- Campo oculto para destino preseleccionado -->
               {selectedDestino && <input type="hidden" name="destino_preseleccionado" value={selectedDestino} />}
               
@@ -523,27 +525,30 @@ const contactTimeOptions = [
 </Layout>
 
 <script>
-  // Mostrar mensaje de éxito después del envío del formulario
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('form[name="cotizacion"]');
-    const formStatus = document.getElementById('form-status');
-    const formSuccess = document.getElementById('form-success');
-    const formError = document.getElementById('form-error');
-    
-    if (form) {
-      form.addEventListener('submit', () => {
-        // El formulario será manejado por Netlify Forms
-        // Solo mostramos el mensaje de éxito visual
-        setTimeout(() => {
-          formStatus?.classList.remove('hidden');
-          formSuccess?.classList.remove('hidden');
-          if (formSuccess) {
-  window.scrollTo({ 
-    top: formSuccess.offsetTop - 100, 
-    behavior: 'smooth' 
-  });
-}        }, 1000);
-      });
-    }
-  });
-</script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.querySelector('form[name="cotizacion"]');
+      const formStatus = document.getElementById('form-status');
+      const formSuccess = document.getElementById('form-success');
+      const formError = document.getElementById('form-error');
+  
+      // Verificamos si los elementos existen antes de usarlos
+      if (form && formStatus && formSuccess) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault(); // Prevenir el comportamiento por defecto de la página
+  
+          // Simular el envío de formulario (en un entorno real, Netlify maneja esto por ti)
+          setTimeout(() => {
+            // Mostrar el mensaje de éxito
+            formStatus.classList.remove('hidden');
+            formSuccess.classList.remove('hidden');
+            
+            // Opcionalmente, hacer scroll hacia el mensaje de éxito
+            window.scrollTo({ top: formSuccess.offsetTop, behavior: 'smooth' });
+          }, 1000);
+        });
+      } else {
+        console.error('No se encontraron los elementos necesarios en el DOM.');
+      }
+    });
+  </script>
+  
