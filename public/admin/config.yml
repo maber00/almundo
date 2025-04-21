@@ -78,7 +78,7 @@ collections:
       - { label: "Descripción", name: "description", widget: "text" }
       - { label: "Imagen", name: "image", widget: "image" }
       - { label: "Destinos Populares", name: "destinations", widget: "list" }
-      - { label: "Tipo", name: "type", widget: "select", options: ["nacional", "internacional", "crucero"] }
+      - { label: "Tipo", name: "type", widget: "select", options: ["nacional", "internacional", "crucero"], required: false }
       - { label: "URL", name: "url", widget: "string", hint: "URL completa con barra inicial, ej: /destinos/tag/aventura" }
       - { label: "Etiqueta Principal", name: "tag", widget: "select", options: ["Aniversario", "Aventura", "Cultural", "Ecoturismo", "Familiar", "Ocio", "Oferta", "Playa", "Romántico", "Todo Incluido", "Crucero"] }
       - { label: "Etiquetas Adicionales", name: "tags", widget: "select", options: ["Aniversario", "Aventura", "Cultural", "Ecoturismo", "Familiar", "Ocio", "Oferta", "Playa", "Romántico", "Todo Incluido", "Crucero"], multiple: true, required: false }
