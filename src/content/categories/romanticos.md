@@ -7,5 +7,6 @@ image: /images/uploads/romanticos-1.jpg
 destinations:
   - Cartagena
   - San Andrés
-url: romanticos
+url: /destinos/tag/romanticos
+tag: Romántico
 ---
