@@ -44,7 +44,7 @@ const formattedCategoria = categoria.charAt(0).toUpperCase() + categoria.slice(1
     <!-- Hero section -->
     <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-20 pt-32">
       <div class="container mx-auto px-4 text-center">
-        <span class="inline-block bg-white text-blue-600 px-4 py-1 rounded-full font-bold text-sm mb-4">
+        <span class="inline-block bg-white text-[#0C005F] px-4 py-1 rounded-full font-bold text-sm mb-4">
           Categoría
         </span>
         <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">{formattedCategoria}</h1>
@@ -58,9 +58,9 @@ const formattedCategoria = categoria.charAt(0).toUpperCase() + categoria.slice(1
     <section class="bg-gray-50 py-4 border-b border-gray-200">
       <div class="container mx-auto px-4">
         <div class="flex items-center text-sm text-gray-500">
-          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <a href="/" class="hover:text-[#0C005F]">Inicio</a>
           <span class="mx-2">➡️</span>
-          <a href="/blog" class="hover:text-blue-600">Blog</a>
+          <a href="/blog" class="hover:text-[#0C005F]">Blog</a>
           <span class="mx-2">➡️</span>
           <span class="text-gray-700">Categoría: {formattedCategoria}</span>
         </div>
@@ -89,12 +89,12 @@ const formattedCategoria = categoria.charAt(0).toUpperCase() + categoria.slice(1
               <span class="mx-2">•</span>
               <span>{post.categories[0]}</span>
             </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{post.title}</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#0C005F] transition-colors">{post.title}</h3>
             {post.subtitle && (
               <p class="text-gray-600 mb-4 line-clamp-2">{post.subtitle}</p>
             )}
           </div>
-          <div class="mt-4 flex items-center text-blue-600 font-medium">
+          <div class="mt-4 flex items-center text-[#0C005F] font-medium">
             Leer más
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -111,7 +111,7 @@ const formattedCategoria = categoria.charAt(0).toUpperCase() + categoria.slice(1
             <h2 class="text-2xl font-bold text-gray-900 mb-4">No hay artículos en esta categoría</h2>
             <p class="text-lg text-gray-600 mb-6">Estamos trabajando en nuevo contenido. ¡Vuelve pronto!</p>
             
-            <a href="/blog" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+            <a href="/blog" class="bg-[#0C005F] text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
               <span class="mr-2">🔄</span>
               Ver todas las entradas
             </a>

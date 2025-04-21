@@ -101,7 +101,7 @@ const internationalCategories = [
     description: "Historia, cultura y arquitectura",
     icon: "🏛️",
     bgColor: "bg-blue-100",
-    textColor: "text-blue-600",
+    textColor: "text-[#0C005F]",
     url: "/destinos/internacionales?region=europa"
   },
   {
@@ -154,7 +154,7 @@ const stats = {
           ))}
           <a 
             href="/destinos/internacionales"
-            class="bg-white text-blue-600 px-4 py-2 rounded-full text-sm hover:bg-blue-50 transition-colors"
+            class="bg-white text-[#0C005F] px-4 py-2 rounded-full text-sm hover:bg-blue-50 transition-colors"
           >
             Ver todos
           </a>
@@ -166,9 +166,9 @@ const stats = {
     <section class="bg-gray-50 py-4 border-b border-gray-200">
       <div class="container mx-auto px-4">
         <div class="flex items-center text-sm text-gray-500">
-          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <a href="/" class="hover:text-[#0C005F]">Inicio</a>
           <span class="mx-2">➡️</span>
-          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
+          <a href="/destinos" class="hover:text-[#0C005F]">Destinos</a>
           <span class="mx-2">➡️</span>
           <span class="text-gray-700">Internacionales</span>
         </div>
@@ -213,7 +213,7 @@ const stats = {
             <div class="flex items-end gap-3">
               <button
                 type="submit"
-                class="flex-grow bg-blue-600 text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+                class="flex-grow bg-[#0C005F] text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
               >
                 <Icon name="tabler:filter" class="w-5 h-5 mr-2" />
                 Aplicar filtros
@@ -252,15 +252,15 @@ const stats = {
           
           <div class="bg-blue-50 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div>
-              <div class="text-4xl font-bold text-blue-600 mb-2">{stats.totalDestinations}+</div>
+              <div class="text-4xl font-bold text-[#0C005F] mb-2">{stats.totalDestinations}+</div>
               <p class="text-gray-700">Destinos internacionales</p>
             </div>
             <div>
-              <div class="text-4xl font-bold text-blue-600 mb-2">{stats.regions}</div>
+              <div class="text-4xl font-bold text-[#0C005F] mb-2">{stats.regions}</div>
               <p class="text-gray-700">Regiones disponibles</p>
             </div>
             <div>
-              <div class="text-4xl font-bold text-blue-600 mb-2">
+              <div class="text-4xl font-bold text-[#0C005F] mb-2">
                 {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
               </div>
               <p class="text-gray-700">Precio promedio</p>
@@ -292,7 +292,7 @@ const stats = {
             <p class="text-lg text-gray-600 mb-6">Prueba aplicando otros filtros o contacta con nuestros asesores para encontrar el destino perfecto para ti.</p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/destinos/internacionales" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+              <a href="/destinos/internacionales" class="bg-[#0C005F] text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
                 <span class="mr-2">🔄</span>
                 Ver todos los destinos internacionales
               </a>
@@ -308,7 +308,7 @@ const stats = {
     </section>
     
     <!-- CTA final -->
-    <section class="py-12 bg-blue-600 text-white">
+    <section class="py-12 bg-[#0C005F] text-white">
       <div class="container mx-auto px-4 text-center">
         <h2 class="text-3xl font-bold mb-4">¿Buscas un destino internacional específico?</h2>
         <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
@@ -318,7 +318,7 @@ const stats = {
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a 
             href="/contacto" 
-            class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
+            class="bg-white text-[#0C005F] py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
           >
             Solicitar asesoramiento
           </a>

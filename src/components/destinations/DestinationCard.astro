@@ -142,7 +142,7 @@ const getDestinationUrl = (destination: Destination) => {
             </p>
           </div>
         ) : (
-          <p class="text-2xl font-bold text-blue-600">
+          <p class="text-2xl font-bold text-[#0C005F]">
             {formatPrice(destination.price)}
           </p>
         )}
@@ -154,10 +154,7 @@ const getDestinationUrl = (destination: Destination) => {
     </div>
 
     <div class="flex justify-between items-center mb-6">
-      <div class="flex items-center">
-        <Icon name="tabler:star" class="w-5 h-5 text-yellow-500" />
-        <span class="ml-1 text-sm font-medium">{destination.rating}% recomendado</span>
-      </div>
+    
       <div class="flex items-center">
         <Icon name="tabler:users" class="w-5 h-5 text-gray-500" />
         <span class="ml-1 text-sm font-medium">Últimos {destination.availability} cupos</span>
@@ -165,9 +162,8 @@ const getDestinationUrl = (destination: Destination) => {
     </div>
     <a
   href={getDestinationUrl(destination)}
-  class="block w-full bg-blue-600 text-white text-center py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
+  class="block w-full bg-[#0C005F] text-white text-center py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
 >
-  Ver detalles
-</a>
+Ver detalles </a>
   </div>
 </div>

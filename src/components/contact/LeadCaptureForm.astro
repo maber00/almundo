@@ -79,7 +79,7 @@ const preselectedDestino = searchParams.get('destino') || '';
 ---
 
 <div class="bg-white shadow-xl rounded-lg overflow-hidden">
-  <div class="bg-blue-600 px-8 py-10 text-white text-center">
+  <div class="bg-[#0C005F] px-8 py-10 text-white text-center">
     <div class="mb-6 text-6xl">✈️</div>
     <h2 class="text-3xl font-bold mb-4">¡Comienza a planear tu viaje soñado!</h2>
     <p class="text-xl text-blue-100 max-w-2xl mx-auto">Cuéntanos sobre tus intereses y un asesor te contactará con la mejor propuesta personalizada.</p>
@@ -250,7 +250,7 @@ const preselectedDestino = searchParams.get('destino') || '';
                   id={`travel_with_${option.value}`} 
                   name="travel_with" 
                   value={option.value}
-                  class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  class="h-5 w-5 text-[#0C005F] border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label for={`travel_with_${option.value}`} class="ml-3 text-sm text-gray-700">
                   {option.label}
@@ -273,7 +273,7 @@ const preselectedDestino = searchParams.get('destino') || '';
                   id={`experience_${option.value}`} 
                   name="experience" 
                   value={option.value}
-                  class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  class="h-5 w-5 text-[#0C005F] border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label for={`experience_${option.value}`} class="ml-3 text-sm text-gray-700">
                   {option.label}
@@ -406,7 +406,7 @@ const preselectedDestino = searchParams.get('destino') || '';
             id="receive_promotions" 
             name="receive_promotions" 
             value="yes"
-            class="h-5 w-5 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            class="h-5 w-5 mt-1 text-[#0C005F] border-gray-300 rounded focus:ring-blue-500"
           />
           <label for="receive_promotions" class="ml-3 text-base text-gray-700">
             Quiero recibir promociones y ofertas exclusivas de viajes
@@ -420,11 +420,11 @@ const preselectedDestino = searchParams.get('destino') || '';
             name="accept_communications" 
             value="yes"
             required
-            class="h-5 w-5 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            class="h-5 w-5 mt-1 text-[#0C005F] border-gray-300 rounded focus:ring-blue-500"
           />
           <label for="accept_communications" class="ml-3 text-base text-gray-700">
             Acepto recibir comunicaciones de AL mundo Tours y he leído la 
-            <a href="/politica-privacidad" class="text-blue-600 hover:underline">política de privacidad</a>
+            <a href="/politica-privacidad" class="text-[#0C005F] hover:underline">política de privacidad</a>
             <span class="text-red-500">*</span>
           </label>
         </div>
@@ -435,7 +435,7 @@ const preselectedDestino = searchParams.get('destino') || '';
     <div class="flex justify-center">
       <button 
         type="submit"
-        class="bg-blue-600 text-white px-10 py-4 rounded-md font-bold text-lg hover:bg-blue-700 transition-colors flex items-center"
+        class="bg-[#0C005F] text-white px-10 py-4 rounded-md font-bold text-lg hover:bg-blue-700 transition-colors flex items-center"
       >
         <span class="mr-3 text-xl">📤</span>
         Enviar solicitud

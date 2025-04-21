@@ -173,7 +173,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
               </p>
             </div>
           ) : (
-            <p class="text-xl md:text-3xl font-bold text-blue-600">
+            <p class="text-xl md:text-3xl font-bold text-[#0C005F]">
               {formatPrice(destination.price)}
             </p>
           )}
@@ -190,11 +190,11 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
     <section class="bg-gray-50 py-4 border-b border-gray-200">
       <div class="container mx-auto px-4">
         <div class="flex items-center text-sm text-gray-500">
-          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <a href="/" class="hover:text-[#0C005F]">Inicio</a>
           <span class="mx-2">➡️</span>
-          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
+          <a href="/destinos" class="hover:text-[#0C005F]">Destinos</a>
           <span class="mx-2">➡️</span>
-          <a href={`/destinos/${destination.type === 'nacional' ? 'nacionales' : 'internacionales'}`} class="hover:text-blue-600">
+          <a href={`/destinos/${destination.type === 'nacional' ? 'nacionales' : 'internacionales'}`} class="hover:text-[#0C005F]">
             {destination.type === 'nacional' ? 'Nacionales' : 'Internacionales'}
           </a>
           <span class="mx-2">➡️</span>
@@ -413,7 +413,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
             <div class="space-y-4">
               <div class="flex items-start">
                 <div class="bg-blue-100 p-2 rounded-full mr-3">
-                  <Icon name="tabler:calendar" class="w-5 h-5 text-blue-600" />
+                  <Icon name="tabler:calendar" class="w-5 h-5 text-[#0C005F]" />
                 </div>
                 <div>
                   <p class="font-medium text-gray-900">Duración</p>
@@ -422,7 +422,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
               </div>
               <div class="flex items-start">
                 <div class="bg-blue-100 p-2 rounded-full mr-3">
-                  <Icon name="tabler:map-pin" class="w-5 h-5 text-blue-600" />
+                  <Icon name="tabler:map-pin" class="w-5 h-5 text-[#0C005F]" />
                 </div>
                 <div>
                   <p class="font-medium text-gray-900">Región</p>
@@ -431,7 +431,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
               </div>
               <div class="flex items-start">
                 <div class="bg-blue-100 p-2 rounded-full mr-3">
-                  <Icon name="tabler:users" class="w-5 h-5 text-blue-600" />
+                  <Icon name="tabler:users" class="w-5 h-5 text-[#0C005F]" />
                 </div>
                 <div>
                   <p class="font-medium text-gray-900">Disponibilidad</p>
@@ -440,7 +440,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
               </div>
               <div class="flex items-start">
                 <div class="bg-blue-100 p-2 rounded-full mr-3">
-                  <Icon name="tabler:star" class="w-5 h-5 text-blue-600" />
+                  <Icon name="tabler:star" class="w-5 h-5 text-[#0C005F]" />
                 </div>
                 <div>
                   <p class="font-medium text-gray-900">Calificación</p>
@@ -499,7 +499,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
                 
                 <div class="p-4">
                   <div class="flex justify-between items-center mb-2">
-                    <p class="text-xl font-bold text-blue-600">
+                    <p class="text-xl font-bold text-[#0C005F]">
                       {related.priceInUsd ? 'USD ' : ''}${related.price.toLocaleString('es-CO')}
                       <span class="text-sm font-normal">{related.priceInUsd ? '' : 'COP'}</span>
                     </p>
@@ -532,7 +532,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a 
             href={`/contacto?destino=${destination.id}`}
-            class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
+            class="bg-white text-[#0C005F] py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
           >
             Solicitar cotización
           </a>

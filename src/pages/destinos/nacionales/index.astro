@@ -95,9 +95,9 @@ const stats = {
     <section class="bg-gray-50 py-4 border-b border-gray-200">
       <div class="container mx-auto px-4">
         <div class="flex items-center text-sm text-gray-500">
-          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <a href="/" class="hover:text-[#0C005F]">Inicio</a>
           <span class="mx-2">➡️</span>
-          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
+          <a href="/destinos" class="hover:text-[#0C005F]">Destinos</a>
           <span class="mx-2">➡️</span>
           <span class="text-gray-700">Nacionales</span>
         </div>
@@ -148,17 +148,17 @@ const stats = {
       <div class="container mx-auto px-4">
         <div class="bg-blue-100 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
           <div>
-            <div class="text-4xl font-bold text-blue-600 mb-2">{stats.totalDestinations}+</div>
+            <div class="text-4xl font-bold text-[#0C005F] mb-2">{stats.totalDestinations}+</div>
             <p class="text-gray-700">Destinos nacionales</p>
           </div>
           <div>
-            <div class="text-4xl font-bold text-blue-600 mb-2">
+            <div class="text-4xl font-bold text-[#0C005F] mb-2">
               {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
             </div>
             <p class="text-gray-700">Precio promedio</p>
           </div>
           <div>
-            <div class="text-4xl font-bold text-blue-600 mb-2">¡Descúbrelos!</div>
+            <div class="text-4xl font-bold text-[#0C005F] mb-2">¡Descúbrelos!</div>
             <p class="text-gray-700">Viajes a medida</p>
           </div>
         </div>
@@ -188,7 +188,7 @@ const stats = {
               Prueba aplicando otros filtros o contacta con nuestros asesores para encontrar el viaje perfecto.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/destinos/nacionales" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+              <a href="/destinos/nacionales" class="bg-[#0C005F] text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
                 <span class="mr-2">🔄</span>
                 Ver todos los destinos nacionales
               </a>
@@ -203,7 +203,7 @@ const stats = {
     </section>
     
     <!-- CTA final -->
-    <section class="py-12 bg-blue-600 text-white">
+    <section class="py-12 bg-[#0C005F] text-white">
       <div class="container mx-auto px-4 text-center">
         <h2 class="text-3xl font-bold mb-4">¿Listo para explorar Colombia?</h2>
         <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
@@ -212,7 +212,7 @@ const stats = {
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a 
             href="/contacto" 
-            class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
+            class="bg-white text-[#0C005F] py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
           >
             Solicitar cotización
           </a>

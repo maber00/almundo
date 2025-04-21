@@ -39,7 +39,7 @@ const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
     <section class="bg-gray-50 py-4 border-b border-gray-200">
       <div class="container mx-auto px-4">
         <div class="flex items-center text-sm text-gray-500">
-          <a href="/" class="hover:text-blue-600">Inicio</a>
+          <a href="/" class="hover:text-[#0C005F]">Inicio</a>
           <span class="mx-2">➡️</span>
           <span class="text-gray-700">Blog</span>
         </div>
@@ -58,7 +58,7 @@ const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
               <ul class="space-y-2">
                 {allCategories.map(category => (
                   <li>
-                    <a href={`/blog/categoria/${category.toLowerCase().replace(/ /g, '-')}`} class="text-gray-700 hover:text-blue-600 flex items-center">
+                    <a href={`/blog/categoria/${category.toLowerCase().replace(/ /g, '-')}`} class="text-gray-700 hover:text-[#0C005F] flex items-center">
                       <span class="mr-2">•</span>
                       {category}
                     </a>
@@ -81,7 +81,7 @@ const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
                       />
                     </div>
                     <div>
-                      <h4 class="text-gray-900 font-medium group-hover:text-blue-600 transition-colors line-clamp-2">{post.data.title}</h4>
+                      <h4 class="text-gray-900 font-medium group-hover:text-[#0C005F] transition-colors line-clamp-2">{post.data.title}</h4>
                       <p class="text-sm text-gray-500">{formatDate(post.data.date)}</p>
                     </div>
                   </a>
@@ -106,7 +106,7 @@ const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
                             alt={post.data.title} 
                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           />
-                          <div class="absolute top-0 left-0 bg-blue-600 text-white text-xs px-3 py-1 m-2 rounded-full">
+                          <div class="absolute top-0 left-0 bg-[#0C005F] text-white text-xs px-3 py-1 m-2 rounded-full">
                             Destacado
                           </div>
                         </div>
@@ -117,12 +117,12 @@ const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
                               <span class="mx-2">•</span>
                               <span>{post.data.categories[0]}</span>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{post.data.title}</h3>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#0C005F] transition-colors">{post.data.title}</h3>
                             {post.data.subtitle && (
                               <p class="text-gray-600 mb-4">{post.data.subtitle}</p>
                             )}
                           </div>
-                          <div class="mt-4 flex items-center text-blue-600 font-medium">
+                          <div class="mt-4 flex items-center text-[#0C005F] font-medium">
                             Leer más
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -157,9 +157,9 @@ const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
                             <span class="mx-2">•</span>
                             <span>{post.data.categories[0]}</span>
                           </div>
-                          <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{post.data.title}</h3>
+                          <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#0C005F] transition-colors">{post.data.title}</h3>
                         </div>
-                        <div class="mt-4 flex items-center text-blue-600 font-medium">
+                        <div class="mt-4 flex items-center text-[#0C005F] font-medium">
                           Leer más
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

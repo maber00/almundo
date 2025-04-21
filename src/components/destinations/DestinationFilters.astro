@@ -88,7 +88,7 @@ const regions = type === "nacional" ? nationalRegions :
               id={`experience-${category.id}`} 
               name="experience" 
               value={category.id}
-              class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              class="h-4 w-4 text-[#0C005F] border-gray-300 rounded focus:ring-blue-500"
               checked={Array.isArray(activeFilters.experience) && activeFilters.experience.includes(category.id)}
             />
             <label for={`experience-${category.id}`} class="ml-2 text-sm text-gray-700">
@@ -111,7 +111,7 @@ const regions = type === "nacional" ? nationalRegions :
                 id={`region-${region.id}`} 
                 name="region" 
                 value={region.id}
-                class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                class="h-4 w-4 text-[#0C005F] border-gray-300 focus:ring-blue-500"
                 checked={activeFilters.region === region.id || (region.id === "all" && !activeFilters.region)}
               />
               <label for={`region-${region.id}`} class="ml-2 text-sm text-gray-700">
@@ -160,7 +160,7 @@ const regions = type === "nacional" ? nationalRegions :
     <div class="flex gap-3">
       <button
         type="submit"
-        class="w-full bg-blue-600 text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+        class="w-full bg-[#0C005F] text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
       >
         <Icon name="tabler:filter" class="w-5 h-5 mr-2" />
         Aplicar filtros

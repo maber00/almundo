@@ -97,7 +97,7 @@ try {
                   {entry.data.categories && entry.data.categories.length > 0 && (
                     <div class="mb-4">
                       {entry.data.categories.map(category => (
-                        <a href={`/blog/categoria/${category.toLowerCase().replace(/ /g, '-')}`} class="inline-block bg-blue-600 text-white text-xs px-3 py-1 rounded-full mr-2 hover:bg-blue-700 transition-colors">
+                        <a href={`/blog/categoria/${category.toLowerCase().replace(/ /g, '-')}`} class="inline-block bg-[#0C005F] text-white text-xs px-3 py-1 rounded-full mr-2 hover:bg-blue-700 transition-colors">
                           {category}
                         </a>
                       ))}
@@ -150,9 +150,9 @@ try {
         <section class="bg-gray-50 py-4 border-b border-gray-200">
           <div class="container mx-auto px-4">
             <div class="flex items-center text-sm text-gray-500">
-              <a href="/" class="hover:text-blue-600">Inicio</a>
+              <a href="/" class="hover:text-[#0C005F]">Inicio</a>
               <span class="mx-2">➡️</span>
-              <a href="/blog" class="hover:text-blue-600">Blog</a>
+              <a href="/blog" class="hover:text-[#0C005F]">Blog</a>
               <span class="mx-2">➡️</span>
               <span class="text-gray-700 truncate">{entry.data.title}</span>
             </div>
@@ -188,16 +188,16 @@ try {
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Comparte este artículo</h3>
                     <div class="flex gap-2">
                       <a href="#" class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition-colors">
-                        <Icon name="tabler:brand-facebook" class="w-6 h-6 text-blue-600" />
+                        <Icon name="tabler:brand-facebook" class="w-6 h-6 text-[#0C005F]" />
                       </a>
                       <a href="#" class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition-colors">
-                        <Icon name="tabler:brand-twitter" class="w-6 h-6 text-blue-600" />
+                        <Icon name="tabler:brand-twitter" class="w-6 h-6 text-[#0C005F]" />
                       </a>
                       <a href="#" class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition-colors">
-                        <Icon name="tabler:brand-whatsapp" class="w-6 h-6 text-blue-600" />
+                        <Icon name="tabler:brand-whatsapp" class="w-6 h-6 text-[#0C005F]" />
                       </a>
                       <a href="#" class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition-colors">
-                        <Icon name="tabler:mail" class="w-6 h-6 text-blue-600" />
+                        <Icon name="tabler:mail" class="w-6 h-6 text-[#0C005F]" />
                       </a>
                     </div>
                   </div>
@@ -222,7 +222,7 @@ try {
                               <div class="flex items-center text-xs text-gray-500 mb-2">
                                 <span>{formatDate(post.data.date)}</span>
                               </div>
-                              <h4 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{post.data.title}</h4>
+                              <h4 class="font-bold text-gray-900 group-hover:text-[#0C005F] transition-colors">{post.data.title}</h4>
                             </div>
                           </div>
                         </a>
@@ -249,7 +249,7 @@ try {
                   <p class="text-gray-600 mb-4">
                     Experto en viajes y miembro del equipo de AL mundo Tour.
                   </p>
-                  <a href="/sobre-nosotros" class="text-blue-600 font-medium hover:text-blue-800">Conoce a nuestro equipo</a>
+                  <a href="/sobre-nosotros" class="text-[#0C005F] font-medium hover:text-blue-800">Conoce a nuestro equipo</a>
                 </div>
                 
                 <!-- Otros artículos recientes -->
@@ -273,7 +273,7 @@ try {
                               />
                             </div>
                             <div>
-                              <h4 class="text-gray-900 font-medium group-hover:text-blue-600 transition-colors line-clamp-2">{post.data.title}</h4>
+                              <h4 class="text-gray-900 font-medium group-hover:text-[#0C005F] transition-colors line-clamp-2">{post.data.title}</h4>
                               <p class="text-sm text-gray-500">{formatDate(post.data.date)}</p>
                             </div>
                           </a>
@@ -291,7 +291,7 @@ try {
         </section>
         
         <!-- CTA - Explorar destinos -->
-        <section class="py-12 bg-blue-600 text-white">
+        <section class="py-12 bg-[#0C005F] text-white">
           <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold mb-4">¿Inspirado para tu próximo viaje?</h2>
             <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
@@ -301,7 +301,7 @@ try {
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="/destinos" 
-                class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
+                class="bg-white text-[#0C005F] py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
               >
                 Explorar destinos
               </a>
@@ -325,7 +325,7 @@ try {
             <h2 class="text-2xl font-bold text-gray-900 mb-4">El artículo que buscas no existe</h2>
             <p class="text-lg text-gray-600 mb-6">Lo sentimos, el contenido que estás buscando no está disponible o ha sido eliminado.</p>
             
-            <a href="/blog" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
+            <a href="/blog" class="bg-[#0C005F] text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
               <span class="mr-2">🔄</span>
               Volver al blog
             </a>
