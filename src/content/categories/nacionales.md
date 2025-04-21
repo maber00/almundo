@@ -10,5 +10,7 @@ destinations:
   - San Andrés
   - Medellín
   - La Guajira
-url: nacionales
+type: nacional
+url: /destinos/tag/nacionales
+tag: Familiar
 ---

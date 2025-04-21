@@ -9,5 +9,7 @@ destinations:
   - Montego Bay
   - Punta Cana
   - Cancún
-url: internacional
+type: internacional
+url: /destinos/tag/internacionales
+tag: Familiar
 ---
