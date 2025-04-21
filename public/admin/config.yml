@@ -124,7 +124,7 @@ collections:
       - { label: "Título", name: "title", widget: "string" }
       - { label: "Subtítulo", name: "subtitle", widget: "string", required: false }
       - { label: "Fecha de publicación", name: "date", widget: "datetime" }
-      - { label: "Autor", name: "author", widget: "string", default: "Equipo AL mundo Tour" }
+      - { label: "Autor", name: "author", widget: "string", default: "Equipo AL mundo Tours" }
       - { label: "Categorías", name: "categories", widget: "list", default: ["Viajes"] }
       - { label: "Tags", name: "tags", widget: "list", default: ["viajes"] }
       - { label: "Imagen destacada", name: "featuredImage", widget: "image" }

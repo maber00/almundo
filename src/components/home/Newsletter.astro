@@ -1,4 +1,5 @@
 ---
+//src/components/home/newsletter.astro
 import { Icon } from 'astro-icon/components';
 // Destinos populares para mostrar como etiquetas
 const popularTags = [
@@ -27,13 +28,18 @@ const popularTags = [
         </p>
       </div>
       
-      <form class="mb-6">
+      <form id="subscription-form" name="subscription" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="mb-6">
+        <input type="hidden" name="form-name" value="subscription" />
+        <p class="hidden"><label>No llenes esto si eres humano: <input name="bot-field" /></label></p>
+        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div class="md:col-span-2">
             <input 
               type="email" 
+              id="email" 
+              name="email" 
               placeholder="Tu correo electrónico" 
-              class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 text-black py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
@@ -45,17 +51,17 @@ const popularTags = [
           </button>
         </div>
         
-        <div class="flex items-start">
-          <input 
-            type="checkbox" 
-            id="privacy-policy" 
-            class="mr-2 mt-1"
-            required
-          />
+        <div class="flex items-start mb-2">
+          <input type="checkbox" id="privacy-policy" required class="mr-2 mt-1" />
           <label for="privacy-policy" class="text-sm text-gray-600">
-            Acepto recibir comunicaciones comerciales y he leído la 
+            Acepto recibir comunicaciones y he leído la 
             <a href="/politica-privacidad" class="text-blue-600 hover:underline">Política de Privacidad</a>.
           </label>
+        </div>
+
+        <div id="subscription-status" class="text-center mt-4 hidden">
+          <p id="subscription-success" class="text-green-600 hidden">✅ ¡Gracias! Estás suscrito.</p>
+          <p id="subscription-error" class="text-red-600 hidden">⚠️ Algo salió mal. Intenta de nuevo.</p>
         </div>
       </form>
       
@@ -98,3 +104,61 @@ const popularTags = [
     </div>
   </div>
 </section>
+
+<script>
+  // @ts-nocheck
+  document.addEventListener('DOMContentLoaded', function() {
+    //
+    // Envío del formulario de suscripción
+    //
+    var form     = document.getElementById('subscription-form');
+    var status   = document.getElementById('subscription-status');
+    var success  = document.getElementById('subscription-success');
+    var errorEl  = document.getElementById('subscription-error');
+
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // 1) Convertir FormData a objeto
+      var fd   = new FormData(form);
+      var data = Object.fromEntries(fd.entries());
+
+      // 2) Backup en Netlify Forms
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(fd).toString()
+      }).catch(function(err) {
+        console.warn('Netlify Forms backup failed', err);
+      });
+
+      // 3) Llamar a nuestra función submit-subscription
+      fetch('/.netlify/functions/submit-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(function(res) {
+        return res.json().then(function(json) {
+          return { status: res.status, body: json };
+        });
+      })
+      .then(function(result) {
+        if (result.status >= 200 && result.status < 300 && result.body.success) {
+          status  && status.classList.remove('hidden');
+          success && success.classList.remove('hidden');
+          form.reset();
+        } else {
+          throw new Error(result.body.message || 'Error inesperado');
+        }
+      })
+      .catch(function(err) {
+        console.error('Error en suscripción:', err);
+        status  && status.classList.remove('hidden');
+        errorEl && errorEl.classList.remove('hidden');
+      });
+    });
+  });
+</script>

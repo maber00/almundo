@@ -163,10 +163,11 @@ const getDestinationUrl = (destination: Destination) => {
         <span class="ml-1 text-sm font-medium">Últimos {destination.availability} cupos</span>
       </div>
     </div>
-
-    
-      href={getDestinationUrl(destination)}
-      class="block w-full bg-blue-600 text-white text-center py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
-    >Ver detalles</a>
+    <a
+  href={getDestinationUrl(destination)}
+  class="block w-full bg-blue-600 text-white text-center py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
+>
+  Ver detalles
+</a>
   </div>
 </div>

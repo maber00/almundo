@@ -58,7 +58,7 @@ const paymentMethods = [
         <div class="space-y-3 text-sm text-gray-300">
           <p>📍 Calle 38 No 21-31<br/>Tuluá, Colombia</p>
           <p>📱 +57 316 527 6338</p>
-          <p>✉️ info@almundotour.com</p>
+          <p>✉️ info@almundotours.com</p>
           <p>⏰ Lun - Vie: 8:00 AM - 6:00 PM<br/>Sábados: 9:00 AM - 1:00 PM</p>
         </div>
       </div>
@@ -97,10 +97,17 @@ const paymentMethods = [
         <p class="text-gray-400 mb-4">
           Recibe nuestras mejores ofertas y promociones directamente en tu correo.
         </p>
-        <form class="mb-6">
+        <form id="newsletter-form" class="mb-6" name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="newsletter" />
+          <p class="hidden">
+            <label>No llenes esto si eres humano: <input name="bot-field" /></label>
+          </p>
+        
           <div class="flex">
             <input 
               type="email" 
+              id="newsletter-email"
+              name="email" 
               placeholder="Tu correo electrónico" 
               class="bg-gray-800 text-white px-4 py-2 rounded-l-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -111,6 +118,11 @@ const paymentMethods = [
             >
               ✉️
             </button>
+          </div>
+        
+          <div id="newsletter-status" class="mt-2 text-sm text-center hidden">
+            <p id="newsletter-success" class="text-green-400 hidden">✅ ¡Gracias por suscribirte!</p>
+            <p id="newsletter-error" class="text-red-400 hidden">⚠️ Ha ocurrido un error. Inténtalo de nuevo.</p>
           </div>
         </form>
         <h4 class="text-lg font-bold mb-4 text-white">Síguenos</h4>
@@ -164,3 +176,59 @@ const paymentMethods = [
     </div>
   </div>
 </footer>
+
+<script>
+  // @ts-nocheck
+  document.addEventListener('DOMContentLoaded', function() {
+    var form      = document.getElementById('newsletter-form');
+    var statusBox = document.getElementById('newsletter-status');
+    var success   = document.getElementById('newsletter-success');
+    var errorEl   = document.getElementById('newsletter-error');
+
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // 1) Recoger email
+      var fd = new FormData(form);
+      var email = fd.get('email');
+
+      // 2) Backup en Netlify Forms
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(fd).toString()
+      }).catch(function(){/* no bloquea si falla */});
+
+      // 3) Enviar a Airtable vía nuestra Function
+      fetch('/.netlify/functions/submit-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      })
+      .then(function(res) {
+        return res.json().then(function(json) {
+          return { status: res.status, body: json };
+        });
+      })
+      .then(function(result) {
+        statusBox.classList.remove('hidden');
+        if (result.status >= 200 && result.status < 300 && result.body.success) {
+          success.classList.remove('hidden');
+          errorEl.classList.add('hidden');
+          form.reset();
+        } else {
+          throw new Error(result.body.message || 'Error inesperado');
+        }
+      })
+      .catch(function(err) {
+        console.error('Error suscrip:', err);
+        statusBox.classList.remove('hidden');
+        success.classList.add('hidden');
+        errorEl.classList.remove('hidden');
+      });
+    });
+  });
+</script>
+
