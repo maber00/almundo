@@ -94,6 +94,9 @@ const preselectedDestino = searchParams.get('destino') || '';
     data-netlify="true"
     netlify-honeypot="bot-field"
   >
+
+  <input type="hidden" name="form-name" value="contacto" />
+
     <!-- Campo oculto anti-spam para Netlify -->
     <p class="hidden">
       <label>No llenes esto si eres humano: <input name="bot-field" /></label>
@@ -455,20 +458,83 @@ const preselectedDestino = searchParams.get('destino') || '';
 </div>
 
 <script>
-  // Mostrar mensaje de éxito después del envío del formulario
+  // Script para manejar el envío del formulario a Netlify Forms y Airtable
   document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('lead-capture-form');
+    const form = document.getElementById('lead-capture-form') as HTMLFormElement;
     const formStatus = document.getElementById('form-status');
     const formSuccess = document.getElementById('form-success');
+    const formError = document.getElementById('form-error');
     
     if (form) {
-      form.addEventListener('submit', (e) => {
-        // El formulario será procesado por Netlify Forms
-        // Solo mostramos el mensaje visual de éxito después de un breve retraso
-        setTimeout(() => {
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Recolectar todos los datos del formulario
+        const formData = new FormData(form);
+        const formObject: Record<string, string | string[]> = {};
+        
+        formData.forEach((value, key) => {
+          // Si ya existe la clave y es un array, añadir el valor
+          if (formObject[key] !== undefined) {
+            if (Array.isArray(formObject[key])) {
+              (formObject[key] as string[]).push(value.toString());
+            } else {
+              // Si ya existe la clave pero no es un array, convertirla en array
+              formObject[key] = [formObject[key] as string, value.toString()];
+            }
+          } else {
+            // Si no existe, simplemente asignar el valor
+            formObject[key] = value.toString();
+          }
+        });
+        
+        try {
+          // 1. Enviar a Netlify Forms (para tener un respaldo)
+          await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData as any).toString()
+          });
+          
+          // 2. Enviar a nuestra función de Netlify para Airtable
+          const airtableResponse = await fetch('/.netlify/functions/submit-lead', {
+
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formObject)
+          });
+          
+          const responseData = await airtableResponse.json();
+          
+          if (airtableResponse.ok && responseData.success) {
+            // Mostrar mensaje de éxito
+            if (formStatus) formStatus.classList.remove('hidden');
+            if (formSuccess) formSuccess.classList.remove('hidden');
+            form.reset();
+            
+            // Scroll hacia el mensaje
+            if (formSuccess) {
+              window.scrollTo({ 
+                top: formSuccess.offsetTop || window.scrollY, 
+                behavior: 'smooth' 
+              });
+            }
+          } else {
+            throw new Error(responseData.message || 'Error al procesar la solicitud');
+          }
+        } catch (error) {
+          console.error('Error:', error);
           if (formStatus) formStatus.classList.remove('hidden');
-          if (formSuccess) formSuccess.classList.remove('hidden');
-        }, 1000);
+          if (formError) formError.classList.remove('hidden');
+          
+          if (formError) {
+            const errorMsg = formError.querySelector('p');
+            if (errorMsg) {
+              errorMsg.textContent = 'Error al enviar el formulario: ' + 
+                (error instanceof Error ? error.message : 'Error desconocido');
+            }
+          }
+        }
       });
     }
   });

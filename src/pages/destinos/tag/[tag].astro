@@ -38,6 +38,8 @@ const normalizedTag = tag
 let taggedDestinations: Destination[] = [];
 try {
   const allDestinations = await getCollection('destinations');
+
+  
   
   taggedDestinations = allDestinations
     .filter(entry => hasTag(entry, normalizedTag))

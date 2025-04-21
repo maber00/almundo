@@ -99,14 +99,15 @@ const contactTimeOptions = [
             
             <!-- Formulario con Netlify Forms -->
            
-<form 
-  class="p-8 md:p-10"
-  name="cotizacion"
-  method="POST"
-  data-netlify="true"
-  netlify-honeypot="bot-field"
->
-  <input type="hidden" name="form-name" value="cotizacion" />
+            <form 
+            id="lead-capture-form" 
+            class="p-8 md:p-10"
+            name="cotizacion"
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+          >
+          <input type="hidden" name="form-name" value="cotizacion" />
   
   <p class="hidden">
     <label>No llenes esto si eres humano: <input name="bot-field" /></label>
@@ -525,30 +526,87 @@ const contactTimeOptions = [
 </Layout>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.querySelector('form[name="cotizacion"]');
-      const formStatus = document.getElementById('form-status');
-      const formSuccess = document.getElementById('form-success');
-      const formError = document.getElementById('form-error');
-  
-      // Verificamos si los elementos existen antes de usarlos
-      if (form && formStatus && formSuccess) {
-        form.addEventListener('submit', (e) => {
-          e.preventDefault(); // Prevenir el comportamiento por defecto de la página
-  
-          // Simular el envío de formulario (en un entorno real, Netlify maneja esto por ti)
-          setTimeout(() => {
-            // Mostrar el mensaje de éxito
-            formStatus.classList.remove('hidden');
-            formSuccess.classList.remove('hidden');
-            
-            // Opcionalmente, hacer scroll hacia el mensaje de éxito
-            window.scrollTo({ top: formSuccess.offsetTop, behavior: 'smooth' });
-          }, 1000);
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form[name="cotizacion"]') as HTMLFormElement;
+    const formStatus = document.getElementById('form-status');
+    const formSuccess = document.getElementById('form-success');
+    const formError = document.getElementById('form-error');
+    
+    if (form) {
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        console.log('Formulario enviado');
+        
+        // Recolectar todos los datos del formulario
+        const formData = new FormData(form);
+        const formObject: Record<string, string> = {};
+        
+        formData.forEach((value, key) => {
+          formObject[key] = value.toString();
         });
-      } else {
-        console.error('No se encontraron los elementos necesarios en el DOM.');
-      }
-    });
-  </script>
-  
+        
+        try {
+          // 1. Enviar a Netlify Forms como respaldo
+          await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData as any).toString()
+          });
+          
+          console.log('Enviando a función de Netlify...');
+          
+          // 2. Enviar a nuestra función de Netlify para Airtable
+          const airtableResponse = await fetch('/.netlify/functions/submit-quote', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formObject)
+          });
+          
+          console.log('Respuesta recibida:', airtableResponse.status);
+          
+          // Verificar si la respuesta es JSON
+          const contentType = airtableResponse.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            // Si no es JSON, obtener el texto para diagnóstico
+            const errorText = await airtableResponse.text();
+            console.error('Respuesta no JSON:', errorText);
+            throw new Error(`Respuesta inesperada del servidor: ${airtableResponse.status} ${airtableResponse.statusText}`);
+          }
+          
+          const responseData = await airtableResponse.json();
+          console.log('Datos de respuesta:', responseData);
+          
+          if (airtableResponse.ok && responseData.success) {
+            console.log('Formulario procesado con éxito');
+            // Mostrar mensaje de éxito
+            if (formStatus) formStatus.classList.remove('hidden');
+            if (formSuccess) formSuccess.classList.remove('hidden');
+            form.reset();
+            
+            // Scroll hacia el mensaje
+            if (formSuccess) {
+              window.scrollTo({ 
+                top: formSuccess.offsetTop || window.scrollY, 
+                behavior: 'smooth' 
+              });
+            }
+          } else {
+            throw new Error(responseData.message || 'Error al procesar la solicitud');
+          }
+        } catch (error) {
+          console.error('Error detallado:', error);
+          if (formStatus) formStatus.classList.remove('hidden');
+          if (formError) formError.classList.remove('hidden');
+          
+          if (formError) {
+            const errorMsg = formError.querySelector('p');
+            if (errorMsg) {
+              errorMsg.textContent = 'Error al enviar el formulario: ' + 
+                (error instanceof Error ? error.message : 'Error desconocido');
+            }
+          }
+        }
+      });
+    }
+  });
+</script>

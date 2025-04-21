@@ -1,8 +1,11 @@
 [build]
-  command = "npm install && npm run build"
+  command = "npm run build"
   publish = "dist"
+  functions = "netlify/functions"
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Declarar los formularios explícitamente
+[[forms]]
+  name = "cotizacion"
+  
+[[forms]]
+  name = "contacto"
