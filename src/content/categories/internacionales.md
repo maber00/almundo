@@ -10,6 +10,6 @@ destinations:
   - Punta Cana
   - Cancún
 type: internacional
-url: /destinos/tag/internacionales
+url: /destinos/internacionales
 tag: Familiar
 ---
