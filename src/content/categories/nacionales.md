@@ -11,6 +11,6 @@ destinations:
   - Medellín
   - La Guajira
 type: nacional
-url: /destinos/tag/nacionales
+url: /destinos/nacionales
 tag: Familiar
 ---
