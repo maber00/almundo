@@ -58,7 +58,7 @@ const mainCategories = [
   }
 ];
 
-// Categorías de experiencia
+// Categorías de experiencia con sus respectivos tags
 const experienceCategories = [
   {
     title: "Aventura",
@@ -66,7 +66,8 @@ const experienceCategories = [
     icon: "🏔️",
     bgColor: "bg-green-100",
     textColor: "text-green-600",
-    url: "/destinos/tag/aventura"
+    url: "/destinos/tag/aventura",
+    tag: "Aventura"  // Añadido tag explícito
   },
   {
     title: "Playa",
@@ -74,7 +75,8 @@ const experienceCategories = [
     icon: "🏖️",
     bgColor: "bg-cyan-100",
     textColor: "text-cyan-600",
-    url: "/destinos/tag/playa"
+    url: "/destinos/tag/playa",
+    tag: "Playa"  // Añadido tag explícito
   },
   {
     title: "Romántico",
@@ -82,7 +84,8 @@ const experienceCategories = [
     icon: "❤️",
     bgColor: "bg-pink-100",
     textColor: "text-pink-600",
-    url: "/destinos/tag/romántico"
+    url: "/destinos/tag/romantico",  // Corregido a 'romantico' sin acento para la URL
+    tag: "Romántico"  // Añadido tag explícito con acento para el CMS
   },
   {
     title: "Cultural",
@@ -90,7 +93,8 @@ const experienceCategories = [
     icon: "🏛️",
     bgColor: "bg-purple-100",
     textColor: "text-purple-600",
-    url: "/destinos/tag/cultural"
+    url: "/destinos/tag/cultural",
+    tag: "Cultural"  // Añadido tag explícito
   }
 ];
 ---
@@ -103,9 +107,6 @@ const experienceCategories = [
         Encuentra el viaje perfecto entre nuestra selección de destinos para todos los gustos y presupuestos
       </p>
     </div>
-    
-    <!-- Categorías principales -->
-   
     
     <!-- Categorías desde el CMS -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -156,14 +157,13 @@ const experienceCategories = [
             href={category.url} 
             class="bg-white rounded-lg shadow-md p-6 flex items-center hover:shadow-lg transition-shadow"
           >
-            <div class={`${category.bgColor} bg-green-100 p-3 rounded-full mr-4`}>
+            <div class={`${category.bgColor} p-3 rounded-full mr-4`}>
               <span class="text-2xl">{category.icon}</span>
             </div>
             <div>
-            <h3 class={`font-bold text-gray-900 ${category.textColor} `}>{category.title}</h3>
-            <p class="text-sm text-gray-600">{category.description}</p>
-          </div>
-            
+              <h3 class={`font-bold text-gray-900 ${category.textColor}`}>{category.title}</h3>
+              <p class="text-sm text-gray-600">{category.description}</p>
+            </div>
           </a>
         ))}
       </div>

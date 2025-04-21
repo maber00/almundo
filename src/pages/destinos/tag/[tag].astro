@@ -1,21 +1,20 @@
 ---
+// src/pages/destinos/tag/[tag].astro
 import Layout from '../../../layouts/Layout.astro';
 import Header from '../../../components/layout/Header.astro';
 import Footer from '../../../components/layout/Footer.astro';
 import DestinationCard from '../../../components/destinations/DestinationCard.astro';
-import SelectFilter from '../../../components/common/SelectFilter.astro';
 import { Icon } from 'astro-icon/components';
 import { getCollection } from 'astro:content';
-import { getFilteredDestinations } from '../../../utils/content';
+import { hasTag } from '../../../utils/content';
 
 interface Destination {
   id: string;
   name: string;
   type: string;
   price: number;
-  originalPrice?: number | string | null;
+  originalPrice?: number | null | string;
   priceInUsd?: boolean;
-  duration: number;
   durationText: string;
   image: string;
   rating: number;
@@ -23,276 +22,121 @@ interface Destination {
   tag?: string;
   tags?: string[];
   region?: string;
-  description: string;
   slug: string;
+  // Añade aquí otras propiedades que usen tus destinos
 }
 
-// Obtener parámetros de búsqueda de la URL
-const { searchParams } = Astro.url;
-const destination_type = searchParams.get('destination_type') || '';
-const budget = searchParams.get('budget') || '';
-const duration = searchParams.get('duration') || '';
-const travel_date = searchParams.get('travel_date') || '';
-const region = searchParams.get('region') || '';
+// Obtener el tag de los parámetros de URL
+const { tag } = Astro.params;
 
-// Crear objeto de filtros a partir de los parámetros URL
-const filters = {
-  destination_type: destination_type || undefined,
-  budget: budget || undefined,
-  duration: duration || undefined,
-  travel_date: travel_date || undefined,
-  region: region || undefined
-};
+// Normalizar el tag para búsqueda (primera letra mayúscula, espacios en lugar de guiones)
+const normalizedTag = tag
+  ? tag.charAt(0).toUpperCase() + tag.slice(1).replace(/-/g, ' ')
+  : '';
 
-// Obtener destinos filtrados 
-const destinations: Destination[] = await getFilteredDestinations(filters);
-
-// Para las secciones específicas, obtener destinos por tipo
-let nationalDestinations: Destination[] = [];
-let internationalDestinations: Destination[] = [];
-let offerDestinations: Destination[] = [];
-
+// Obtener todos los destinos que coincidan con el tag
+let taggedDestinations: Destination[] = [];
 try {
-  // Obtener todas las colecciones
   const allDestinations = await getCollection('destinations');
   
-  // Filtrar por tipo
-  nationalDestinations = allDestinations
-    .filter(entry => entry.data.type === 'nacional')
-    .map(entry => ({ ...entry.data, slug: entry.slug } as Destination))
-    .slice(0, 6);
-
-  internationalDestinations = allDestinations
-    .filter(entry => entry.data.type === 'internacional')
-    .map(entry => ({ ...entry.data, slug: entry.slug } as Destination))
-    .slice(0, 6);
-
-  // Filtrar ofertas (con tag "Oferta" o precio original mayor al precio actual)
-  offerDestinations = allDestinations
-    .filter(entry => {
-      const originalPrice = entry.data.originalPrice
-        ? (typeof entry.data.originalPrice === 'string'
-            ? Number((entry.data.originalPrice as string).replace(/[.,]/g, '')) || 0
-            : entry.data.originalPrice)
-        : 0;
-      return (originalPrice > 0 && originalPrice > entry.data.price) || entry.data.tag === 'Oferta' || 
-        (entry.data.tags && entry.data.tags.includes('Oferta'));
-    })
-    .map(entry => ({ ...entry.data, slug: entry.slug } as Destination))
-    .slice(0, 6);
+  taggedDestinations = allDestinations
+    .filter(entry => hasTag(entry, normalizedTag))
+    .map(entry => ({
+      ...entry.data,
+      slug: entry.slug
+    }));
 } catch (error) {
-  console.error('Error al obtener destinos:', error);
+  console.error(`Error al obtener destinos con tag ${normalizedTag}:`, error);
 }
 
-// Tipos de destinos para el buscador
-const destinationTypes = [
-  { id: "nacional", label: "Nacional" },
-  { id: "internacional", label: "Internacional" },
-  { id: "caribe", label: "Caribe" },
-  { id: "europa", label: "Europa" },
-  { id: "norteamerica", label: "Norteamérica" },
-  { id: "sudamerica", label: "Sudamérica" },
-  { id: "asia", label: "Asia" }
-];
+// Estadísticas básicas
+const stats = {
+  totalDestinations: taggedDestinations.length,
+  averagePrice: taggedDestinations.length > 0 
+    ? Math.round(taggedDestinations.reduce((sum, dest) => sum + dest.price, 0) / taggedDestinations.length) 
+    : 0
+};
 
-// Rangos de presupuesto para el select
-const budgetRanges = [
-  { id: "budget-1", label: "Hasta $1,000,000" },
-  { id: "budget-2", label: "$1,000,000 - $3,000,000" },
-  { id: "budget-3", label: "$3,000,000 - $5,000,000" },
-  { id: "budget-4", label: "$5,000,000 - $10,000,000" },
-  { id: "budget-5", label: "Más de $10,000,000" }
-];
-
-// Duraciones de viaje
-const tripDurations = [
-  { id: "duration-1", label: "3-5 días" },
-  { id: "duration-2", label: "6-8 días" },
-  { id: "duration-3", label: "9-12 días" },
-  { id: "duration-4", label: "13-15 días" },
-  { id: "duration-5", label: "Más de 15 días" }
-];
-
-// Regiones para el filtrado
-const regionOptions = [
-  { id: "all", label: "Todas las regiones" },
-  { id: "caribe", label: "Caribe" },
-  { id: "andina", label: "Andina" },
-  { id: "pacifica", label: "Pacífica" },
-  { id: "norteamerica", label: "Norteamérica" },
-  { id: "sudamerica", label: "Sudamérica" },
-  { id: "europa", label: "Europa" },
-  { id: "asia", label: "Asia" }
-];
+// Título para mostrar en la página
+const pageTitle = normalizedTag || 'Destinos';
 ---
 
-<Layout title="Destinos | AL mundo Tour" description="Explora nuestros destinos nacionales e internacionales y encuentra tu próxima aventura.">
+<Layout title={`Destinos ${pageTitle} | AL mundo Tour`} description={`Explora nuestros destinos de ${pageTitle.toLowerCase()}. Encuentra las mejores experiencias y ofertas.`}>
   <Header />
-
+  
   <main>
-    <!-- Hero section con buscador -->
-    <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-20 pt-32 pb-32 relative">
+    <!-- Hero section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-20 pt-32">
       <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Nuestros Destinos</h1>
-        <p class="text-xl text-blue-100 max-w-3xl mx-auto mb-12">
-          Explora nuestra amplia selección de destinos nacionales e internacionales para todos los gustos y presupuestos.
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Destinos: {pageTitle}</h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+          Descubre nuestros mejores destinos de {pageTitle.toLowerCase()} seleccionados para experiencias inolvidables.
         </p>
       </div>
-
-      <!-- Buscador Avanzado -->
-      <div class="absolute bottom-0 left-0 right-0 z-30 transform translate-y-1/2">
-        <div class="container mx-auto px-4">
-          <div class="bg-white rounded-lg shadow-xl p-6">
-            <h3 class="text-2xl font-bold text-gray-800 mb-4">Encuentra tu viaje ideal</h3>
-
-            <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4" id="search-form" action="/destinos" method="get">
-              <!-- Tipo de Destino -->
-              <SelectFilter
-                name="destination_type"
-                label="Tipo de Destino"
-                options={destinationTypes}
-                placeholder="Todos los destinos"
-                selectedValue={destination_type}
-              />
-
-              <!-- Presupuesto -->
-              <SelectFilter
-                name="budget"
-                label="Presupuesto"
-                options={budgetRanges}
-                placeholder="Cualquier presupuesto"
-                selectedValue={budget}
-              />
-
-              <!-- Duración -->
-              <SelectFilter
-                name="duration"
-                label="Duración"
-                options={tripDurations}
-                placeholder="Cualquier duración"
-                selectedValue={duration}
-              />
-
-              <!-- Región -->
-              <SelectFilter
-                name="region"
-                label="Región"
-                options={regionOptions}
-                placeholder="Todas las regiones"
-                selectedValue={region}
-              />
-
-              <!-- Botón de búsqueda -->
-              <div class="flex items-end">
-                <button
-                  type="submit"
-                  class="w-full bg-blue-600 text-white py-2 px-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
-                >
-                  <Icon name="tabler:search" class="w-5 h-5 mr-2" />
-                  Encontrar mi viaje ideal
-                </button>
-              </div>
-            </form>
-
-            <div class="mt-4 text-center">
-              <p class="text-sm text-gray-600">
-                <span class="font-medium">Agencia de viajes en Colombia</span> con experiencia internacional.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
-
-    <!-- Espacio para el buscador -->
-    <div class="py-20"></div>
-
+    
     <!-- Breadcrumbs -->
     <section class="bg-gray-50 py-4 border-b border-gray-200">
       <div class="container mx-auto px-4">
         <div class="flex items-center text-sm text-gray-500">
           <a href="/" class="hover:text-blue-600">Inicio</a>
           <span class="mx-2">➡️</span>
-          <span class="text-gray-700">Destinos</span>
+          <a href="/destinos" class="hover:text-blue-600">Destinos</a>
+          <span class="mx-2">➡️</span>
+          <span class="text-gray-700">{pageTitle}</span>
         </div>
       </div>
     </section>
-
-    <!-- Categorías de viaje por experiencia -->
-    <section class="py-12 bg-gray-50">
+    
+    <!-- Estadísticas -->
+    <section class="py-8 bg-blue-50">
       <div class="container mx-auto px-4">
-        <h3 class="text-2xl font-bold text-center text-gray-900 mb-6">Explora por tipo de experiencia</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <a href="/destinos/tag/aventura" class="bg-white rounded-lg shadow-md p-6 flex items-center hover:shadow-lg transition-shadow">
-            <div class="bg-green-100 p-3 rounded-full mr-4">
-              <span class="text-green-600 text-2xl">🏔️</span>
+        <div class="bg-blue-100 rounded-lg p-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-4xl font-bold text-blue-600 mb-2">{taggedDestinations.length}+</div>
+            <p class="text-gray-700">Destinos disponibles</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-blue-600 mb-2">
+              {stats.averagePrice ? `$${Math.floor(stats.averagePrice/100000)*100000}` : 'Consultar'}
             </div>
-            <div>
-              <h4 class="font-bold text-gray-900">Aventura</h4>
-              <p class="text-sm text-gray-600">Experiencias emocionantes</p>
+            <p class="text-gray-700">Precio promedio</p>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-blue-600 mb-2">
+              <Icon name="tabler:heart" class="w-10 h-10 inline-block text-red-500" />
             </div>
-          </a>
-
-          <a href="/destinos/tag/playa" class="bg-white rounded-lg shadow-md p-6 flex items-center hover:shadow-lg transition-shadow">
-            <div class="bg-cyan-100 p-3 rounded-full mr-4">
-              <span class="text-cyan-600 text-2xl">🏖️</span>
-            </div>
-            <div>
-              <h4 class="font-bold text-gray-900">Playa</h4>
-              <p class="text-sm text-gray-600">Relax junto al mar</p>
-            </div>
-          </a>
-
-          <a href="/destinos/tag/romántico" class="bg-white rounded-lg shadow-md p-6 flex items-center hover:shadow-lg transition-shadow">
-            <div class="bg-pink-100 p-3 rounded-full mr-4">
-              <span class="text-pink-600 text-2xl">❤️</span>
-            </div>
-            <div>
-              <h4 class="font-bold text-gray-900">Romántico</h4>
-              <p class="text-sm text-gray-600">Escapadas en pareja</p>
-            </div>
-          </a>
-
-          <a href="/destinos/tag/cultural" class="bg-white rounded-lg shadow-md p-6 flex items-center hover:shadow-lg transition-shadow">
-            <div class="bg-purple-100 p-3 rounded-full mr-4">
-              <span class="text-purple-600 text-2xl">🏛️</span>
-            </div>
-            <div>
-              <h4 class="font-bold text-gray-900">Cultural</h4>
-              <p class="text-sm text-gray-600">Historia y patrimonio</p>
-            </div>
-          </a>
+            <p class="text-gray-700">Experiencias únicas</p>
+          </div>
         </div>
       </div>
     </section>
-
-    <!-- Resultados de búsqueda o todos los destinos -->
+    
+    <!-- Lista de destinos -->
     <section class="py-12">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-gray-900 mb-8">
-          {destination_type || budget || duration || region || travel_date 
-            ? 'Resultados de búsqueda' 
-            : 'Todos nuestros destinos'}
+          Nuestros destinos de {pageTitle}
         </h2>
-
-        {destinations.length > 0 ? (
+        
+        {taggedDestinations.length > 0 ? (
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {destinations.map((destination: Destination) => (
+            {taggedDestinations.map((destination) => (
               <DestinationCard destination={destination} />
             ))}
           </div>
         ) : (
           <div class="bg-white rounded-lg shadow-lg p-8 text-center">
             <div class="text-6xl mb-4">🔍</div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">No encontramos destinos que coincidan con tu búsqueda</h2>
-            <p class="text-lg text-gray-600 mb-6">Prueba aplicando otros filtros o contacta con nuestros asesores para encontrar el destino perfecto para ti.</p>
-
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">No encontramos destinos en esta categoría</h2>
+            <p class="text-lg text-gray-600 mb-6">Estamos trabajando en nuevas opciones. ¡Vuelve pronto!</p>
+            
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/destinos" class="bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
                 <span class="mr-2">🔄</span>
                 Ver todos los destinos
               </a>
-
+              
               <a href="/contacto" class="bg-green-500 text-white py-3 px-6 rounded-md font-medium hover:bg-green-600 transition-colors inline-flex items-center justify-center">
                 <span class="mr-2">💬</span>
                 Contactar asesor
@@ -302,87 +146,25 @@ const regionOptions = [
         )}
       </div>
     </section>
-
-    <!-- Secciones de categorías destacadas (se muestran si no hay filtros aplicados) -->
-    {(!destination_type && !budget && !duration && !region && !travel_date) && (
-      <>
-        <!-- Destinos Nacionales -->
-        <section class="py-10 bg-gray-50">
-          <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center mb-8">
-              <h2 class="text-2xl font-bold text-gray-900">Destinos Nacionales</h2>
-              <a href="/destinos/nacionales" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                Ver todos
-                <Icon name="tabler:arrow-right" class="w-5 h-5 ml-1" />
-              </a>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {nationalDestinations.slice(0, 3).map((destination: Destination) => (
-                <DestinationCard destination={destination} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <!-- Destinos Internacionales -->
-        <section class="py-10">
-          <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center mb-8">
-              <h2 class="text-2xl font-bold text-gray-900">Destinos Internacionales</h2>
-              <a href="/destinos/internacionales" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                Ver todos
-                <Icon name="tabler:arrow-right" class="w-5 h-5 ml-1" />
-              </a>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {internationalDestinations.slice(0, 3).map((destination: Destination) => (
-                <DestinationCard destination={destination} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <!-- Ofertas Especiales -->
-        <section class="py-10 bg-red-50">
-          <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center mb-8">
-              <h2 class="text-2xl font-bold text-gray-900">Ofertas Especiales</h2>
-              <a href="/promociones" class="text-red-600 hover:text-red-800 font-medium flex items-center">
-                Ver todas las ofertas
-                <Icon name="tabler:arrow-right" class="w-5 h-5 ml-1" />
-              </a>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {offerDestinations.slice(0, 3).map((destination: Destination) => (
-                <DestinationCard destination={destination} />
-              ))}
-            </div>
-          </div>
-        </section>
-      </>
-    )}
-
+    
     <!-- CTA final -->
     <section class="py-12 bg-blue-600 text-white">
       <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl font-bold mb-4">¿No encuentras lo que buscas?</h2>
+        <h2 class="text-3xl font-bold mb-4">¿Buscas algo más específico?</h2>
         <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-          Nuestros asesores de viajes están listos para ayudarte a encontrar el destino perfecto para ti.
+          Nuestros asesores especializados están listos para ayudarte a encontrar tu destino ideal.
         </p>
-
+        
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a 
             href="/contacto" 
             class="bg-white text-blue-600 py-3 px-8 rounded-md font-medium hover:bg-blue-50 transition-colors"
           >
-            Contactar asesor
+            Solicitar asesoramiento
           </a>
-
+          
           <a 
-            href="https://wa.me/573165276338?text=Hola, estoy buscando un destino y necesito asesoría"
+            href={`https://wa.me/573165276338?text=Hola, estoy interesado en un destino de ${pageTitle.toLowerCase()}`}
             target="_blank" 
             class="bg-green-500 text-white py-3 px-8 rounded-md font-medium hover:bg-green-600 transition-colors"
           >
@@ -392,6 +174,6 @@ const regionOptions = [
       </div>
     </section>
   </main>
-
+  
   <Footer />
 </Layout>

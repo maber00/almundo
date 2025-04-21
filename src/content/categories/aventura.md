@@ -8,7 +8,7 @@ destinations:
   - La Guajira
   - Amazonas
   - Cusco
-url: aventura
+url: /destinos/tag/aventura
 tag: Aventura
 tags:
   - Ecoturismo

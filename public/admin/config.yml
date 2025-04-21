@@ -66,7 +66,7 @@ collections:
       - { label: "Orden", name: "order", widget: "number", default: 0, hint: "Posición de visualización (0 primero)" }
 
 
-  # Colección para categorías
+    # Colección para categorías
   - name: "categories"
     label: "Categorías"
     folder: "src/content/categories"
@@ -78,9 +78,10 @@ collections:
       - { label: "Descripción", name: "description", widget: "text" }
       - { label: "Imagen", name: "image", widget: "image" }
       - { label: "Destinos Populares", name: "destinations", widget: "list" }
+      - { label: "URL", name: "url", widget: "string", hint: "URL completa con barra inicial, ej: /destinos/tag/aventura" }
       - { label: "Etiqueta Principal", name: "tag", widget: "select", options: ["Aniversario", "Aventura", "Cultural", "Ecoturismo", "Familiar", "Ocio", "Oferta", "Playa", "Romántico", "Todo Incluido", "Crucero"] }
       - { label: "Etiquetas Adicionales", name: "tags", widget: "select", options: ["Aniversario", "Aventura", "Cultural", "Ecoturismo", "Familiar", "Ocio", "Oferta", "Playa", "Romántico", "Todo Incluido", "Crucero"], multiple: true, required: false }
-      
+
   # Colección para alianzas
   - name: "alliances"
     label: "Alianzas Estratégicas"
