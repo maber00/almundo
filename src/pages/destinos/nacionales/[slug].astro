@@ -266,20 +266,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
             </div>
 
             <!-- Itinerario desplegable (solo se muestra si hay datos) -->
-{destination.itinerary && destination.itinerary.length > 0 && (
-  <div class="bg-white rounded-lg shadow-md p-8 mb-8">
-    <button 
-      id="itinerary-toggle-btn" 
-      class="flex items-center justify-between w-full text-left font-bold text-xl text-gray-900"
-    >
-      <div class="flex items-center">
-        <Icon name="tabler:map-route" class="w-6 h-6 text-blue-600 mr-2" />
-        Itinerario del viaje
-      </div>
-      <div class="transition-transform duration-300" id="itinerary-icon">
-        <Icon name="tabler:chevron-down" class="w-6 h-6 text-gray-500" />
-      </div>
-    </button>
+
     
     <!-- Itinerario desplegable (solo se muestra si hay datos) -->
 {destination.itinerary && destination.itinerary.length > 0 && (
@@ -328,8 +315,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
     </div>
   </div>
 )}
-</div>
-)}
+
 
             
             <!-- Qué incluye -->
