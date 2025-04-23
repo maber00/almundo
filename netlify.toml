@@ -1,11 +1,17 @@
 [build]
-  command = "npm run build"
-  publish = "dist"
+  command   = "npm run build"
+  publish   = "dist"
   functions = "netlify/functions"
 
-# Declarar los formularios explícitamente
+[dev]
+  # Astro corre en el puerto 4321
+  targetPort = 4321
+  # Netlify Dev expone todo (sitio + lambdas) en el puerto 8888
+  port       = 8888
+  functions  = "netlify/functions"
+
 [[forms]]
   name = "cotizacion"
-  
+
 [[forms]]
   name = "contacto"

@@ -312,6 +312,238 @@ const contactTimeOptions = [
                       placeholder="Ej: 2"
                     />
                   </div>
+
+                  <!-- Sección para viajero solo -->
+<!-- Sección para viajero solo -->
+<div id="solo-traveler-section" style="display: none;" class="mt-4">
+  <div class="bg-blue-50 p-5 rounded-lg">
+    <h4 class="text-lg font-medium text-gray-900 mb-3">Información del viajero</h4>
+    
+    <div>
+      <label for="traveler_age" class="block text-sm font-medium text-gray-700 mb-1">
+        Edad <span class="text-red-500">*</span>
+      </label>
+      <input 
+        type="number" 
+        id="traveler_age" 
+        name="traveler_age" 
+        min="1"
+        max="120"
+        data-required="true"
+        class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Ej: 35"
+      />
+    </div>
+  </div>
+</div>
+
+<!-- Sección para pareja -->
+<div id="couple-section" style="display: none;" class="mt-4">
+  <div class="bg-blue-50 p-5 rounded-lg">
+    <h4 class="text-lg font-medium text-gray-900 mb-3">Información de la pareja</h4>
+    
+    <div>
+      <label for="couple_ages" class="block text-sm font-medium text-gray-700 mb-1">
+        Edades de ambos <span class="text-red-500">*</span>
+      </label>
+      <input 
+        type="text" 
+        id="couple_ages" 
+        name="couple_ages" 
+        data-required="true"
+        class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Ej: 30 y 32 años"
+      />
+    </div>
+  </div>
+</div>
+
+<!-- Sección para familia -->
+<div id="family-section" style="display: none;" class="mt-4">
+  <div class="bg-blue-50 p-5 rounded-lg">
+    <h4 class="text-lg font-medium text-gray-900 mb-3">Información de la familia</h4>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="adults_count" class="block text-sm font-medium text-gray-700 mb-1">
+          Número de adultos <span class="text-red-500">*</span>
+        </label>
+        <input 
+          type="number" 
+          id="adults_count" 
+          name="adults_count" 
+          min="1"
+          max="20"
+          data-required="true"
+          class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Ej: 2"
+        />
+      </div>
+      
+      <div>
+        <label for="has_children" class="block text-sm font-medium text-gray-700 mb-1">
+          ¿Viajan niños en el grupo? <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <select 
+            id="has_children" 
+            name="has_children"
+            data-required="true"
+            class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+          >
+            <option value="">Seleccionar...</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <label for="adults_ages" class="block text-sm font-medium text-gray-700 mb-1">
+          Edades de los adultos <span class="text-red-500">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="adults_ages" 
+          name="adults_ages" 
+          data-required="true"
+          class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Ej: 35, 38 años"
+        />
+      </div>
+    </div>
+    
+    <!-- Detalles de niños (mostrar/ocultar) -->
+    <div id="children-details-section" style="display: none;" class="mt-4 pt-4 border-t border-blue-200">
+      <h5 class="text-base font-medium text-gray-900 mb-3">Información sobre los niños</h5>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="children_count" class="block text-sm font-medium text-gray-700 mb-1">
+            Número de niños <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="children_count" 
+            name="children_count" 
+            min="1"
+            max="10"
+            data-required="true"
+            class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Ej: 2"
+          />
+        </div>
+        
+        <div>
+          <label for="children_ages" class="block text-sm font-medium text-gray-700 mb-1">
+            Edades de los niños <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="children_ages" 
+            name="children_ages" 
+            data-required="true"
+            class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Ej: 5, 8, 12 años"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sección para amigos -->
+<div id="friends-section" style="display: none;" class="mt-4">
+  <div class="bg-blue-50 p-5 rounded-lg">
+    <h4 class="text-lg font-medium text-gray-900 mb-3">Información del grupo de amigos</h4>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="friends_count" class="block text-sm font-medium text-gray-700 mb-1">
+          Número de personas <span class="text-red-500">*</span>
+        </label>
+        <input 
+          type="number" 
+          id="friends_count" 
+          name="friends_count" 
+          min="2"
+          max="30"
+          data-required="true"
+          class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Ej: 4"
+        />
+      </div>
+      
+      <div>
+        <label for="friends_ages" class="block text-sm font-medium text-gray-700 mb-1">
+          Rango de edades <span class="text-red-500">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="friends_ages" 
+          name="friends_ages" 
+          data-required="true"
+          class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Ej: Entre 25 y 30 años"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sección para grupo empresarial -->
+<div id="business-section" style="display: none;" class="mt-4">
+  <div class="bg-blue-50 p-5 rounded-lg">
+    <h4 class="text-lg font-medium text-gray-900 mb-3">Información del viaje empresarial</h4>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1">
+          Nombre de la empresa <span class="text-red-500">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="company_name" 
+          name="company_name" 
+          data-required="true"
+          class="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Ej: Empresa XYZ"
+        />
+      </div>
+      
+      <div>
+        <label for="business_trip_type" class="block text-sm font-medium text-gray-700 mb-1">
+          Tipo de viaje empresarial <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <select 
+            id="business_trip_type" 
+            name="business_trip_type"
+            data-required="true"
+            class="block appearance-none w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+          >
+            <option value="">Seleccionar...</option>
+            <option value="Viaje de incentivos">Viaje de incentivos</option>
+            <option value="Team building">Team building</option>
+            <option value="Conferencia o evento">Conferencia o evento</option>
+            <option value="Capacitación">Capacitación</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
                   
                   <!-- Duración aproximada -->
                   <div>
@@ -527,86 +759,222 @@ const contactTimeOptions = [
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('form[name="cotizacion"]') as HTMLFormElement;
-    const formStatus = document.getElementById('form-status');
-    const formSuccess = document.getElementById('form-success');
-    const formError = document.getElementById('form-error');
-    
-    if (form) {
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        console.log('Formulario enviado');
+  // Referencias a elementos del formulario con verificación de tipo
+  const form = document.querySelector('form[name="cotizacion"]') as HTMLFormElement | null;
+  const formStatus = document.getElementById('form-status');
+  const formSuccess = document.getElementById('form-success');
+  const formError = document.getElementById('form-error');
+  const travelWithSelect = document.getElementById('travel_with') as HTMLSelectElement | null;
+  
+  // Referencias a secciones dinámicas (inicialmente ocultas)
+  const soloSection = document.getElementById('solo-traveler-section');
+  const coupleSection = document.getElementById('couple-section');
+  const familySection = document.getElementById('family-section');
+  const friendsSection = document.getElementById('friends-section');
+  const businessSection = document.getElementById('business-section');
+  
+  // Ocultar todas las secciones dinámicas al inicio
+  function hideAllDynamicSections(): void {
+    const sections = [soloSection, coupleSection, familySection, friendsSection, businessSection];
+    sections.forEach(section => {
+      if (section) {
+        section.style.display = 'none';
         
-        // Recolectar todos los datos del formulario
-        const formData = new FormData(form);
-        const formObject: Record<string, string> = {};
-        
-        formData.forEach((value, key) => {
-          formObject[key] = value.toString();
+        // Desactivar campos requeridos cuando están ocultos
+        const requiredInputs = section.querySelectorAll('[required]');
+        requiredInputs.forEach((input: Element) => {
+          if (input instanceof HTMLElement) {
+            input.setAttribute('data-required', 'true');
+            input.removeAttribute('required');
+          }
         });
-        
-        try {
-          // 1. Enviar a Netlify Forms como respaldo
-          await fetch('/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(formData as any).toString()
-          });
-          
-          console.log('Enviando a función de Netlify...');
-          
-          // 2. Enviar a nuestra función de Netlify para Airtable
-          const airtableResponse = await fetch('/.netlify/functions/submit-quote', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formObject)
-          });
-          
-          console.log('Respuesta recibida:', airtableResponse.status);
-          
-          // Verificar si la respuesta es JSON
-          const contentType = airtableResponse.headers.get('content-type');
-          if (!contentType || !contentType.includes('application/json')) {
-            // Si no es JSON, obtener el texto para diagnóstico
-            const errorText = await airtableResponse.text();
-            console.error('Respuesta no JSON:', errorText);
-            throw new Error(`Respuesta inesperada del servidor: ${airtableResponse.status} ${airtableResponse.statusText}`);
-          }
-          
-          const responseData = await airtableResponse.json();
-          console.log('Datos de respuesta:', responseData);
-          
-          if (airtableResponse.ok && responseData.success) {
-            console.log('Formulario procesado con éxito');
-            // Mostrar mensaje de éxito
-            if (formStatus) formStatus.classList.remove('hidden');
-            if (formSuccess) formSuccess.classList.remove('hidden');
-            form.reset();
-            
-            // Scroll hacia el mensaje
-            if (formSuccess) {
-              window.scrollTo({ 
-                top: formSuccess.offsetTop || window.scrollY, 
-                behavior: 'smooth' 
-              });
-            }
-          } else {
-            throw new Error(responseData.message || 'Error al procesar la solicitud');
-          }
-        } catch (error) {
-          console.error('Error detallado:', error);
-          if (formStatus) formStatus.classList.remove('hidden');
-          if (formError) formError.classList.remove('hidden');
-          
-          if (formError) {
-            const errorMsg = formError.querySelector('p');
-            if (errorMsg) {
-              errorMsg.textContent = 'Error al enviar el formulario: ' + 
-                (error instanceof Error ? error.message : 'Error desconocido');
-            }
-          }
+      }
+    });
+  }
+  
+  // Mostrar sección específica y configurar sus campos
+  function showSection(section: HTMLElement | null): void {
+    if (section) {
+      section.style.display = 'block';
+      
+      // Reactivar campos requeridos
+      const dataRequiredInputs = section.querySelectorAll('[data-required="true"]');
+      dataRequiredInputs.forEach((input: Element) => {
+        if (input instanceof HTMLElement) {
+          input.setAttribute('required', '');
         }
       });
     }
-  });
+  }
+  
+  // Inicializar estado del formulario
+  hideAllDynamicSections();
+  
+  // Evento para manejar el cambio en "Con quién viajaría"
+  if (travelWithSelect) {
+    travelWithSelect.addEventListener('change', function() {
+      hideAllDynamicSections();
+      
+      // Mostrar sección correspondiente según la selección
+      const value = this.value;
+      switch(value) {
+        case 'solo':
+          showSection(soloSection);
+          break;
+        case 'pareja':
+          showSection(coupleSection);
+          break;
+        case 'familia':
+          showSection(familySection);
+          break;
+        case 'amigos':
+          showSection(friendsSection);
+          break;
+        case 'grupo-empresarial':
+          showSection(businessSection);
+          break;
+      }
+    });
+    
+    // Disparar el evento change para configurar el formulario según el valor inicial
+    const event = new Event('change');
+    travelWithSelect.dispatchEvent(event);
+  }
+  
+  // Manejar campo de niños en sección familiar
+  const hasChildrenSelect = document.getElementById('has_children') as HTMLSelectElement | null;
+  const childrenDetailsSection = document.getElementById('children-details-section');
+  
+  if (hasChildrenSelect && childrenDetailsSection) {
+    hasChildrenSelect.addEventListener('change', function() {
+      if (this.value === 'si') {
+        childrenDetailsSection.style.display = 'block';
+        const dataRequiredInputs = childrenDetailsSection.querySelectorAll('[data-required="true"]');
+        dataRequiredInputs.forEach((input: Element) => {
+          if (input instanceof HTMLElement) {
+            input.setAttribute('required', '');
+          }
+        });
+      } else {
+        childrenDetailsSection.style.display = 'none';
+        const requiredInputs = childrenDetailsSection.querySelectorAll('[required]');
+        requiredInputs.forEach((input: Element) => {
+          if (input instanceof HTMLElement) {
+            input.setAttribute('data-required', 'true');
+            input.removeAttribute('required');
+          }
+        });
+      }
+    });
+    
+    // Configurar estado inicial
+    const childrenEvent = new Event('change');
+    hasChildrenSelect.dispatchEvent(childrenEvent);
+  }
+  
+  // Manejo de envío del formulario
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      console.log('Formulario enviado');
+      
+      // Mostrar indicador de carga
+      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      let originalBtnText = '';
+      
+      if (submitBtn) {
+        originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner">⏳</span> Enviando...';
+      }
+      
+      // Recolectar todos los datos del formulario
+      const formData = new FormData(form);
+      const formObject: Record<string, string> = {};
+      
+      formData.forEach((value, key) => {
+        formObject[key] = value.toString();
+      });
+      
+      try {
+        // 1. Enviar a Netlify Forms como respaldo
+        await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(formData as any).toString()
+        });
+        
+        console.log('Enviando a función de Netlify...');
+        
+        // 2. Enviar a nuestra función de Netlify para Airtable
+        const airtableResponse = await fetch('/.netlify/functions/submit-quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formObject)
+        });
+        
+        console.log('Respuesta recibida:', airtableResponse.status);
+        
+        // Verificar si la respuesta es JSON
+        const contentType = airtableResponse.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          // Si no es JSON, obtener el texto para diagnóstico
+          const errorText = await airtableResponse.text();
+          console.error('Respuesta no JSON:', errorText);
+          throw new Error(`Respuesta inesperada del servidor: ${airtableResponse.status} ${airtableResponse.statusText}`);
+        }
+        
+        const responseData = await airtableResponse.json();
+        console.log('Datos de respuesta:', responseData);
+        
+        if (airtableResponse.ok && responseData.success) {
+          console.log('Formulario procesado con éxito');
+          // Mostrar mensaje de éxito
+          if (formStatus) formStatus.classList.remove('hidden');
+          if (formSuccess) formSuccess.classList.remove('hidden');
+          form.reset();
+          
+          // Ocultar secciones dinámicas después de enviar el form
+          hideAllDynamicSections();
+          
+          // Scroll hacia el mensaje
+          if (formSuccess) {
+            window.scrollTo({ 
+              top: formSuccess.offsetTop - 100, 
+              behavior: 'smooth' 
+            });
+          }
+        } else {
+          throw new Error(responseData.message || 'Error al procesar la solicitud');
+        }
+      } catch (error) {
+        console.error('Error detallado:', error);
+        if (formStatus) formStatus.classList.remove('hidden');
+        if (formError) formError.classList.remove('hidden');
+        
+        if (formError) {
+          const errorMsg = formError.querySelector('p');
+          if (errorMsg) {
+            errorMsg.textContent = 'Error al enviar el formulario: ' + 
+              (error instanceof Error ? error.message : 'Error desconocido');
+          }
+        }
+        
+        // Scroll al mensaje de error
+        if (formError) {
+          window.scrollTo({ 
+            top: formError.offsetTop - 100, 
+            behavior: 'smooth' 
+          });
+        }
+      } finally {
+        // Restaurar el botón de envío
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        }
+      }
+    });
+  }
+});
 </script>

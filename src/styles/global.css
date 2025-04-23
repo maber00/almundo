@@ -2,3 +2,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Transiciones suaves para secciones dinámicas */
+  #solo-traveler-section,
+  #couple-section,
+  #family-section,
+  #friends-section, 
+  #business-section,
+  #children-details-section {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Estilo para secciones condicionales */
+  .bg-blue-50 {
+    border-left: 4px solid #3B82F6;
+  }
