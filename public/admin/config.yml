@@ -37,6 +37,17 @@ collections:
       - { label: "Naviera (para cruceros)", name: "cruiseLine", widget: "string", required: false }
       - { label: "Barco (para cruceros)", name: "ship", widget: "string", required: false }
       - { label: "Puertos (para cruceros)", name: "ports", widget: "list", required: false }
+       # Nuevo campo de itinerario
+      - label: "Itinerario"
+        name: "itinerary"
+        widget: "list"
+        required: false
+        summary: "Día {{fields.title}}"
+        fields:
+          - { label: "Título del día", name: "title", widget: "string" }
+          - { label: "Descripción", name: "description", widget: "text" }
+          - { label: "Actividades", name: "activities", widget: "list", required: false }
+
 
   # Colección para rutas populares de cruceros
   - name: "cruise-routes"
