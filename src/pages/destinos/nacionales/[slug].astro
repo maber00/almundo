@@ -5,6 +5,19 @@ import Footer from '../../../components/layout/Footer.astro';
 import { Icon } from 'astro-icon/components';
 import { getDestinationById, getAllDestinations } from '../../../utils/content.js';
 
+interface ItineraryDay {
+  title: string;
+  description?: string;
+  activities?: string[];
+}
+
+// Asegúrate de que tu interfaz Destination incluya el campo itinerary
+interface Destination {
+  // ... otros campos que ya tienes ...
+  itinerary?: ItineraryDay[];
+}
+
+
 export async function getStaticPaths() {
   // Importar getCollection directamente aquí para evitar problemas
   const { getCollection } = await import('astro:content');
@@ -251,6 +264,73 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
                 {destination.description}
               </p>
             </div>
+
+            <!-- Itinerario desplegable (solo se muestra si hay datos) -->
+{destination.itinerary && destination.itinerary.length > 0 && (
+  <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+    <button 
+      id="itinerary-toggle-btn" 
+      class="flex items-center justify-between w-full text-left font-bold text-xl text-gray-900"
+    >
+      <div class="flex items-center">
+        <Icon name="tabler:map-route" class="w-6 h-6 text-blue-600 mr-2" />
+        Itinerario del viaje
+      </div>
+      <div class="transition-transform duration-300" id="itinerary-icon">
+        <Icon name="tabler:chevron-down" class="w-6 h-6 text-gray-500" />
+      </div>
+    </button>
+    
+    <!-- Itinerario desplegable (solo se muestra si hay datos) -->
+{destination.itinerary && destination.itinerary.length > 0 && (
+  <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+    <button 
+      id="itinerary-toggle-btn" 
+      class="flex items-center justify-between w-full text-left font-bold text-xl text-gray-900"
+    >
+      <div class="flex items-center">
+        <Icon name="tabler:map-route" class="w-6 h-6 text-blue-600 mr-2" />
+        Itinerario del viaje
+      </div>
+      <div class="transition-transform duration-300" id="itinerary-icon">
+        <Icon name="tabler:chevron-down" class="w-6 h-6 text-gray-500" />
+      </div>
+    </button>
+    
+    <div id="itinerary-content" class="mt-6 hidden">
+      <div class="space-y-6">
+        {destination.itinerary.map((day, index) => (
+          <div class="border-l-4 border-blue-200 pl-4">
+            <h4 class="text-lg font-bold text-gray-900 mb-2">Día {index + 1}: {day.title}</h4>
+            {/* Verificamos si existe day.day en lugar de day.description */}
+            {day.day && (
+              <p class="text-gray-700">{day.day}</p>
+            )}
+            
+            {day.activities && day.activities.length > 0 && (
+              <div class="mt-3">
+                <h5 class="font-medium text-gray-900 mb-2">Actividades:</h5>
+                <ul class="pl-5 space-y-1">
+                  {day.activities.map(activity => (
+                    <li class="flex items-start">
+                      <div class="bg-blue-100 p-1 rounded-full mr-2 mt-1 flex-shrink-0">
+                        <Icon name="tabler:check" class="w-3 h-3 text-blue-600" />
+                      </div>
+                      <span class="text-gray-700">{activity}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+</div>
+)}
+
             
             <!-- Qué incluye -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
@@ -581,6 +661,28 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
         showImage(currentIndex + 1);
       }, 5000);
     }
+
+    const itineraryToggleBtn = document.getElementById('itinerary-toggle-btn');
+if (itineraryToggleBtn) {
+  const itineraryContent = document.getElementById('itinerary-content');
+  const itineraryIcon = document.getElementById('itinerary-icon');
+
+  itineraryToggleBtn.addEventListener('click', function() {
+    // Toggle de la visibilidad del contenido
+    if (itineraryContent) {
+      itineraryContent.classList.toggle('hidden');
+      
+      // Rotar el icono
+      if (itineraryIcon) {
+        if (itineraryContent.classList.contains('hidden')) {
+          itineraryIcon.style.transform = 'rotate(0deg)';
+        } else {
+          itineraryIcon.style.transform = 'rotate(180deg)';
+        }
+      }
+    }
+  });
+}
   
     //
     // 2) Envío del formulario de cotización
