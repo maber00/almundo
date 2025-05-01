@@ -6,7 +6,7 @@ region: Caribe
 price: 1299000
 currency: COP
 priceInUsd: false
-originalPrice: 1159000
+originalPrice: 1099000
 duration: 4
 durationText: " 4 días / 3 noches"
 image: /images/uploads/santa-marta-cabo-san-juan-del-guia.jpg
@@ -24,9 +24,10 @@ tags:
   - Playa
   - Oferta
 includes:
-  - "- Tiquetes aéreos ida y regreso - Alojamiento 4 días 3 noches -
-    Alimentación (según hotel) - Traslado aeropuerto – hotel – aeropuerto -
-    Asistencia médica"
+  - Tiquetes aéreos ida y regreso
+  - Alojamiento 4 días 3 noches
+  - Alimentación (según hotel) - Traslado aeropuerto – hotel – aeropuerto
+  - Asistencia médica
 notIncludes:
   - "- Gastos no especificados en el plan - Seguro hotelero"
 notes: Paquete sujeto a cotización.
