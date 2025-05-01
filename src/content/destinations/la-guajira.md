@@ -3,10 +3,10 @@ id: "la-guajira\t"
 name: La Guajira
 type: nacional
 region: Caribe
-price: 1489000
+price: 1589000
 currency: COP
 priceInUsd: false
-originalPrice: 1599000
+originalPrice: 1489000
 duration: 4
 durationText: 4 días / 3 noches
 image: /images/uploads/foto-la-guajira-4.jpg
