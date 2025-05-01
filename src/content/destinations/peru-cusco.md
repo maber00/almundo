@@ -3,10 +3,10 @@ id: peru-cusco
 name: Peru - Cusco
 type: internacional
 region: Andina
-price: 569
+price: 689
 currency: USD
 priceInUsd: true
-originalPrice: null
+originalPrice: 599
 duration: 6
 durationText: 6 días / 5 noches
 image: /images/uploads/fotos-peru-2.jpg
@@ -20,13 +20,18 @@ rating: 95
 availability: 6
 tag: Aventura
 tags:
-  - "Aventura"
+  - Aventura
+  - Oferta
 includes:
-  - "- Traslados aeropuerto–hotel - Alojamiento según programa - Tours
-    programados (City tour"
+  - Traslados aeropuerto–hotel-aeropuerto
+  - Alojamiento según programa
+  - Tours programados (City tour
   - Valle Sagrado
-  - etc.) - Entradas a Machu Picchu - Desayunos incluidos
+  - etc.)
+  - Entradas a Machu Picchu
+  - Desayunos incluidos
 notIncludes:
-  - "- Almuerzos y cenas no especificados - Boletos de avión"
+  - Almuerzos y cenas no especificados
+  - Boletos de avión
 notes: Paquete sujeto a cotización.
 ---
