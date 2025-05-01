@@ -6,14 +6,18 @@ region: Amazónica
 price: 1399000
 currency: COP
 priceInUsd: false
+originalPrice: 1599000
 duration: 4
 durationText: 4 días / 3 noches
 image: /images/uploads/foto-amazonas-4.jpg
 gallery:
   - /images/uploads/foto-amazonas-5.jpg
   - /images/uploads/foto-amazonas-6.jpg
-description: Destino ecológico ideal para conectar con la naturaleza, disfrutar
-  de la biodiversidad y vivir aventuras en la selva amazónica.
+description: Sumérgete en el corazón de la selva amazónica, un destino mágico
+  donde la naturaleza cobra vida. Vive una experiencia inolvidable explorando
+  ríos imponentes, fauna exótica y culturas ancestrales. Ideal para los amantes
+  del ecoturismo, la aventura y quienes desean reconectar con la esencia pura
+  del planeta.
 featured: false
 rating: 91
 availability: 5
@@ -23,8 +27,8 @@ tags:
   - Ecoturismo
 includes:
   - "- Tiquetes aéreos ida y regreso - Alojamiento 4 días 3 noches -
-    Alimentación según hotel - Traslado aeropuerto–hotel–aeropuerto - Asistencia
-    médica"
+    Alimentación Desayuno - Traslado aeropuerto–hotel–aeropuerto - Asistencia
+    médica - Tours Full day selva - Tours Puerto Nariño"
 notIncludes:
   - "- Gastos no especificados - Seguro hotelero"
 notes: Paquete sujeto a cotización.
