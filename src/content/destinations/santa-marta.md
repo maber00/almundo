@@ -3,10 +3,10 @@ id: santa-marta
 name: Santa Marta
 type: nacional
 region: Caribe
-price: 1299000
+price: 1199000
 currency: COP
 priceInUsd: false
-originalPrice: 1099000
+originalPrice: 999900
 duration: 4
 durationText: " 4 días / 3 noches"
 image: /images/uploads/santa-marta-cabo-san-juan-del-guia.jpg
