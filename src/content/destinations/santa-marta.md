@@ -3,9 +3,10 @@ id: santa-marta
 name: Santa Marta
 type: nacional
 region: Caribe
-price: 999996
+price: 1299000
 currency: COP
 priceInUsd: false
+originalPrice: 1159000
 duration: 4
 durationText: " 4 días / 3 noches"
 image: /images/uploads/santa-marta-cabo-san-juan-del-guia.jpg
@@ -16,11 +17,12 @@ gallery:
 description: Santa Marta es uno de los principales destinos de playa en
   Colombia, con atractivos como el Parque Tayrona y hermosos paisajes costeros.
 featured: true
-rating: 87
+rating: 98
 availability: 10
 tag: Playa
 tags:
-  - "Playa"
+  - Playa
+  - Oferta
 includes:
   - "- Tiquetes aéreos ida y regreso - Alojamiento 4 días 3 noches -
     Alimentación (según hotel) - Traslado aeropuerto – hotel – aeropuerto -
