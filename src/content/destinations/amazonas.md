@@ -28,13 +28,15 @@ tags:
   - Oferta
 includes:
   - Tiquetes aéreos ida y regreso
-  - Alojamiento 4 días 3 noches
-  - Alimentación Desayuno
+  - Alojamiento 4 días 3 noches en Hotel Madreselva
+  - "Alimentación: Desayuno"
   - Traslado aeropuerto–hotel–aeropuerto
   - Asistencia médica
   - Tours Full day selva
   - Tours Puerto Nariño
 notIncludes:
-  - "- Gastos no especificados - Seguro hotelero"
+  - Gastos no especificados
+  - Seguro hotelero
 notes: Paquete sujeto a cotización.
+itinerary: []
 ---
