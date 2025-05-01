@@ -3,10 +3,10 @@ id: amazonas
 name: Amazonas
 type: nacional
 region: Amazónica
-price: 1399000
+price: 1599000
 currency: COP
 priceInUsd: false
-originalPrice: 1599000
+originalPrice: 1399000
 duration: 4
 durationText: 4 días / 3 noches
 image: /images/uploads/foto-amazonas-4.jpg
@@ -18,13 +18,14 @@ description: Sumérgete en el corazón de la selva amazónica, un destino mágic
   ríos imponentes, fauna exótica y culturas ancestrales. Ideal para los amantes
   del ecoturismo, la aventura y quienes desean reconectar con la esencia pura
   del planeta.
-featured: false
+featured: true
 rating: 91
 availability: 5
 tag: Aventura
 tags:
   - Aventura
   - Ecoturismo
+  - Oferta
 includes:
   - "- Tiquetes aéreos ida y regreso - Alojamiento 4 días 3 noches -
     Alimentación Desayuno - Traslado aeropuerto–hotel–aeropuerto - Asistencia
