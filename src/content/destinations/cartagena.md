@@ -3,7 +3,7 @@ id: cartagena
 name: Cartagena
 type: nacional
 region: Caribe
-price: 1199000
+price: 1399000
 currency: COP
 priceInUsd: false
 originalPrice: 1099000
