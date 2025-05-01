@@ -1,7 +1,7 @@
 ---
 title: Explora Colombia
 subtitle: Historia y cultura en el Caribe Colombiano
-image: /images/uploads/foto-la-guajira-6.jpg
+image: /images/uploads/foto-santa-marta-4.jpg
 offerText: Desde $2,499,000 COP
 buttonText: Ver oferta
 buttonUrl: destinos/nacionales/colombia
