@@ -34,7 +34,8 @@ includes:
 notIncludes:
   - Gastos no especificados en el plan
   - Seguro hotelero
-notes: Paquete sujeto a cotización.
+notes: El precio publicado es desde, por persona, en acomodación doble. Sujeto a
+  cotización.
 itinerary:
   - title: Llegada a Cartagena
     description: Recepción en el aeropuerto y traslado al hotel. Tiempo libre para
