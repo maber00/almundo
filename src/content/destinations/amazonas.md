@@ -3,7 +3,7 @@ id: amazonas
 name: Amazonas
 type: nacional
 region: Amazónica
-price: 1599000
+price: 1699000
 currency: COP
 priceInUsd: false
 originalPrice: 1399000
