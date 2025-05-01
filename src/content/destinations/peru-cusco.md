@@ -33,5 +33,6 @@ includes:
 notIncludes:
   - Almuerzos y cenas no especificados
   - Boletos de avión
-notes: Paquete sujeto a cotización.
+notes: El precio publicado es desde, por persona, en acomodación doble. Sujeto a
+  cotización.
 ---
