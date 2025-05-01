@@ -28,7 +28,7 @@ tags:
   - Oferta
 includes:
   - Tiquetes aéreos ida y regreso
-  - Alojamiento 4 días 3 noches en Hotel Madreselva
+  - Alojamiento 4 días 3 noches en Hotel Madreselva en acomodación doble
   - "Alimentación: Desayuno"
   - Traslado aeropuerto–hotel–aeropuerto
   - Asistencia médica
