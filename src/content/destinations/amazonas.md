@@ -37,6 +37,7 @@ includes:
 notIncludes:
   - Gastos no especificados
   - Seguro hotelero
-notes: Paquete sujeto a cotización.
+notes: El precio publicado es desde, por persona, en acomodación doble. Sujeto a
+  cotización.
 itinerary: []
 ---
