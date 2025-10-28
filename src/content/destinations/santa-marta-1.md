@@ -8,7 +8,7 @@ currency: COP
 priceInUsd: false
 duration: 5
 durationText: 5 dias / 4 noches
-image: /images/uploads/parque-tayrona-cabo-san-juan-magdalena-colombia-2-©-tristan-quevilly-.jpg
+image: /images/uploads/cabo-san-juan-1125x530.jpg
 gallery:
   - /images/uploads/cabo-san-juan-1125x530.jpg
   - /images/uploads/cabo_san_juan-_colombia.jpg
