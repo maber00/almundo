@@ -53,13 +53,15 @@ includes:
     impresionantes)
   - Visita a Hobbitenango el mundo mágico inspirado en el Hobbit
   - Tour por la encantadora antigua Guatemala
-  - Asistencia medica.
+  - Asistencia medica
+  - Maletín sin rodachines.
 notIncludes:
   - Gastos no seleccionados
   - Comidas y bebidas no especificadas en el programa
   - Tasas no mencionadas en el programa(Impuesto al Turismo)
   - Equipaje de bodega
-  - Selección de asiento.
+  - Selección de asiento
+  - Equipaje de cabina.
 notes: El precio publicado es desde, por persona sujeto a cotización, La tarifa
   por persona esta sujeta a disponibilidad y a posibles ajustes según la
   temporada o cambios en las condiciones del viaje.
