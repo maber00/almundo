@@ -13,6 +13,7 @@ gallery:
   - /images/uploads/paris.jpg
   - /images/uploads/2_viaje_por_madrid_y_paris_en_7_dias-thumbnail_webp-1024x512.webp
   - /images/uploads/madrid_20210422182820.webp
+  - /images/uploads/paris-louvre_1100x700.jpeg
 description: >-
   Descubre dos de las capitales más fascinantes de Europa en un solo viaje lleno
   de historia, arte y encanto. 
