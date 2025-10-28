@@ -8,7 +8,7 @@ currency: COP
 priceInUsd: false
 duration: 8
 durationText: 8 días / 6 noches
-image: /images/uploads/paris-louvre_1100x700.jpeg
+image: /images/uploads/paris.jpg
 gallery:
   - /images/uploads/paris.jpg
   - /images/uploads/2_viaje_por_madrid_y_paris_en_7_dias-thumbnail_webp-1024x512.webp
