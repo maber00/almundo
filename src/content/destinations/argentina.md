@@ -39,7 +39,7 @@ includes:
   - 1 noche adicional de alojamiento en Buenos Aires
   - Traslado Aeroparque / Hotel / Aeroparque
   - Asistencia medica internacional
-  - Impuestos Incluidos
+  - ""
   - Asesoría personalizada durante todo el proceso
   - Maletín sin rodachines.
 notIncludes:
@@ -49,7 +49,8 @@ notIncludes:
   - Fee Bancario
   - Asistencia medica para mayores de 85 años
   - Gastos personales o no especificados
-  - Equipaje de cabina.
+  - Equipaje de cabina
+  - Selección de Asientos.
 notes: El precio publicado es desde, por persona sujeto a cotización, La tarifa
   por persona esta sujeta a disponibilidad y a posibles ajustes según la
   temporada o cambios en las condiciones del viaje.
