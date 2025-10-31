@@ -3,9 +3,10 @@ id: Europa
 name: Escapada Europea
 type: internacional
 region: Europa
-price: 6299000
+price: 6999000
 currency: COP
 priceInUsd: false
+originalPrice: 6499000
 duration: 8
 durationText: 8 días / 6 noches
 image: /images/uploads/paris.jpg
