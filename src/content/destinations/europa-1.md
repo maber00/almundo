@@ -2,7 +2,7 @@
 id: Madrid y París
 name: Escapada Europea
 type: internacional
-region: Europa
+region: Madrid y París
 price: 6999000
 currency: COP
 priceInUsd: false
