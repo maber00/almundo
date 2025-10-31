@@ -13,6 +13,9 @@ image: /images/uploads/paris_20211026114244.jpg
 gallery:
   - /images/uploads/italia_47.jpg
   - /images/uploads/madrid_20210421161358.jpg
+  - /images/uploads/paris.jpg
+  - /images/uploads/madrid_20210628120152.webp
+  - /images/uploads/internacionales-3.jpg
 description: >-
   Viva la experiencia de recorrer las tres capitales más emblemáticas de Europa
   en un solo viaje lleno de historia, arte y cultura.
