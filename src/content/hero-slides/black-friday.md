@@ -1,6 +1,6 @@
 ---
-title: Black Friday
-subtitle: Black Friday
+title: .
+subtitle: .
 image: /images/uploads/black-friday-viajes-al-mundo.png
 offerText: .
 buttonText: Ver oferta
