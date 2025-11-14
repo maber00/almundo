@@ -7,6 +7,6 @@ image: /images/uploads/internacionales-3.jpg
 offerText: RESERVA HASTA EL 28 DE NOV
 buttonText: Ver oferta
 buttonUrl: /destinos/
-order: -2
+order: 0
 active: true
 ---
