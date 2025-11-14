@@ -1,8 +1,8 @@
 ---
-title: .
-subtitle: .
+title: ....
+subtitle: ...
 image: /images/uploads/black-friday-viajes-al-mundo.png
-offerText: .
+offerText: ..
 buttonText: Ver oferta
 buttonUrl: /destinos/
 order: 1
