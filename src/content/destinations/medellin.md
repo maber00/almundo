@@ -3,7 +3,7 @@ id: medellin
 name: Medellín
 type: nacional
 region: Andina
-price: 769000
+price: 899000
 currency: COP
 priceInUsd: false
 originalPrice: null
