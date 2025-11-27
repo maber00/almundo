@@ -6,7 +6,7 @@ region: Caribe
 price: 1499000
 currency: COP
 priceInUsd: false
-originalPrice: 1298999
+originalPrice: 999000
 duration: 4
 durationText: 4 días / 3 noches
 image: /images/uploads/foto-san-andres-2.jpg
