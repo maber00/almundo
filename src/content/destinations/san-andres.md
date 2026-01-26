@@ -30,7 +30,6 @@ includes:
   - Alojamiento 4 días 3 noches - Alimentación (según hotel)
   - Traslado aeropuerto – hotel – aeropuerto
   - Asistencia médica
-  - "Tours: Vuelta a la isla - Johnny Cay + Acuario - Tour por la bahia"
 notIncludes:
   - "- Gastos no especificados en el plan - Seguro hotelero"
 notes: El precio publicado es desde, por persona, en acomodación doble. Sujeto a
