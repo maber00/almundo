@@ -104,7 +104,7 @@ function generatePDF(dest) {
 
     // ══ 1. HEADER — logo + contacto ══════════════════════════
     if (logoPath) {
-      safeImage(doc, logoPath, M, y - 2, { height: 22 });
+      safeImage(doc, logoPath, M, y - 2, { height: 40 });
       doc.x = M + 60;
     }
 
@@ -391,7 +391,7 @@ function generatePDF(dest) {
     y += 10;
 
     if (logoPath) {
-      safeImage(doc, logoPath, M, y - 2, { height: 18 });
+      safeImage(doc, logoPath, M, y - 2, { height: 30 });
       doc.x = M + 60;
     }
 
