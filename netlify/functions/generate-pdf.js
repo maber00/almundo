@@ -35,13 +35,10 @@ function fmtPrice(price, usd = false) {
 }
 
 // ── Helpers de imágenes ───────────────────────────────────────
-
-// Busca la imagen en dist/ o public/ del servidor (solo archivos locales)
 function resolveImage(imgPath) {
   if (!imgPath) return null;
 
   const s = String(imgPath);
-  // Si te llega URL, NO intentamos fs.existsSync (por ahora)
   if (s.startsWith('http://') || s.startsWith('https://')) return null;
 
   const bases = [
@@ -68,6 +65,40 @@ function safeImage(doc, filePath, x, y, opts = {}) {
   }
 }
 
+// ── Layout helpers ────────────────────────────────────────────
+const PAGE_H = 841.89; // A4 alto en puntos
+const FOOTER_SPACE = 90; // reserva para que nada choque con el footer
+
+function ensureSpace(doc, y, needed, marginTop = 34) {
+  if (y + needed > PAGE_H - FOOTER_SPACE) {
+    doc.addPage({ size: 'A4', margin: 0 });
+    return marginTop;
+  }
+  return y;
+}
+
+function drawFooterFixed(doc, logoPath, M, CW) {
+  const footerY = PAGE_H - 42;
+
+  doc.moveTo(M, footerY - 12)
+    .lineTo(M + CW, footerY - 12)
+    .strokeColor(C.border)
+    .lineWidth(0.5)
+    .stroke();
+
+  if (logoPath) {
+    safeImage(doc, logoPath, M, footerY - 10, { height: 30 });
+  }
+
+  doc.font('Helvetica')
+    .fontSize(8.5)
+    .fillColor(C.gray)
+    .text('+57 316 527 6338  |  almundotours.com', M, footerY - 2, {
+      width: CW,
+      align: 'right',
+    });
+}
+
 function generatePDF(dest) {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ size: 'A4', margin: 0, compress: true });
@@ -81,8 +112,10 @@ function generatePDF(dest) {
     const CW = W - M * 2;  // ancho útil
     let y = M;
 
-    // ✅ Logo UNA sola vez (usa PNG/JPG, evita WEBP)
-    const logoPath = resolveImage('assets/images/Logo3.png') || resolveImage('assets/images/Logo3.jpg');
+    // ✅ Logo (PNG/JPG)
+    const logoPath =
+      resolveImage('assets/images/Logo3.png') ||
+      resolveImage('assets/images/Logo3.jpg');
 
     // Datos del destino
     const usd      = !!dest.priceInUsd;
@@ -103,23 +136,16 @@ function generatePDF(dest) {
     const tagsExtra = (dest.tags || []).filter(t => t !== tagMain).slice(0, 3);
 
     // ══ 1. HEADER — logo + contacto ══════════════════════════
+    if (logoPath) {
+      safeImage(doc, logoPath, M, y - 6, { height: 40 });
+    }
 
-if (logoPath) {
-  safeImage(doc, logoPath, M, y - 6, { height: 40 });
-}
+    doc.font('Helvetica')
+      .fontSize(9)
+      .fillColor(C.gray)
+      .text('almundotours.com  |  +57 316 527 6338', M, y + 14, { width: CW, align: 'right' });
 
-doc.font('Helvetica')
-   .fontSize(9)
-   .fillColor(C.gray)
-   .text(
-     'almundotours.com  |  +57 316 527 6338',
-     M,
-     y + 14,
-     { width: CW, align: 'right' }
-   );
-
-// espacio suficiente para que nada se monte
-y += 54;
+    y += 54;
 
     // ══ 2. BADGES — sin fondo, texto en línea ════════════════
     let bx = M;
@@ -150,9 +176,10 @@ y += 54;
     y += 18;
 
     // ══ 3. IMAGEN HERO ═══════════════════════════════════════
-const heroH = 150;
-    const heroFile = resolveImage(dest.image);
+    const heroH = 150;
+    y = ensureSpace(doc, y, heroH + 40, M);
 
+    const heroFile = resolveImage(dest.image);
     if (heroFile) {
       try {
         doc.save();
@@ -176,6 +203,8 @@ const heroH = 150;
     y += heroH + 14;
 
     // ══ 4. TÍTULO + DESCRIPCIÓN ══════════════════════════════
+    y = ensureSpace(doc, y, 90, M);
+
     doc.font('Helvetica-Bold').fontSize(22).fillColor(C.navy)
       .text(dest.name || '', M, y);
     y += 30;
@@ -185,7 +214,7 @@ const heroH = 150;
       .text(desc, M, y, { width: CW, lineGap: 2 });
     y += doc.heightOfString(desc, { width: CW }) + 12;
 
-    // META horizontal sin emojis (para no romper encoding)
+    // META horizontal sin emojis
     const metaItems = [];
     if (dest.region)       metaItems.push(String(dest.region));
     if (dest.durationText) metaItems.push(String(dest.durationText).trim());
@@ -211,12 +240,13 @@ const heroH = 150;
     y += 20;
 
     // ══ 5. PRECIO ════════════════════════════════════════════
+    y = ensureSpace(doc, y, 90, M);
+
     if (isOffer) {
       doc.font('Helvetica').fontSize(7.5).fillColor(C.gray)
         .text('Precio por persona', M, y);
       y += 12;
 
-      // Precio anterior tachado
       const strikeStr = `Antes: ${fmtPrice(priceNum, usd)}`;
       doc.font('Helvetica').fontSize(9.5).fillColor([156, 163, 175])
         .text(strikeStr, M, y, { lineBreak: false });
@@ -225,11 +255,9 @@ const heroH = 150;
         .strokeColor([156, 163, 175]).lineWidth(0.5).stroke();
       y += 16;
 
-      // Precio nuevo
       doc.font('Helvetica-Bold').fontSize(18).fillColor(C.red)
         .text(`Ahora: ${fmtPrice(origNum, usd)}`, M, y);
 
-      // % descuento — derecha
       doc.font('Helvetica-Bold').fontSize(30).fillColor(C.green)
         .text(`${pct}%`, M, y - 28, { width: CW, align: 'right', lineBreak: false });
       doc.fontSize(9).text('DESCUENTO', M, y - 2, { width: CW, align: 'right' });
@@ -255,6 +283,8 @@ const heroH = 150;
     y += 8;
 
     // ══ 6. DOS COLUMNAS ══════════════════════════════════════
+    y = ensureSpace(doc, y, 260, M);
+
     const LW  = CW * 0.52;
     const RX  = M + LW + 14;
     const RW  = CW * 0.48 - 14;
@@ -274,12 +304,10 @@ const heroH = 150;
       const actH  = acts.length * 13 + 8;
       const bodyH = actH + 18;
 
-      // Header azul
       doc.rect(M, yL, LW, 14).fill(C.navy);
       doc.font('Helvetica-Bold').fontSize(7).fillColor(C.white)
         .text(`DÍA ${num}`, M + 8, yL + 4, { lineBreak: false });
 
-      // Body
       doc.rect(M, yL + 14, LW, bodyH).fill(bg);
 
       doc.font('Helvetica-Bold').fontSize(8.5).fillColor(C.navy)
@@ -301,7 +329,6 @@ const heroH = 150;
 
     const notes = String(dest.notes || '').trim();
 
-    // ¿Qué incluye?
     doc.font('Helvetica-Bold').fontSize(11).fillColor(C.green)
       .text('¿Qué incluye?', RX, yR);
     yR += 16;
@@ -309,9 +336,10 @@ const heroH = 150;
     const incH = incs.length * 15 + 12;
     doc.rect(RX, yR, RW, incH).fill(C.lgreen);
 
+    // ✅ sin ✓ (usa bullet seguro)
     incs.forEach((item, j) => {
-      doc.font('Helvetica-Bold').fontSize(9).fillColor([21, 128, 61])
-        .text('✓', RX + 6, yR + 8 + j * 15, { lineBreak: false });
+      doc.font('Helvetica-Bold').fontSize(10).fillColor([21, 128, 61])
+        .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
 
       doc.font('Helvetica').fontSize(7.8).fillColor([22, 101, 52])
         .text(item, RX + 18, yR + 8 + j * 15, { width: RW - 24, lineBreak: false });
@@ -319,7 +347,6 @@ const heroH = 150;
 
     yR += incH + 12;
 
-    // ¿Qué no incluye?
     doc.font('Helvetica-Bold').fontSize(11).fillColor(C.red)
       .text('¿Qué no incluye?', RX, yR);
     yR += 16;
@@ -327,9 +354,10 @@ const heroH = 150;
     const ninH = nincs.length * 15 + 12;
     doc.rect(RX, yR, RW, ninH).fill(C.lred);
 
+    // ✅ sin ✗ (usa bullet seguro)
     nincs.forEach((item, j) => {
-      doc.font('Helvetica-Bold').fontSize(9).fillColor([185, 28, 28])
-        .text('✗', RX + 6, yR + 8 + j * 15, { lineBreak: false });
+      doc.font('Helvetica-Bold').fontSize(10).fillColor([185, 28, 28])
+        .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
 
       doc.font('Helvetica').fontSize(7.8).fillColor([153, 27, 27])
         .text(item, RX + 18, yR + 8 + j * 15, { width: RW - 24, lineBreak: false });
@@ -337,7 +365,6 @@ const heroH = 150;
 
     yR += ninH + 12;
 
-    // Info importante
     if (notes) {
       const noteH = doc.heightOfString(notes, { width: RW - 16 }) + 22;
       doc.rect(RX, yR, RW, noteH).fill(C.lyell);
@@ -351,7 +378,6 @@ const heroH = 150;
       yR += noteH + 12;
     }
 
-    // CTA
     doc.rect(RX, yR, RW, 38).fill(C.navy);
     doc.font('Helvetica-Bold').fontSize(10).fillColor(C.white)
       .text('¿Te interesa este destino?', RX, yR + 9, { width: RW, align: 'center' });
@@ -359,18 +385,18 @@ const heroH = 150;
     doc.font('Helvetica').fontSize(8).fillColor([199, 210, 254])
       .text('Escríbenos · Te asesoramos sin costo', RX, yR + 23, { width: RW, align: 'center' });
 
-    yR += 50;
-
     y = Math.max(yL, yR) + 14;
 
     // ══ 7. GALERÍA ═══════════════════════════════════════════
+    const gH = 90;
+    y = ensureSpace(doc, y, 14 + gH + 18, M);
+
     doc.font('Helvetica-Bold').fontSize(10).fillColor(C.navy)
       .text('Galería', M, y);
     y += 14;
 
     const gallery = Array.isArray(dest.gallery) ? dest.gallery : [];
     const gW  = (CW - 8) / 3;
-    const gH  = 90;
     const gFallbacks = [C.cyan, C.navy, [0, 100, 150]];
 
     for (let i = 0; i < 3; i++) {
@@ -388,24 +414,11 @@ const heroH = 150;
           console.error('GALLERY ERROR:', e?.message || e);
         }
       }
-
       doc.rect(gx, y, gW, gH).fill(gFallbacks[i] || C.navy);
     }
 
-    y += gH + 14;
-
-    // ══ 8. FOOTER — sin fondo ════════════════════════════════
-    doc.moveTo(M, y).lineTo(M + CW, y).strokeColor(C.border).lineWidth(0.5).stroke();
-    y += 10;
-
-    if (logoPath) {
-      safeImage(doc, logoPath, M, y - 2, { height: 30 });
-      doc.x = M + 60;
-    }
-
-    // sin emojis (evita problemas de encoding)
-    doc.font('Helvetica').fontSize(8.5).fillColor(C.gray)
-      .text('+57 316 527 6338  |  almundotours.com', M, y + 3, { width: CW, align: 'right' });
+    // ══ 8. FOOTER — FIJO (siempre visible) ════════════════════
+    drawFooterFixed(doc, logoPath, M, CW);
 
     doc.end();
   });
