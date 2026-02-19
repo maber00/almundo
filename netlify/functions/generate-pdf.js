@@ -184,7 +184,7 @@ function generatePDF(dest) {
       try {
         doc.save();
         doc.rect(M, y, CW, heroH).clip();
-        safeImage(doc, heroFile, M, y, { width: CW, height: heroH });
+        safeImage(doc, heroFile, M, y, { cover: [CW, heroH], align: 'center', valign: 'center' });
 
         const grad = doc.linearGradient(M, y, M, y + heroH);
         grad.stop(0, 'black', 0).stop(0.5, 'black', 0.1).stop(1, 'black', 0.5);
@@ -414,7 +414,7 @@ function generatePDF(dest) {
         try {
           doc.save();
           doc.rect(gx, y, gW, gH).clip();
-          safeImage(doc, gSrc, gx, y, { width: gW, height: gH });
+          safeImage(doc, gSrc, gx, y, { cover: [gW, gH], align: 'center', valign: 'center' });
           doc.restore();
           continue;
         } catch (e) {
