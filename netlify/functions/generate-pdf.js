@@ -69,10 +69,12 @@ function generatePDF(dest) {
     const tagsExtra = (dest.tags || []).filter(t => t !== tagMain).slice(0, 3);
 
     // ══ 1. HEADER — logo tipográfico, sin fondo ══════════════
-    doc.font('Helvetica-Bold').fontSize(17).fillColor(C.navy)
-       .text('AL MUNDO', M, y + 2, { continued: true, lineBreak: false })
-       .fillColor(C.gold)
-       .text(' TOURS', { lineBreak: false });
+    const logoFile = resolveImage('assets/images/Logo3.webp');
+if (logoFile) {
+  doc.image(logoFile, M, y - 2, { height: 22 }); // ajusta
+  // y si quieres el texto a la derecha:
+  doc.x = M + 60;
+}
 
     doc.font('Helvetica').fontSize(8).fillColor(C.gray)
        .text('almundotours.com  |  +57 316 527 6338', M, y + 6, { width: CW, align: 'right' });
@@ -136,10 +138,11 @@ function generatePDF(dest) {
 
     // META horizontal sin fondo
     const metaItems = [];
-    if (dest.region)       metaItems.push(`📍 ${dest.region}`);
-    if (dest.durationText) metaItems.push(`⏱ ${String(dest.durationText).trim()}`);
-    if (dest.availability) metaItems.push(`👥 ${dest.availability} cupos`);
-    if (dest.rating)       metaItems.push(`⭐ ${dest.rating}% satisfacción`);
+    if (dest.region)       metaItems.push(dest.region);
+if (dest.durationText) metaItems.push(String(dest.durationText).trim());
+if (dest.availability) metaItems.push(`${dest.availability} cupos`);
+if (dest.rating)       metaItems.push(`${dest.rating}% satisfacción`);
+
 
     let mx = M;
     metaItems.forEach((item, idx) => {
@@ -315,10 +318,10 @@ function generatePDF(dest) {
     doc.moveTo(M, y).lineTo(M + CW, y).strokeColor(C.border).lineWidth(0.5).stroke();
     y += 10;
 
-    doc.font('Helvetica-Bold').fontSize(12).fillColor(C.navy)
-       .text('AL MUNDO', M, y, { continued: true, lineBreak: false })
-       .fillColor(C.gold)
-       .text(' TOURS', { lineBreak: false });
+    if (logoPath) {
+  doc.image(logoPath, M, y - 2, { height: 18 });
+  doc.x = M + 60;
+}
 
     doc.font('Helvetica').fontSize(8.5).fillColor(C.gray)
        .text('📞 +57 316 527 6338  |  🌐 almundotours.com', M, y + 3, { width: CW, align: 'right' });
