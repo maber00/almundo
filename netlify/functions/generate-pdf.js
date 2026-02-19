@@ -1,7 +1,8 @@
 // ═══════════════════════════════════════════════════════════════
 // netlify/functions/generate-pdf.js
 // Instalar: npm install pdfkit
-// Logo:     /public/assets/images/Logo3.png  (PNG o JPG, no WEBP)
+// Nota: usa LOGO en PNG/JPG (evita WEBP en PDFKit)
+// Coloca el logo en: /public/assets/images/Logo3.png
 // ═══════════════════════════════════════════════════════════════
 
 import PDFDocument from 'pdfkit';
@@ -36,13 +37,16 @@ function fmtPrice(price, usd = false) {
 // ── Helpers de imágenes ───────────────────────────────────────
 function resolveImage(imgPath) {
   if (!imgPath) return null;
+
   const s = String(imgPath);
   if (s.startsWith('http://') || s.startsWith('https://')) return null;
+
   const bases = [
     path.join(process.cwd(), 'dist'),
     path.join(process.cwd(), 'public'),
     process.cwd(),
   ];
+
   for (const base of bases) {
     const full = path.join(base, s);
     if (fs.existsSync(full)) return full;
@@ -61,7 +65,40 @@ function safeImage(doc, filePath, x, y, opts = {}) {
   }
 }
 
-// ────────────────────────────────────────────────────────────
+// ── Layout helpers ────────────────────────────────────────────
+const PAGE_H = 841.89;
+const FOOTER_SPACE = 90;
+
+function ensureSpace(doc, y, needed, marginTop = 34) {
+  if (y + needed > PAGE_H - FOOTER_SPACE) {
+    doc.addPage({ size: 'A4', margin: 0 });
+    return marginTop;
+  }
+  return y;
+}
+
+function drawFooterFixed(doc, logoPath, M, CW) {
+  const footerY = PAGE_H - 42;
+
+  doc.moveTo(M, footerY - 12)
+    .lineTo(M + CW, footerY - 12)
+    .strokeColor(C.border)
+    .lineWidth(0.5)
+    .stroke();
+
+  if (logoPath) {
+    safeImage(doc, logoPath, M, footerY - 10, { height: 30 });
+  }
+
+  doc.font('Helvetica')
+    .fontSize(8.5)
+    .fillColor(C.gray)
+    .text('+57 316 527 6338  |  almundotours.com', M, footerY - 2, {
+      width: CW,
+      align: 'right',
+    });
+}
+
 function generatePDF(dest) {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ size: 'A4', margin: 0, compress: true });
@@ -70,74 +107,89 @@ function generatePDF(dest) {
     doc.on('end',  () => resolve(Buffer.concat(chunks)));
     doc.on('error', reject);
 
-    const W  = 595.28;
-    const M  = 30;
+    const W = 595.28;
+    const M = 34;
     const CW = W - M * 2;
-    let   y  = M;
+    let y = M;
 
-    // ✅ Logo (PNG/JPG — no WEBP)
+    // ✅ Logo (PNG/JPG)
     const logoPath =
       resolveImage('assets/images/Logo3.png') ||
-      resolveImage('assets/images/Logo3.jpg') ||
-      resolveImage('assets/images/logo.png');
+      resolveImage('assets/images/Logo3.jpg');
 
     // Datos del destino
     const usd      = !!dest.priceInUsd;
     const priceNum = typeof dest.price === 'string'
       ? parseInt(dest.price.replace(/[.,]/g,''))
       : Math.round(dest.price || 0);
+
     const origNum  = dest.originalPrice
       ? (typeof dest.originalPrice === 'string'
-          ? parseInt(dest.originalPrice.replace(/[.,]/g,''))
-          : Math.round(dest.originalPrice))
+        ? parseInt(dest.originalPrice.replace(/[.,]/g,''))
+        : Math.round(dest.originalPrice))
       : 0;
-    const isOffer   = origNum > 0 && origNum < priceNum;
-    const pct       = isOffer ? Math.round(((priceNum - origNum) / priceNum) * 100) : 0;
+
+    const isOffer  = origNum > 0 && origNum < priceNum;
+    const pct      = isOffer ? Math.round(((priceNum - origNum) / priceNum) * 100) : 0;
+
     const tagMain   = dest.tag || '';
     const tagsExtra = (dest.tags || []).filter(t => t !== tagMain).slice(0, 3);
 
-    // ══ 1. HEADER — logo real + contacto ═════════════════════
+    // ══ 1. HEADER — logo + contacto ══════════════════════════
     if (logoPath) {
-      safeImage(doc, logoPath, M, y - 4, { height: 32 });
-    } else {
-      // Fallback tipográfico si no hay logo
-      doc.font('Helvetica-Bold').fontSize(16).fillColor(C.navy)
-         .text('AL MUNDO', M, y, { continued: true, lineBreak: false })
-         .fillColor(C.gold).text(' TOURS', { lineBreak: false });
+      safeImage(doc, logoPath, M, y - 6, { height: 40 });
     }
-    doc.font('Helvetica').fontSize(8).fillColor(C.gray)
-       .text('almundotours.com  |  +57 316 527 6338', M, y + 4, { width: CW, align: 'right' });
-    y += 22;
+
+    doc.font('Helvetica')
+      .fontSize(9)
+      .fillColor(C.gray)
+      .text('almundotours.com  |  +57 316 527 6338', M, y + 14, { width: CW, align: 'right' });
+
+    y += 44; // era 54
 
     // ══ 2. BADGES — sin fondo, texto en línea ════════════════
     let bx = M;
     const drawBadge = (text, color, bold = true) => {
       const fn = bold ? 'Helvetica-Bold' : 'Helvetica';
+      const w  = doc.font(fn).fontSize(8).widthOfString(text);
       doc.font(fn).fontSize(8).fillColor(color).text(text, bx, y, { lineBreak: false });
-      bx += doc.widthOfString(text);
+      bx += w;
     };
+
     if (isOffer) {
-      drawBadge('OFERTA ESPECIAL', C.red); bx += 8;
-      drawBadge('·', C.gray, false);      bx += 8;
+      drawBadge('OFERTA ESPECIAL', C.red);
+      bx += 10;
+      drawBadge('·', C.gray, false);
+      bx += 10;
     }
-    if (tagMain) { drawBadge(tagMain, TAGS[tagMain] || C.navy); bx += 8; }
+
+    if (tagMain) {
+      drawBadge(tagMain, TAGS[tagMain] || C.navy);
+      bx += 10;
+    }
+
     tagsExtra.forEach(t => {
-      drawBadge('·', C.gray, false); bx += 8;
-      drawBadge(t, TAGS[t] || C.navy);  bx += 8;
+      drawBadge('·', C.gray, false); bx += 10;
+      drawBadge(t, TAGS[t] || C.navy); bx += 10;
     });
-    y += 14;
+
+    y += 12; // era 18
 
     // ══ 3. IMAGEN HERO ═══════════════════════════════════════
     const heroH = 150;
+    y = ensureSpace(doc, y, heroH + 40, M);
+
     const heroFile = resolveImage(dest.image);
     if (heroFile) {
       try {
         doc.save();
         doc.rect(M, y, CW, heroH).clip();
         safeImage(doc, heroFile, M, y, { width: CW, height: heroH });
+
         const grad = doc.linearGradient(M, y, M, y + heroH);
-        grad.stop(0, 'black', 0).stop(0.5, 'black', 0.08).stop(1, 'black', 0.45);
+        grad.stop(0, 'black', 0).stop(0.5, 'black', 0.1).stop(1, 'black', 0.5);
         doc.rect(M, y, CW, heroH).fill(grad);
+
         doc.restore();
       } catch (e) {
         console.error('HERO ERROR:', e?.message || e);
@@ -146,19 +198,22 @@ function generatePDF(dest) {
     } else {
       doc.rect(M, y, CW, heroH).fill(C.navy);
     }
-    y += heroH + 10;
+
+    y += heroH + 8; // era +14
 
     // ══ 4. TÍTULO + DESCRIPCIÓN ══════════════════════════════
-    doc.font('Helvetica-Bold').fontSize(20).fillColor(C.navy)
-       .text(dest.name || '', M, y);
-    y += 24;
+    y = ensureSpace(doc, y, 90, M);
+
+    doc.font('Helvetica-Bold').fontSize(22).fillColor(C.navy)
+      .text(dest.name || '', M, y);
+    y += 26; // era 30
 
     const desc = dest.description || '';
-    doc.font('Helvetica').fontSize(9).fillColor(C.gray)
-       .text(desc, M, y, { width: CW, lineGap: 1.5 });
-    y += doc.heightOfString(desc, { width: CW, lineGap: 1.5 }) + 8;
+    doc.font('Helvetica').fontSize(9.5).fillColor(C.gray)
+      .text(desc, M, y, { width: CW, lineGap: 2 });
+    y += doc.heightOfString(desc, { width: CW }) + 6; // era +12
 
-    // META horizontal sin fondo
+    // META horizontal sin emojis
     const metaItems = [];
     if (dest.region)       metaItems.push(String(dest.region));
     if (dest.durationText) metaItems.push(String(dest.durationText).trim());
@@ -167,156 +222,184 @@ function generatePDF(dest) {
 
     let mx = M;
     metaItems.forEach((item, idx) => {
-      doc.font('Helvetica-Bold').fontSize(8).fillColor(C.dark)
-         .text(item, mx, y, { lineBreak: false });
-      mx += doc.widthOfString(item);
+      const iw = doc.font('Helvetica-Bold').fontSize(8.5).widthOfString(item);
+
+      doc.font('Helvetica-Bold').fontSize(8.5).fillColor(C.dark)
+        .text(item, mx, y, { lineBreak: false });
+
+      mx += iw;
+
       if (idx < metaItems.length - 1) {
         const sep = '  |  ';
         doc.font('Helvetica').fillColor([209, 213, 219])
-           .text(sep, mx, y, { lineBreak: false });
+          .text(sep, mx, y, { lineBreak: false });
         mx += doc.widthOfString(sep);
       }
     });
-    y += 15;
+    y += 14; // era 20
 
     // ══ 5. PRECIO ════════════════════════════════════════════
+    y = ensureSpace(doc, y, 90, M);
+
     if (isOffer) {
-      doc.font('Helvetica').fontSize(7).fillColor(C.gray)
-         .text('Precio por persona', M, y);
-      y += 9;
+      doc.font('Helvetica').fontSize(7.5).fillColor(C.gray)
+        .text('Precio por persona', M, y);
+      y += 10; // era 12
 
       const strikeStr = `Antes: ${fmtPrice(priceNum, usd)}`;
-      doc.font('Helvetica').fontSize(9).fillColor([156, 163, 175])
-         .text(strikeStr, M, y, { lineBreak: false });
+      doc.font('Helvetica').fontSize(9.5).fillColor([156, 163, 175])
+        .text(strikeStr, M, y, { lineBreak: false });
       const sw = doc.widthOfString(strikeStr);
-      doc.moveTo(M, y + 4.5).lineTo(M + sw, y + 4.5)
-         .strokeColor([156, 163, 175]).lineWidth(0.4).stroke();
-      y += 12;
+      doc.moveTo(M, y + 5).lineTo(M + sw, y + 5)
+        .strokeColor([156, 163, 175]).lineWidth(0.5).stroke();
+      y += 14; // era 16
 
-      doc.font('Helvetica-Bold').fontSize(16).fillColor(C.red)
-         .text(`Ahora: ${fmtPrice(origNum, usd)}`, M, y);
+      doc.font('Helvetica-Bold').fontSize(18).fillColor(C.red)
+        .text(`Ahora: ${fmtPrice(origNum, usd)}`, M, y);
 
-      doc.font('Helvetica-Bold').fontSize(26).fillColor(C.green)
-         .text(`${pct}%`, M, y - 20, { width: CW, align: 'right', lineBreak: false });
-      doc.fontSize(8).text('DESCUENTO', M, y, { width: CW, align: 'right' });
-      doc.font('Helvetica').fontSize(6.5).fillColor(C.gray)
-         .text('Sujeto a cotización', M, y + 12, { width: CW, align: 'right' });
-      y += 22;
-    } else {
+      doc.font('Helvetica-Bold').fontSize(30).fillColor(C.green)
+        .text(`${pct}%`, M, y - 28, { width: CW, align: 'right', lineBreak: false });
+      doc.fontSize(9).text('DESCUENTO', M, y - 2, { width: CW, align: 'right' });
+
       doc.font('Helvetica').fontSize(7).fillColor(C.gray)
-         .text('Precio por persona', M, y);
-      y += 9;
-      doc.font('Helvetica-Bold').fontSize(16).fillColor(C.navy)
-         .text(fmtPrice(priceNum, usd), M, y);
-      doc.font('Helvetica').fontSize(6.5).fillColor(C.gray)
-         .text('Sujeto a cotización', M, y + 3, { width: CW, align: 'right' });
-      y += 20;
+        .text('Sujeto a cotización', M, y + 16, { width: CW, align: 'right' });
+
+      y += 24; // era 28
+    } else {
+      doc.font('Helvetica').fontSize(7.5).fillColor(C.gray)
+        .text('Precio por persona', M, y);
+      y += 10; // era 12
+
+      doc.font('Helvetica-Bold').fontSize(18).fillColor(C.navy)
+        .text(fmtPrice(priceNum, usd), M, y);
+
+      doc.font('Helvetica').fontSize(7).fillColor(C.gray)
+        .text('Sujeto a cotización', M, y + 4, { width: CW, align: 'right' });
+
+      y += 22; // era 26
     }
-    y += 8;
+
+    y += 6; // era 8
 
     // ══ 6. DOS COLUMNAS ══════════════════════════════════════
-    const LW = CW * 0.52;
-    const RX = M + LW + 12;
-    const RW = CW * 0.48 - 12;
+    y = ensureSpace(doc, y, 260, M);
+
+    const LW  = CW * 0.52;
+    const RX  = M + LW + 14;
+    const RW  = CW * 0.48 - 14;
     let yL = y, yR = y;
 
-    // ─── Itinerario (izquierda) ──────────────────────────────
-    doc.font('Helvetica-Bold').fontSize(10).fillColor(C.navy)
-       .text('Itinerario', M, yL);
-    yL += 12;
+    // ─── Itinerario (izquierda) ───────────────────────────────
+    doc.font('Helvetica-Bold').fontSize(11).fillColor(C.navy)
+      .text('Itinerario', M, yL);
+    yL += 13; // era 16
 
     (dest.itinerary || []).forEach((day, i) => {
       const num   = day?.day || (i + 1);
       const title = String(day?.title || '');
       const acts  = (day?.activities || []).map(a => String(a ?? '')).filter(Boolean);
+
       const bg    = i % 2 === 0 ? C.lblue : C.lgray;
-      const actH  = acts.length * 12 + 6;
-      const bodyH = actH + 14;
+      const actH  = acts.length * 13 + 8;
+      const bodyH = actH + 18;
 
-      doc.rect(M, yL, LW, 12).fill(C.navy);
+      doc.rect(M, yL, LW, 14).fill(C.navy);
       doc.font('Helvetica-Bold').fontSize(7).fillColor(C.white)
-         .text(`DÍA ${num}`, M + 6, yL + 3.5, { lineBreak: false });
+        .text(`DÍA ${num}`, M + 8, yL + 4, { lineBreak: false });
 
-      doc.rect(M, yL + 12, LW, bodyH).fill(bg);
-      doc.font('Helvetica-Bold').fontSize(8).fillColor(C.navy)
-         .text(title, M + 6, yL + 16, { width: LW - 12 });
-      doc.font('Helvetica').fontSize(7).fillColor(C.dark);
+      doc.rect(M, yL + 14, LW, bodyH).fill(bg);
+
+      doc.font('Helvetica-Bold').fontSize(8.5).fillColor(C.navy)
+        .text(title, M + 8, yL + 20, { width: LW - 16 });
+
+      doc.font('Helvetica').fontSize(7.5).fillColor(C.dark);
       acts.forEach((a, j) => {
-        doc.text(`• ${a}`, M + 8, yL + 26 + j * 12, { width: LW - 16, lineBreak: false });
+        doc.text(`• ${a}`, M + 12, yL + 33 + j * 13, { width: LW - 20, lineBreak: false });
       });
 
-      yL += 12 + bodyH + 3;
+      yL += 14 + bodyH + 3; // era +4
     });
 
-    // ─── Derecha: Incluye / No incluye ──────────────────────
+    // ─── Incluye / No incluye (derecha) ──────────────────────
     const incs  = (dest.includes || []).map(x => String(x ?? '')).filter(Boolean);
     const nincs = (dest.notIncludes || [])
       .map(s => String(s ?? '').replace(/^[-\s]+/, ''))
       .filter(Boolean);
+
     const notes = String(dest.notes || '').trim();
 
-    // Incluye
-    doc.font('Helvetica-Bold').fontSize(10).fillColor(C.green)
-       .text('Que incluye', RX, yR);
-    yR += 12;
-    const incH = incs.length * 13 + 8;
+    doc.font('Helvetica-Bold').fontSize(11).fillColor(C.green)
+      .text('¿Qué incluye?', RX, yR);
+    yR += 13; // era 16
+
+    const incH = incs.length * 15 + 12;
     doc.rect(RX, yR, RW, incH).fill(C.lgreen);
+
     incs.forEach((item, j) => {
-      doc.font('Helvetica-Bold').fontSize(9).fillColor([21, 128, 61])
-         .text('•', RX + 5, yR + 5 + j * 13, { lineBreak: false });
-      doc.font('Helvetica').fontSize(7.5).fillColor([22, 101, 52])
-         .text(item, RX + 14, yR + 5.5 + j * 13, { width: RW - 20, lineBreak: false });
-    });
-    yR += incH + 9;
+      doc.font('Helvetica-Bold').fontSize(10).fillColor([21, 128, 61])
+        .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
 
-    // No incluye
-    doc.font('Helvetica-Bold').fontSize(10).fillColor(C.red)
-       .text('No incluye', RX, yR);
-    yR += 12;
-    const ninH = nincs.length * 13 + 8;
+      doc.font('Helvetica').fontSize(7.8).fillColor([22, 101, 52])
+        .text(item, RX + 18, yR + 8 + j * 15, { width: RW - 24, lineBreak: false });
+    });
+
+    yR += incH + 8; // era +12
+
+    doc.font('Helvetica-Bold').fontSize(11).fillColor(C.red)
+      .text('¿Qué no incluye?', RX, yR);
+    yR += 13; // era 16
+
+    const ninH = nincs.length * 15 + 12;
     doc.rect(RX, yR, RW, ninH).fill(C.lred);
-    nincs.forEach((item, j) => {
-      doc.font('Helvetica-Bold').fontSize(9).fillColor([185, 28, 28])
-         .text('•', RX + 5, yR + 5 + j * 13, { lineBreak: false });
-      doc.font('Helvetica').fontSize(7.5).fillColor([153, 27, 27])
-         .text(item, RX + 14, yR + 5.5 + j * 13, { width: RW - 20, lineBreak: false });
-    });
-    yR += ninH + 9;
 
-    // Info importante
+    nincs.forEach((item, j) => {
+      doc.font('Helvetica-Bold').fontSize(10).fillColor([185, 28, 28])
+        .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
+
+      doc.font('Helvetica').fontSize(7.8).fillColor([153, 27, 27])
+        .text(item, RX + 18, yR + 8 + j * 15, { width: RW - 24, lineBreak: false });
+    });
+
+    yR += ninH + 8; // era +12
+
     if (notes) {
-      const nH = doc.heightOfString(notes, { width: RW - 12 }) + 16;
-      doc.rect(RX, yR, RW, nH).fill(C.lyell);
-      doc.font('Helvetica-Bold').fontSize(7.5).fillColor([146, 64, 14])
-         .text('Importante:', RX + 5, yR + 6);
-      doc.font('Helvetica').fontSize(7).fillColor([120, 53, 15])
-         .text(notes, RX + 5, yR + 16, { width: RW - 10 });
-      yR += nH + 8;
+      const noteH = doc.heightOfString(notes, { width: RW - 16 }) + 22;
+      doc.rect(RX, yR, RW, noteH).fill(C.lyell);
+
+      doc.font('Helvetica-Bold').fontSize(7.8).fillColor([146, 64, 14])
+        .text('Importante:', RX + 6, yR + 8);
+
+      doc.font('Helvetica').fontSize(7.5).fillColor([120, 53, 15])
+        .text(notes, RX + 6, yR + 20, { width: RW - 12 });
+
+      yR += noteH + 8; // era +12
     }
 
-    // CTA
-    doc.rect(RX, yR, RW, 32).fill(C.navy);
-    doc.font('Helvetica-Bold').fontSize(9).fillColor(C.white)
-       .text('¿Te interesa este destino?', RX, yR + 7, { width: RW, align: 'center' });
-    doc.font('Helvetica').fontSize(7.5).fillColor([199, 210, 254])
-       .text('Escríbenos · Te asesoramos sin costo', RX, yR + 19, { width: RW, align: 'center' });
-    yR += 40;
+    doc.rect(RX, yR, RW, 38).fill(C.navy);
+    doc.font('Helvetica-Bold').fontSize(10).fillColor(C.white)
+      .text('¿Te interesa este destino?', RX, yR + 9, { width: RW, align: 'center' });
 
-    y = Math.max(yL, yR) + 10;
+    doc.font('Helvetica').fontSize(8).fillColor([199, 210, 254])
+      .text('Escríbenos · Te asesoramos sin costo', RX, yR + 23, { width: RW, align: 'center' });
+
+    y = Math.max(yL, yR) + 10; // era +14
 
     // ══ 7. GALERÍA ═══════════════════════════════════════════
-    doc.font('Helvetica-Bold').fontSize(9).fillColor(C.navy)
-       .text('Galería', M, y);
-    y += 11;
+    const gH = 90;
+    y = ensureSpace(doc, y, 14 + gH + 18, M);
+
+    doc.font('Helvetica-Bold').fontSize(10).fillColor(C.navy)
+      .text('Galería', M, y);
+    y += 12; // era 14
 
     const gallery = Array.isArray(dest.gallery) ? dest.gallery : [];
-    const gW = (CW - 6) / 3;
-    const gH = 90;
-    const gFallbacks = [[0, 130, 185], [0, 100, 160], [0, 155, 175]];
+    const gW  = (CW - 8) / 3;
+    const gFallbacks = [C.cyan, C.navy, [0, 100, 150]];
 
     for (let i = 0; i < 3; i++) {
-      const gx   = M + i * (gW + 3);
+      const gx   = M + i * (gW + 4);
       const gSrc = gallery[i] ? resolveImage(gallery[i]) : null;
+
       if (gSrc) {
         try {
           doc.save();
@@ -330,22 +413,9 @@ function generatePDF(dest) {
       }
       doc.rect(gx, y, gW, gH).fill(gFallbacks[i] || C.navy);
     }
-    y += gH + 10;
 
-    // ══ 8. FOOTER — logo real + contacto ═════════════════════
-    doc.moveTo(M, y).lineTo(M + CW, y)
-       .strokeColor(C.border).lineWidth(0.5).stroke();
-    y += 6;
-
-    if (logoPath) {
-      safeImage(doc, logoPath, M, y - 2, { height: 26 });
-    } else {
-      doc.font('Helvetica-Bold').fontSize(11).fillColor(C.navy)
-         .text('AL MUNDO', M, y, { continued: true, lineBreak: false })
-         .fillColor(C.gold).text(' TOURS', { lineBreak: false });
-    }
-    doc.font('Helvetica').fontSize(8).fillColor(C.gray)
-       .text('+57 316 527 6338  |  almundotours.com', M, y + 3, { width: CW, align: 'right' });
+    // ══ 8. FOOTER — FIJO (siempre visible) ════════════════════
+    drawFooterFixed(doc, logoPath, M, CW);
 
     doc.end();
   });
@@ -368,6 +438,7 @@ export async function handler(event) {
 
   try {
     const pdfBuffer = await generatePDF(destination);
+
     const safeName  = (destination.name || 'destino')
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]/gi, '-').toLowerCase();
