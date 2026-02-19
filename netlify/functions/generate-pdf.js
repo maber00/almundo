@@ -332,35 +332,45 @@ function generatePDF(dest) {
       .text('¿Qué incluye?', RX, yR);
     yR += 13; // era 16
 
-    const incH = incs.length * 15 + 12;
+    // Altura dinámica por item — respeta saltos de línea
+    const incItemH = incs.map(item =>
+      Math.max(doc.font('Helvetica').fontSize(7.8).heightOfString(item, { width: RW - 24 }) + 7, 16)
+    );
+    const incH = incItemH.reduce((a, b) => a + b, 0) + 10;
     doc.rect(RX, yR, RW, incH).fill(C.lgreen);
 
+    let incY = yR + 6;
     incs.forEach((item, j) => {
       doc.font('Helvetica-Bold').fontSize(10).fillColor([21, 128, 61])
-        .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
-
+        .text('•', RX + 6, incY, { lineBreak: false });
       doc.font('Helvetica').fontSize(7.8).fillColor([22, 101, 52])
-        .text(item, RX + 18, yR + 8 + j * 15, { width: RW - 24, lineBreak: false });
+        .text(item, RX + 18, incY + 0.5, { width: RW - 24 });
+      incY += incItemH[j];
     });
 
-    yR += incH + 8; // era +12
+    yR += incH + 8;
 
     doc.font('Helvetica-Bold').fontSize(11).fillColor(C.red)
       .text('¿Qué no incluye?', RX, yR);
-    yR += 13; // era 16
+    yR += 13;
 
-    const ninH = nincs.length * 15 + 12;
+    // Altura dinámica por item — respeta saltos de línea
+    const ninItemH = nincs.map(item =>
+      Math.max(doc.font('Helvetica').fontSize(7.8).heightOfString(item, { width: RW - 24 }) + 7, 16)
+    );
+    const ninH = ninItemH.reduce((a, b) => a + b, 0) + 10;
     doc.rect(RX, yR, RW, ninH).fill(C.lred);
 
+    let ninY = yR + 6;
     nincs.forEach((item, j) => {
       doc.font('Helvetica-Bold').fontSize(10).fillColor([185, 28, 28])
-        .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
-
+        .text('•', RX + 6, ninY, { lineBreak: false });
       doc.font('Helvetica').fontSize(7.8).fillColor([153, 27, 27])
-        .text(item, RX + 18, yR + 8 + j * 15, { width: RW - 24, lineBreak: false });
+        .text(item, RX + 18, ninY + 0.5, { width: RW - 24 });
+      ninY += ninItemH[j];
     });
 
-    yR += ninH + 8; // era +12
+    yR += ninH + 8;
 
     if (notes) {
       const noteH = doc.heightOfString(notes, { width: RW - 16 }) + 22;
@@ -382,7 +392,7 @@ function generatePDF(dest) {
     doc.font('Helvetica').fontSize(8).fillColor([199, 210, 254])
       .text('Escríbenos · Te asesoramos sin costo', RX, yR + 23, { width: RW, align: 'center' });
 
-    y = Math.max(yL, yR) + 10; // era +14
+    y = Math.max(yL, yR) + 38; // espacio tras CTA antes de galería
 
     // ══ 7. GALERÍA ═══════════════════════════════════════════
     const gH = 90;
