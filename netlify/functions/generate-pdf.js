@@ -1,13 +1,14 @@
 // ═══════════════════════════════════════════════════════════════
 // netlify/functions/generate-pdf.js
 // Instalar: npm install pdfkit
-// Nota: usa LOGO en PNG/JPG (evita WEBP en PDFKit)
+// Nota: usa LOGO en PNG (evita WEBP en PDFKit)
 // Coloca el logo en: /public/assets/images/Logo3.png
 // ═══════════════════════════════════════════════════════════════
 
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
+import sizeOf from 'image-size';
 
 // ── Paleta ───────────────────────────────────────────────────
 const C = {
@@ -52,6 +53,42 @@ function resolveImage(imgPath) {
     if (fs.existsSync(full)) return full;
   }
   return null;
+}
+
+// ── Cover image: centra y recorta como object-fit:cover ──────
+function coverImage(doc, filePath, x, y, w, h) {
+  try {
+    if (!filePath) return false;
+
+    // Obtener dimensiones reales de la imagen
+    const dims = sizeOf(filePath);
+    if (!dims || !dims.width || !dims.height) return false;
+
+    const imgW = dims.width;
+    const imgH = dims.height;
+
+    // Calcular escala para que la imagen cubra el área (cover)
+    const scaleX = w / imgW;
+    const scaleY = h / imgH;
+    const scale  = Math.max(scaleX, scaleY);
+
+    const scaledW = imgW * scale;
+    const scaledH = imgH * scale;
+
+    // Centrar la imagen dentro del área
+    const offsetX = x - (scaledW - w) / 2;
+    const offsetY = y - (scaledH - h) / 2;
+
+    doc.save();
+    doc.rect(x, y, w, h).clip();
+    doc.image(filePath, offsetX, offsetY, { width: scaledW, height: scaledH });
+    doc.restore();
+
+    return true;
+  } catch (e) {
+    console.error('COVER IMAGE ERROR:', filePath, e?.message || e);
+    return false;
+  }
 }
 
 function safeImage(doc, filePath, x, y, opts = {}) {
@@ -112,10 +149,8 @@ function generatePDF(dest) {
     const CW = W - M * 2;
     let y = M;
 
-    // ✅ Logo (PNG/JPG)
-    const logoPath =
-      resolveImage('assets/images/Logo3.png') ||
-      resolveImage('assets/images/Logo3.jpg');
+    // ✅ Logo solo PNG
+    const logoPath = resolveImage('assets/images/Logo3.png');
 
     // Datos del destino
     const usd      = !!dest.priceInUsd;
@@ -145,7 +180,7 @@ function generatePDF(dest) {
       .fillColor(C.gray)
       .text('almundotours.com  |  +57 316 527 6338', M, y + 14, { width: CW, align: 'right' });
 
-    y += 44; // era 54
+    y += 54;
 
     // ══ 2. BADGES — sin fondo, texto en línea ════════════════
     let bx = M;
@@ -173,45 +208,46 @@ function generatePDF(dest) {
       drawBadge(t, TAGS[t] || C.navy); bx += 10;
     });
 
-    y += 12; // era 18
+    y += 18;
 
-    // ══ 3. IMAGEN HERO ═══════════════════════════════════════
+    // ══ 3. IMAGEN HERO — cover ════════════════════════════════
     const heroH = 150;
     y = ensureSpace(doc, y, heroH + 40, M);
 
     const heroFile = resolveImage(dest.image);
-    if (heroFile) {
-      try {
-        doc.save();
-        doc.rect(M, y, CW, heroH).clip();
-        safeImage(doc, heroFile, M, y, { cover: [CW, heroH], align: 'center', valign: 'center' });
+    const heroDrawn = heroFile
+      ? coverImage(doc, heroFile, M, y, CW, heroH)
+      : false;
 
-        const grad = doc.linearGradient(M, y, M, y + heroH);
-        grad.stop(0, 'black', 0).stop(0.5, 'black', 0.1).stop(1, 'black', 0.5);
-        doc.rect(M, y, CW, heroH).fill(grad);
-
-        doc.restore();
-      } catch (e) {
-        console.error('HERO ERROR:', e?.message || e);
-        doc.rect(M, y, CW, heroH).fill(C.navy);
-      }
-    } else {
+    if (!heroDrawn) {
       doc.rect(M, y, CW, heroH).fill(C.navy);
     }
 
-    y += heroH + 8; // era +14
+    // Overlay oscuro inferior para legibilidad
+    try {
+      doc.save();
+      doc.rect(M, y, CW, heroH).clip();
+      const grad = doc.linearGradient(M, y, M, y + heroH);
+      grad.stop(0, 'black', 0).stop(0.5, 'black', 0.1).stop(1, 'black', 0.5);
+      doc.rect(M, y, CW, heroH).fill(grad);
+      doc.restore();
+    } catch (e) {
+      // overlay opcional, no bloquea
+    }
+
+    y += heroH + 14;
 
     // ══ 4. TÍTULO + DESCRIPCIÓN ══════════════════════════════
     y = ensureSpace(doc, y, 90, M);
 
     doc.font('Helvetica-Bold').fontSize(22).fillColor(C.navy)
       .text(dest.name || '', M, y);
-    y += 26; // era 30
+    y += 30;
 
     const desc = dest.description || '';
     doc.font('Helvetica').fontSize(9.5).fillColor(C.gray)
       .text(desc, M, y, { width: CW, lineGap: 2 });
-    y += doc.heightOfString(desc, { width: CW }) + 6; // era +12
+    y += doc.heightOfString(desc, { width: CW }) + 12;
 
     // META horizontal sin emojis
     const metaItems = [];
@@ -236,7 +272,7 @@ function generatePDF(dest) {
         mx += doc.widthOfString(sep);
       }
     });
-    y += 14; // era 20
+    y += 20;
 
     // ══ 5. PRECIO ════════════════════════════════════════════
     y = ensureSpace(doc, y, 90, M);
@@ -244,7 +280,7 @@ function generatePDF(dest) {
     if (isOffer) {
       doc.font('Helvetica').fontSize(7.5).fillColor(C.gray)
         .text('Precio por persona', M, y);
-      y += 10; // era 12
+      y += 12;
 
       const strikeStr = `Antes: ${fmtPrice(priceNum, usd)}`;
       doc.font('Helvetica').fontSize(9.5).fillColor([156, 163, 175])
@@ -252,7 +288,7 @@ function generatePDF(dest) {
       const sw = doc.widthOfString(strikeStr);
       doc.moveTo(M, y + 5).lineTo(M + sw, y + 5)
         .strokeColor([156, 163, 175]).lineWidth(0.5).stroke();
-      y += 14; // era 16
+      y += 16;
 
       doc.font('Helvetica-Bold').fontSize(18).fillColor(C.red)
         .text(`Ahora: ${fmtPrice(origNum, usd)}`, M, y);
@@ -264,11 +300,11 @@ function generatePDF(dest) {
       doc.font('Helvetica').fontSize(7).fillColor(C.gray)
         .text('Sujeto a cotización', M, y + 16, { width: CW, align: 'right' });
 
-      y += 24; // era 28
+      y += 28;
     } else {
       doc.font('Helvetica').fontSize(7.5).fillColor(C.gray)
         .text('Precio por persona', M, y);
-      y += 10; // era 12
+      y += 12;
 
       doc.font('Helvetica-Bold').fontSize(18).fillColor(C.navy)
         .text(fmtPrice(priceNum, usd), M, y);
@@ -276,10 +312,10 @@ function generatePDF(dest) {
       doc.font('Helvetica').fontSize(7).fillColor(C.gray)
         .text('Sujeto a cotización', M, y + 4, { width: CW, align: 'right' });
 
-      y += 22; // era 26
+      y += 26;
     }
 
-    y += 6; // era 8
+    y += 8;
 
     // ══ 6. DOS COLUMNAS ══════════════════════════════════════
     y = ensureSpace(doc, y, 260, M);
@@ -292,7 +328,7 @@ function generatePDF(dest) {
     // ─── Itinerario (izquierda) ───────────────────────────────
     doc.font('Helvetica-Bold').fontSize(11).fillColor(C.navy)
       .text('Itinerario', M, yL);
-    yL += 13; // era 16
+    yL += 16;
 
     (dest.itinerary || []).forEach((day, i) => {
       const num   = day?.day || (i + 1);
@@ -317,7 +353,7 @@ function generatePDF(dest) {
         doc.text(`• ${a}`, M + 12, yL + 33 + j * 13, { width: LW - 20, lineBreak: false });
       });
 
-      yL += 14 + bodyH + 3; // era +4
+      yL += 14 + bodyH + 4;
     });
 
     // ─── Incluye / No incluye (derecha) ──────────────────────
@@ -330,47 +366,37 @@ function generatePDF(dest) {
 
     doc.font('Helvetica-Bold').fontSize(11).fillColor(C.green)
       .text('¿Qué incluye?', RX, yR);
-    yR += 13; // era 16
+    yR += 16;
 
-    // Altura dinámica por item — respeta saltos de línea
-    const incItemH = incs.map(item =>
-      Math.max(doc.font('Helvetica').fontSize(7.8).heightOfString(item, { width: RW - 24 }) + 7, 16)
-    );
-    const incH = incItemH.reduce((a, b) => a + b, 0) + 10;
+    const incH = incs.length * 15 + 12;
     doc.rect(RX, yR, RW, incH).fill(C.lgreen);
 
-    let incY = yR + 6;
     incs.forEach((item, j) => {
       doc.font('Helvetica-Bold').fontSize(10).fillColor([21, 128, 61])
-        .text('•', RX + 6, incY, { lineBreak: false });
+        .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
+
       doc.font('Helvetica').fontSize(7.8).fillColor([22, 101, 52])
-        .text(item, RX + 18, incY + 0.5, { width: RW - 24 });
-      incY += incItemH[j];
+        .text(item, RX + 18, yR + 8 + j * 15, { width: RW - 24, lineBreak: false });
     });
 
-    yR += incH + 8;
+    yR += incH + 12;
 
     doc.font('Helvetica-Bold').fontSize(11).fillColor(C.red)
       .text('¿Qué no incluye?', RX, yR);
-    yR += 13;
+    yR += 16;
 
-    // Altura dinámica por item — respeta saltos de línea
-    const ninItemH = nincs.map(item =>
-      Math.max(doc.font('Helvetica').fontSize(7.8).heightOfString(item, { width: RW - 24 }) + 7, 16)
-    );
-    const ninH = ninItemH.reduce((a, b) => a + b, 0) + 10;
+    const ninH = nincs.length * 15 + 12;
     doc.rect(RX, yR, RW, ninH).fill(C.lred);
 
-    let ninY = yR + 6;
     nincs.forEach((item, j) => {
       doc.font('Helvetica-Bold').fontSize(10).fillColor([185, 28, 28])
-        .text('•', RX + 6, ninY, { lineBreak: false });
+        .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
+
       doc.font('Helvetica').fontSize(7.8).fillColor([153, 27, 27])
-        .text(item, RX + 18, ninY + 0.5, { width: RW - 24 });
-      ninY += ninItemH[j];
+        .text(item, RX + 18, yR + 8 + j * 15, { width: RW - 24, lineBreak: false });
     });
 
-    yR += ninH + 8;
+    yR += ninH + 12;
 
     if (notes) {
       const noteH = doc.heightOfString(notes, { width: RW - 16 }) + 22;
@@ -382,7 +408,7 @@ function generatePDF(dest) {
       doc.font('Helvetica').fontSize(7.5).fillColor([120, 53, 15])
         .text(notes, RX + 6, yR + 20, { width: RW - 12 });
 
-      yR += noteH + 8; // era +12
+      yR += noteH + 12;
     }
 
     doc.rect(RX, yR, RW, 38).fill(C.navy);
@@ -392,15 +418,15 @@ function generatePDF(dest) {
     doc.font('Helvetica').fontSize(8).fillColor([199, 210, 254])
       .text('Escríbenos · Te asesoramos sin costo', RX, yR + 23, { width: RW, align: 'center' });
 
-    y = Math.max(yL, yR) + 38; // espacio tras CTA antes de galería
+    y = Math.max(yL, yR) + 14;
 
-    // ══ 7. GALERÍA ═══════════════════════════════════════════
+    // ══ 7. GALERÍA — cover ════════════════════════════════════
     const gH = 90;
     y = ensureSpace(doc, y, 14 + gH + 18, M);
 
     doc.font('Helvetica-Bold').fontSize(10).fillColor(C.navy)
       .text('Galería', M, y);
-    y += 12; // era 14
+    y += 14;
 
     const gallery = Array.isArray(dest.gallery) ? dest.gallery : [];
     const gW  = (CW - 8) / 3;
@@ -411,15 +437,8 @@ function generatePDF(dest) {
       const gSrc = gallery[i] ? resolveImage(gallery[i]) : null;
 
       if (gSrc) {
-        try {
-          doc.save();
-          doc.rect(gx, y, gW, gH).clip();
-          safeImage(doc, gSrc, gx, y, { cover: [gW, gH], align: 'center', valign: 'center' });
-          doc.restore();
-          continue;
-        } catch (e) {
-          console.error('GALLERY ERROR:', e?.message || e);
-        }
+        const drawn = coverImage(doc, gSrc, gx, y, gW, gH);
+        if (drawn) continue;
       }
       doc.rect(gx, y, gW, gH).fill(gFallbacks[i] || C.navy);
     }
