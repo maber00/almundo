@@ -128,7 +128,7 @@ function generatePDF(dest) {
     y += 14;
 
     // ══ 3. IMAGEN HERO ═══════════════════════════════════════
-    const heroH = 108;
+    const heroH = 150;
     const heroFile = resolveImage(dest.image);
     if (heroFile) {
       try {
@@ -311,7 +311,7 @@ function generatePDF(dest) {
 
     const gallery = Array.isArray(dest.gallery) ? dest.gallery : [];
     const gW = (CW - 6) / 3;
-    const gH = 58;
+    const gH = 90;
     const gFallbacks = [[0, 130, 185], [0, 100, 160], [0, 155, 175]];
 
     for (let i = 0; i < 3; i++) {
