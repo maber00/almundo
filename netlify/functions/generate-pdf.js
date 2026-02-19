@@ -1,14 +1,13 @@
 // ═══════════════════════════════════════════════════════════════
 // netlify/functions/generate-pdf.js
 // Instalar: npm install pdfkit
-// Nota: usa LOGO en PNG (evita WEBP en PDFKit)
+// Nota: usa LOGO en PNG/JPG (evita WEBP en PDFKit)
 // Coloca el logo en: /public/assets/images/Logo3.png
 // ═══════════════════════════════════════════════════════════════
 
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
-import sizeOf from 'image-size';
 
 // ── Paleta ───────────────────────────────────────────────────
 const C = {
@@ -55,42 +54,6 @@ function resolveImage(imgPath) {
   return null;
 }
 
-// ── Cover image: centra y recorta como object-fit:cover ──────
-function coverImage(doc, filePath, x, y, w, h) {
-  try {
-    if (!filePath) return false;
-
-    // Obtener dimensiones reales de la imagen
-    const dims = sizeOf(filePath);
-    if (!dims || !dims.width || !dims.height) return false;
-
-    const imgW = dims.width;
-    const imgH = dims.height;
-
-    // Calcular escala para que la imagen cubra el área (cover)
-    const scaleX = w / imgW;
-    const scaleY = h / imgH;
-    const scale  = Math.max(scaleX, scaleY);
-
-    const scaledW = imgW * scale;
-    const scaledH = imgH * scale;
-
-    // Centrar la imagen dentro del área
-    const offsetX = x - (scaledW - w) / 2;
-    const offsetY = y - (scaledH - h) / 2;
-
-    doc.save();
-    doc.rect(x, y, w, h).clip();
-    doc.image(filePath, offsetX, offsetY, { width: scaledW, height: scaledH });
-    doc.restore();
-
-    return true;
-  } catch (e) {
-    console.error('COVER IMAGE ERROR:', filePath, e?.message || e);
-    return false;
-  }
-}
-
 function safeImage(doc, filePath, x, y, opts = {}) {
   try {
     if (!filePath) return false;
@@ -103,8 +66,8 @@ function safeImage(doc, filePath, x, y, opts = {}) {
 }
 
 // ── Layout helpers ────────────────────────────────────────────
-const PAGE_H = 841.89;
-const FOOTER_SPACE = 90;
+const PAGE_H = 841.89; // A4 alto en puntos
+const FOOTER_SPACE = 90; // reserva para que nada choque con el footer
 
 function ensureSpace(doc, y, needed, marginTop = 34) {
   if (y + needed > PAGE_H - FOOTER_SPACE) {
@@ -145,12 +108,14 @@ function generatePDF(dest) {
     doc.on('error', reject);
 
     const W = 595.28;
-    const M = 34;
-    const CW = W - M * 2;
+    const M = 34;          // margen lateral
+    const CW = W - M * 2;  // ancho útil
     let y = M;
 
-    // ✅ Logo solo PNG
-    const logoPath = resolveImage('assets/images/Logo3.png');
+    // ✅ Logo (PNG/JPG)
+    const logoPath =
+      resolveImage('assets/images/Logo3.png') ||
+      resolveImage('assets/images/Logo3.jpg');
 
     // Datos del destino
     const usd      = !!dest.priceInUsd;
@@ -210,29 +175,29 @@ function generatePDF(dest) {
 
     y += 18;
 
-    // ══ 3. IMAGEN HERO — cover ════════════════════════════════
+    // ══ 3. IMAGEN HERO ═══════════════════════════════════════
     const heroH = 150;
     y = ensureSpace(doc, y, heroH + 40, M);
 
     const heroFile = resolveImage(dest.image);
-    const heroDrawn = heroFile
-      ? coverImage(doc, heroFile, M, y, CW, heroH)
-      : false;
+    if (heroFile) {
+      try {
+        doc.save();
+        doc.rect(M, y, CW, heroH).clip();
+        safeImage(doc, heroFile, M, y, { width: CW, height: heroH });
 
-    if (!heroDrawn) {
+        // overlay oscuro inferior para legibilidad
+        const grad = doc.linearGradient(M, y, M, y + heroH);
+        grad.stop(0, 'black', 0).stop(0.5, 'black', 0.1).stop(1, 'black', 0.5);
+        doc.rect(M, y, CW, heroH).fill(grad);
+
+        doc.restore();
+      } catch (e) {
+        console.error('HERO ERROR:', e?.message || e);
+        doc.rect(M, y, CW, heroH).fill(C.navy);
+      }
+    } else {
       doc.rect(M, y, CW, heroH).fill(C.navy);
-    }
-
-    // Overlay oscuro inferior para legibilidad
-    try {
-      doc.save();
-      doc.rect(M, y, CW, heroH).clip();
-      const grad = doc.linearGradient(M, y, M, y + heroH);
-      grad.stop(0, 'black', 0).stop(0.5, 'black', 0.1).stop(1, 'black', 0.5);
-      doc.rect(M, y, CW, heroH).fill(grad);
-      doc.restore();
-    } catch (e) {
-      // overlay opcional, no bloquea
     }
 
     y += heroH + 14;
@@ -371,6 +336,7 @@ function generatePDF(dest) {
     const incH = incs.length * 15 + 12;
     doc.rect(RX, yR, RW, incH).fill(C.lgreen);
 
+    // ✅ sin ✓ (usa bullet seguro)
     incs.forEach((item, j) => {
       doc.font('Helvetica-Bold').fontSize(10).fillColor([21, 128, 61])
         .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
@@ -388,6 +354,7 @@ function generatePDF(dest) {
     const ninH = nincs.length * 15 + 12;
     doc.rect(RX, yR, RW, ninH).fill(C.lred);
 
+    // ✅ sin ✗ (usa bullet seguro)
     nincs.forEach((item, j) => {
       doc.font('Helvetica-Bold').fontSize(10).fillColor([185, 28, 28])
         .text('•', RX + 6, yR + 7 + j * 15, { lineBreak: false });
@@ -420,7 +387,7 @@ function generatePDF(dest) {
 
     y = Math.max(yL, yR) + 14;
 
-    // ══ 7. GALERÍA — cover ════════════════════════════════════
+    // ══ 7. GALERÍA ═══════════════════════════════════════════
     const gH = 90;
     y = ensureSpace(doc, y, 14 + gH + 18, M);
 
@@ -437,8 +404,15 @@ function generatePDF(dest) {
       const gSrc = gallery[i] ? resolveImage(gallery[i]) : null;
 
       if (gSrc) {
-        const drawn = coverImage(doc, gSrc, gx, y, gW, gH);
-        if (drawn) continue;
+        try {
+          doc.save();
+          doc.rect(gx, y, gW, gH).clip();
+          safeImage(doc, gSrc, gx, y, { width: gW, height: gH });
+          doc.restore();
+          continue;
+        } catch (e) {
+          console.error('GALLERY ERROR:', e?.message || e);
+        }
       }
       doc.rect(gx, y, gW, gH).fill(gFallbacks[i] || C.navy);
     }
