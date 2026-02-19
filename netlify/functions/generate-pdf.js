@@ -103,15 +103,23 @@ function generatePDF(dest) {
     const tagsExtra = (dest.tags || []).filter(t => t !== tagMain).slice(0, 3);
 
     // ══ 1. HEADER — logo + contacto ══════════════════════════
-    if (logoPath) {
-      safeImage(doc, logoPath, M, y - 2, { height: 40 });
-      doc.x = M + 60;
-    }
 
-    doc.font('Helvetica').fontSize(8).fillColor(C.gray)
-      .text('almundotours.com  |  +57 316 527 6338', M, y + 6, { width: CW, align: 'right' });
+if (logoPath) {
+  safeImage(doc, logoPath, M, y - 6, { height: 40 });
+}
 
-    y += 26;
+doc.font('Helvetica')
+   .fontSize(9)
+   .fillColor(C.gray)
+   .text(
+     'almundotours.com  |  +57 316 527 6338',
+     M,
+     y + 14,
+     { width: CW, align: 'right' }
+   );
+
+// espacio suficiente para que nada se monte
+y += 54;
 
     // ══ 2. BADGES — sin fondo, texto en línea ════════════════
     let bx = M;
