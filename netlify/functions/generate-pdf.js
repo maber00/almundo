@@ -150,7 +150,7 @@ y += 54;
     y += 18;
 
     // ══ 3. IMAGEN HERO ═══════════════════════════════════════
-    const heroH = 110;
+const heroH = 150;
     const heroFile = resolveImage(dest.image);
 
     if (heroFile) {
@@ -370,7 +370,7 @@ y += 54;
 
     const gallery = Array.isArray(dest.gallery) ? dest.gallery : [];
     const gW  = (CW - 8) / 3;
-    const gH  = 62;
+    const gH  = 90;
     const gFallbacks = [C.cyan, C.navy, [0, 100, 150]];
 
     for (let i = 0; i < 3; i++) {
