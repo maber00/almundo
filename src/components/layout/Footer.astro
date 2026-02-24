@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '../../assets/images/Logo3blanco.webp';
+import { Icon } from 'astro-icon/components';
 
 // Importa las imágenes para Efecty y Baloto
 
@@ -27,19 +28,18 @@ const legalLinks = [
 
 // Redes sociales se mantienen con Iconify
 const socialMedia = [
-  { name: "Facebook", url: "https://www.facebook.com/p/Al-Mundo-Tours-61565786490036/", icon: "mdi:facebook" },
-  { name: "Instagram", url: "https://www.instagram.com/al_mundotours/", icon: "mdi:instagram" },
-  { name: "Twitter", url: "https://twitter.com/almundotour", icon: "mdi:twitter" },
-  { name: "YouTube", url: "https://youtube.com/almundotour", icon: "mdi:youtube" },
-  { name: "WhatsApp", url: "https://wa.me/573165276338", icon: "mdi:whatsapp" },
+  { name: "Instagram", url: "https://www.instagram.com/al_mundotours", icon: "tabler:brand-instagram" },
+  { name: "TikTok", url: "https://www.tiktok.com/@al.mundo.tours", icon: "tabler:brand-tiktok" },
+  { name: "WhatsApp", url: "https://wa.me/573165276338", icon: "tabler:brand-whatsapp" },
+  { name: "Facebook", url: "https://www.facebook.com/p/Al-Mundo-Tours-61565786490036/", icon: "tabler:brand-facebook" },
 ];
 
 // Métodos de pago: para Efecty y Baloto se usan las imágenes en lugar de iconos
 const paymentMethods = [
-  { name: "Visa", icon: "simple-icons:visa" },
-  { name: "MasterCard", icon: "simple-icons:mastercard" },
-  { name: "American Express", icon: "simple-icons:americanexpress" },
-  { name: "PSE", icon: "mdi:credit-card-outline" },
+  { icon: "simple-icons:visa" },
+  { icon: "simple-icons:mastercard" },
+  { icon: "simple-icons:americanexpress" },
+  { icon: "tabler:building-bank" } // PSE
 ];
 ---
 
@@ -135,8 +135,7 @@ const paymentMethods = [
       aria-label={`Síguenos en ${social.name}`}
       class="hover:text-blue-400 transition-colors"
     >
-      <span class="iconify" data-icon={social.icon} style="font-size: 24px;"></span>
-    </a>
+<Icon name={social.icon} class="w-6 h-6" />    </a>
   ))}
 </div>
       </div>
@@ -147,14 +146,16 @@ const paymentMethods = [
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div class="mb-4 md:mb-0">
           <h4 class="text-lg font-bold mb-3 text-white">Métodos de pago aceptados</h4>
-          <div class="flex flex-wrap gap-3 text-white text-sm">
-            {paymentMethods.map((method) => (
-              <div class="bg-gray-800 px-3 py-1 rounded flex items-center">
-                <span class="iconify" data-icon={method.icon} style="font-size: 20px; margin-right: 0.5rem;"></span>
-                {method.name}
-              </div>
-            ))}
-          </div>
+          <div class="flex flex-wrap gap-6 items-center">
+  {paymentMethods.map((method) => (
+    <div class="opacity-80 hover:opacity-100 transition-opacity">
+      <Icon 
+        name={method.icon} 
+        class="w-8 h-8 text-white"
+      />
+    </div>
+  ))}
+</div>
         </div>
       </div>
     </div>
