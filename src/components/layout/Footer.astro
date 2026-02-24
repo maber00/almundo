@@ -1,8 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '../../assets/images/Logo3blanco.webp';
+import Nequi from '../../assets/images/nequi.svg';
 import { Icon } from 'astro-icon/components';
-
 // Importa las imágenes para Efecty y Baloto
 
 // Enlaces rápidos, destinos y demás arrays siguen igual…
@@ -155,6 +155,12 @@ const paymentMethods = [
       />
     </div>
   ))}
+
+  {/* Nequi SVG */}
+  <div class="opacity-80 hover:opacity-100 transition-opacity">
+  <Nequi class="w-10 h-8 brightness-0 invert" aria-label="Nequi" />
+</div>
+
 </div>
         </div>
       </div>
