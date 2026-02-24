@@ -133,22 +133,40 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
                   )}
                   <p class="text-xs md:text-sm text-gray-500">Precio por persona</p>
                   {isOffer ? (
-                    <div>
-                      <p class="line-through text-gray-500 text-sm md:text-base font-medium">
-                        Antes: {formatPrice(destination.price)}
-                      </p>
-                      <p class="text-xl md:text-3xl font-bold text-red-600">
-                        Ahora: {formatPrice(originalPrice)}
-                      </p>
-                      <p class="text-xs text-green-600 font-medium">
-                        {Math.round(((destination.price - originalPrice) / destination.price) * 100)}% de descuento
-                      </p>
-                    </div>
-                  ) : (
-                    <p class="text-xl md:text-3xl font-bold text-[#0C005F]">
-                      {formatPrice(destination.price)}
-                    </p>
-                  )}
+            <div>
+              <p class="line-through text-gray-500 text-sm md:text-base font-medium">
+                Antes: {formatPrice(destination.price)}
+              </p>
+              <div class="flex items-start gap-4">
+
+              <div class="flex flex-col text-xs md:text-sm text-gray-500 font-medium leading-tight">
+                <span>Ahora</span>
+                <span>Desde</span>
+              </div>
+
+              <p class="text-2xl md:text-3xl font-bold text-red-600">
+                {formatPrice(originalPrice)}
+              </p>
+
+            </div>
+
+              <p class="text-xs text-green-600 font-medium">
+                {Math.round(((destination.price - originalPrice) / destination.price) * 100)}% de descuento
+              </p>
+            </div>
+          ) : (
+          <div class="flex items-start gap-3">
+    
+    <div class="flex flex-col text-xs md:text-sm text-gray-500 font-medium leading-tight">
+      <span>Desde</span>
+    </div>
+
+    <p class="text-xl md:text-3xl font-bold text-[#0C005F]">
+      {formatPrice(destination.price)}
+    </p>
+
+  </div>
+)}
                 </div>
               </div>
             </div>
@@ -473,19 +491,49 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
                 
                 <div class="p-4">
                   <div class="flex justify-between items-center mb-2">
-                    <p class="text-xl font-bold text-[#0C005F]">
-                      {related.priceInUsd ? 'USD ' : ''}${related.price.toLocaleString('es-CO')}
-                      <span class="text-sm font-normal">{related.priceInUsd ? '' : 'COP'}</span>
-                    </p>
+                    {
+  related.originalPrice && related.originalPrice > related.price ? (
+    
+    <div class="flex items-start gap-2">
+      
+      <div class="flex flex-col text-[11px] text-gray-500 uppercase leading-tight">
+        <span>Ahora</span>
+        <span>Desde</span>
+      </div>
+
+      <p class="text-xl font-bold text-red-600">
+        {related.priceInUsd ? 'USD ' : ''}${related.price.toLocaleString('es-CO')}
+        <span class="text-sm font-normal">{related.priceInUsd ? '' : 'COP'}</span>
+      </p>
+
+    </div>
+
+  ) : (
+
+    <div class="flex items-start gap-2">
+      
+      <div class="flex flex-col text-[11px] text-gray-500 leading-tight">
+        <span>Desde</span>
+      </div>
+
+      <p class="text-xl font-bold text-[#0C005F]">
+        {related.priceInUsd ? 'USD ' : ''}${related.price.toLocaleString('es-CO')}
+        <span class="text-sm font-normal">{related.priceInUsd ? '' : 'COP'}</span>
+      </p>
+
+    </div>
+
+  )
+}
                     
                     <span class="text-sm text-gray-500">{related.durationText}</span>
                   </div>
                   
                   <a 
                     href={`/destinos/${related.type === 'nacional' ? 'nacionales' : 'internacionales'}/${related.id}`}
-                    class="block w-full bg-[#0C005F] text-white text-center py-2 rounded-md font-medium hover:bg-blue-700 transition-colors mt-3"
+                    class="block w-full bg-blue-600 text-white text-center py-2 rounded-md font-medium hover:bg-blue-700 transition-colors mt-3"
                   >
-                    text-[#0C005F]
+                    Ver detalles
                   </a>
                 </div>
               </div>
