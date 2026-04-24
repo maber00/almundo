@@ -3,10 +3,10 @@ id: EUROPA
 name: Travesía Europea
 type: internacional
 region: Europa
-price: 8999000
+price: 10999900
 currency: COP
 priceInUsd: false
-originalPrice: 8399000
+originalPrice: 9999900
 duration: 11
 durationText: 11 días / 9 noches
 image: /images/uploads/paris_20211026114244.jpg
