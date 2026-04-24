@@ -3,10 +3,10 @@ id: Madrid y París
 name: Escapada Europea
 type: internacional
 region: Madrid y París
-price: 6999000
+price: 7999000
 currency: COP
 priceInUsd: false
-originalPrice: 6499000
+originalPrice: 7499000
 duration: 8
 durationText: 8 días / 6 noches
 image: /images/uploads/paris.jpg
