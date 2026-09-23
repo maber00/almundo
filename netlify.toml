@@ -40,7 +40,7 @@
   status = 301
 
 [[redirects]]
-  from   = "/destinos/internacionales/Madrid y París"
+  from   = "/destinos/internacionales/Madrid%20y%20Par%C3%ADs"
   to     = "/destinos/internacionales/madrid-y-paris"
   status = 301
 
@@ -55,7 +55,7 @@
   status = 301
 
 [[redirects]]
-  from   = "/destinos/nacionales/Santa Marta"
+  from   = "/destinos/nacionales/Santa%20Marta"
   to     = "/destinos/nacionales/santa-marta-premium-tayrona"
   status = 301
 
