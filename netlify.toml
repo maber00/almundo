@@ -10,6 +10,25 @@
   port       = 8888
   functions  = "netlify/functions"
 
+# --- Migración de dominio: almundotours.com -> tripanytravel.com ---
+# Sin estas reglas el dominio viejo sirve el sitio con 200 y Google lo ve
+# como contenido duplicado, sin transferir autoridad al dominio nuevo.
+# force = true es necesario porque de lo contrario Netlify resuelve la ruta
+# real antes de aplicar el redirect. Las reglas de netlify.toml se evalúan
+# antes que el _redirects que genera el adapter de Astro.
+
+[[redirects]]
+  from   = "https://almundotours.com/*"
+  to     = "https://www.tripanytravel.com/:splat"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "https://www.almundotours.com/*"
+  to     = "https://www.tripanytravel.com/:splat"
+  status = 301
+  force  = true
+
 [[forms]]
   name = "cotizacion"
 

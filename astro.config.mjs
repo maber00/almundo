@@ -4,6 +4,11 @@ import netlify from '@astrojs/netlify';
 import icon from 'astro-icon';
 
 export default defineConfig({
+  // Dominio canónico del sitio. Necesario para que Astro.site resuelva
+  // las URLs absolutas (canonical, Open Graph) contra el dominio nuevo
+  // y no contra el host que sirvió la petición.
+  site: 'https://www.tripanytravel.com',
+
   // Salida en modo servidor para usar funciones
   output: 'server',
 
