@@ -11,3 +11,6 @@ dist/
 # Env files
 .env
 .env.*
+
+# Video local, no se sube
+*.mp4
