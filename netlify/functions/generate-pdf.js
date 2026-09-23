@@ -87,7 +87,7 @@ function drawFooter(doc, logoPath, M, CW) {
     .strokeColor(C.border).lineWidth(0.5).stroke();
   if (logoPath) safeImage(doc, logoPath, M, fy - 10, { height: 30 });
   doc.font('Helvetica').fontSize(8.5).fillColor(C.gray)
-    .text('+57 316 527 6338  |  almundotours.com', M, fy - 2, { width: CW, align: 'right' });
+    .text('+57 316 527 6338  |  tripanytravel.com', M, fy - 2, { width: CW, align: 'right' });
 }
 
 // ── Generador principal ───────────────────────────────────────
@@ -105,7 +105,7 @@ function generatePDF(dest) {
     let   y  = M;
 
     // Solo PNG
-    const logoPath = resolveImage('assets/images/Logo3.png');
+    const logoPath = resolveImage('assets/images/tripany.png');
 
     // Precios
     const usd      = !!dest.priceInUsd;
@@ -121,7 +121,7 @@ function generatePDF(dest) {
     // ══ 1. HEADER ══════════════════════════════════════════════
     if (logoPath) safeImage(doc, logoPath, M, y - 6, { height: 40 });
     doc.font('Helvetica').fontSize(9).fillColor(C.gray)
-      .text('almundotours.com  |  +57 316 527 6338', M, y + 14, { width: CW, align: 'right' });
+      .text('tripanytravel.com  |  +57 316 527 6338', M, y + 14, { width: CW, align: 'right' });
     y += 54;
 
     // ══ 2. BADGES ══════════════════════════════════════════════
