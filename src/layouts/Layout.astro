@@ -59,15 +59,29 @@ const ogImageURL = new URL(ogImage, Astro.site);
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={ogImageURL} />
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {/* Poppins auto-hospedada. La hoja de fonts.googleapis.com bloqueaba el
+        render 967 ms: obligaba a resolver y negociar TLS con dos dominios
+        externos antes de pintar. Sirviéndola desde el mismo origen eso
+        desaparece. Se omite el peso 300, que no se usa en el sitio.
+        Comentario de Astro: queda en el fuente, no viaja al navegador. */}
+    <link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/poppins-700.woff2" as="font" type="font/woff2" crossorigin>
+    <style is:inline>
+      /* font-display: swap -> el texto se ve de inmediato con la fuente de
+         sistema y cambia a Poppins al llegar; nunca hay texto invisible. */
+      @font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/poppins-400.woff2') format('woff2')}
+      @font-face{font-family:'Poppins';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/poppins-500.woff2') format('woff2')}
+      @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/poppins-600.woff2') format('woff2')}
+      @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/poppins-700.woff2') format('woff2')}
+      /* Con respaldo real: durante el swap, y si la fuente fallara, el texto
+         cae a la del sistema y no a la serif por defecto del navegador. */
+      body{font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+    </style>
     
     <!-- Custom Styles -->
     <slot name="head" />
   </head>
-  <body class="font-[Poppins] min-h-screen flex flex-col">
+  <body class="min-h-screen flex flex-col">
     <!-- Google Tag Manager (noscript) -->
     <noscript>
       <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N8SCW6D9"
