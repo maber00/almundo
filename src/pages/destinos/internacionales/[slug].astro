@@ -80,7 +80,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
         <!-- Capa de oscurecimiento igual que en destinos nacionales -->
         <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70 z-10"></div>
         
-        <img 
+        <img fetchpriority="high" decoding="async" 
           src={destination.image} 
           alt={destination.name} 
           class="w-full h-full object-cover scale-105 transition-transform duration-10000 hover:scale-100"
@@ -207,7 +207,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
               <div class="relative aspect-video">
                 <div id="gallery-container" class="w-full h-full">
                   {galleryImages.map((image: string, index: number) => (
-                    <img 
+                    <img loading="lazy" decoding="async" 
                       src={image} 
                       alt={`${destination.name} - Imagen ${index + 1}`} 
                       class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
@@ -468,7 +468,7 @@ const galleryImages = destination.gallery && destination.gallery.length > 0
             {relatedDestinations.map((related) => (
               <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div class="relative">
-                  <img 
+                  <img loading="lazy" decoding="async" 
                     src={related.image} 
                     alt={related.name} 
                     class="w-full h-48 object-cover"

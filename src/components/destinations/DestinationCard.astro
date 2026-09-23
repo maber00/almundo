@@ -102,7 +102,7 @@ const getDestinationUrl = (destination: Destination) => {
 
 <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
   <div class="relative">
-    <img
+    <img loading="lazy" decoding="async"
       src={destination.image || '/images/placeholder.jpg'}
       alt={destination.name}
       class="w-full h-64 object-cover"

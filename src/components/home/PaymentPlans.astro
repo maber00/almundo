@@ -125,7 +125,7 @@ try {
             <div class="grid grid-cols-2 gap-4">
               {bankPartners.map((bank) => (
                 <div class="flex items-center justify-center bg-gray-100 p-4 rounded">
-                  <img 
+                  <img loading="lazy" decoding="async" 
                     src={bank.logo} 
                     alt={`Logo ${bank.name}`}
                     class="h-10 object-contain"

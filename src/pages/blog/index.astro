@@ -74,7 +74,7 @@ const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
                 {posts.slice(0, 4).map(post => (
                   <a href={`/blog/${post.slug}`} class="flex items-center group">
                     <div class="w-16 h-16 flex-shrink-0 rounded-md overflow-hidden mr-3">
-                      <img 
+                      <img loading="lazy" decoding="async" 
                         src={post.data.featuredImage} 
                         alt={post.data.title} 
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
@@ -101,7 +101,7 @@ const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
                     <a href={`/blog/${post.slug}`} class="group">
                       <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col transition-transform hover:-translate-y-1 duration-300">
                         <div class="relative h-48 md:h-56">
-                          <img 
+                          <img loading="lazy" decoding="async" 
                             src={post.data.featuredImage} 
                             alt={post.data.title} 
                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -144,7 +144,7 @@ const allCategories = [...new Set(posts.flatMap(post => post.data.categories))];
                   <a href={`/blog/${post.slug}`} class="group">
                     <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col transition-transform hover:-translate-y-1 duration-300">
                       <div class="h-48">
-                        <img 
+                        <img loading="lazy" decoding="async" 
                           src={post.data.featuredImage} 
                           alt={post.data.title} 
                           class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

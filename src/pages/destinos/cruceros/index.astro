@@ -318,7 +318,7 @@ const defaultCruiseLines = [
             {popularRoutes.map((route) => (
               <div class="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div class="h-48 overflow-hidden">
-                  <img 
+                  <img loading="lazy" decoding="async" 
                     src={route.image} 
                     alt={`Crucero por ${route.name}`} 
                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"

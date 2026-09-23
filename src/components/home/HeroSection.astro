@@ -48,6 +48,10 @@ const tripDurations = [
 ];
 ---
 
+{heroSlides[0] && (
+  <link rel="preload" as="image" href={heroSlides[0].image} fetchpriority="high" />
+)}
+
 <section class="relative w-full min-h-screen mt-0 pt-20">
   <!-- Hero Slider -->
   <div class="relative w-full h-screen overflow-hidden" id="hero-slider">
@@ -58,7 +62,8 @@ const tripDurations = [
         <div class={`slide absolute inset-0 w-full h-full transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}>
           <div 
             class="w-full h-full bg-cover bg-center"
-            style={`background-image: url(${slide.image})`}
+            style={index === 0 ? `background-image: url(${slide.image})` : undefined}
+            data-bg={index === 0 ? undefined : slide.image}
           >
              <div class="container mx-auto px-4 h-full flex items-start md:items-center pt-20 md:pt-0">
               <div class="text-white max-w-xl relative z-20 mb-24 md:mb-0">
@@ -210,11 +215,21 @@ const tripDurations = [
   const prevButton = document.getElementById('prev-slide');
   const nextButton = document.getElementById('next-slide');
   
+  // Aplica el fondo de un slide que se dejó diferido para no competir
+  // con el LCP. Idempotente: quita el data-bg tras usarlo.
+  function applyBg(slide: Element | undefined) {
+    const el = slide?.querySelector<HTMLElement>('[data-bg]');
+    if (!el) return;
+    el.style.backgroundImage = `url(${el.dataset.bg})`;
+    el.removeAttribute('data-bg');
+  }
+
   // Función para mostrar un slide específico
   function showSlide(index: number) {
   if (index < 0) index = slides.length - 1;
   if (index >= slides.length) index = 0;
 
+    applyBg(slides[index]);
     
     slides.forEach((slide, i) => {
       slide.classList.toggle('opacity-0', i !== index);
@@ -249,6 +264,12 @@ const tripDurations = [
     });
   }
   
+  // Ya con la página cargada no hay nada que estorbar: traemos los slides
+  // restantes para que el autoplay no muestre un fondo vacío.
+  window.addEventListener('load', () => {
+    slides.forEach((slide) => applyBg(slide));
+  });
+
   // Auto-rotate
   setInterval(() => {
     showSlide(currentSlide + 1);

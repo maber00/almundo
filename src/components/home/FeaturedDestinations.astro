@@ -46,7 +46,7 @@ const formatPrice = (price: number, inUsd?: boolean): string =>
         return (
           <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
             <div class="relative">
-              <img
+              <img loading="lazy" decoding="async"
                 src={dest.image || '/images/placeholder.jpg'}
                 alt={String(dest.name)}
                 class="w-full h-64 object-cover"

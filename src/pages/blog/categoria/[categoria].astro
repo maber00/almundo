@@ -78,7 +78,7 @@ const formattedCategoria = categoria.charAt(0).toUpperCase() + categoria.slice(1
     <a href={`/blog/${post.slug}`} class="group">
       <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col transition-transform hover:-translate-y-1 duration-300">
         <div class="h-48">
-          <img 
+          <img loading="lazy" decoding="async" 
             src={post.featuredImage} 
             alt={post.title} 
             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

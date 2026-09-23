@@ -85,7 +85,7 @@ try {
         <section class="relative pt-20">
           <div class="h-[50vh] w-full relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80 z-10"></div>
-            <img 
+            <img fetchpriority="high" decoding="async" 
               src={entry.data.featuredImage} 
               alt={entry.data.title} 
               class="w-full h-full object-cover"
@@ -117,7 +117,7 @@ try {
               <div class="container mx-auto">
                 <div class="flex justify-between items-center text-white max-w-3xl mx-auto">
                   <div class="flex items-center gap-2">
-                    <img 
+                    <img loading="lazy" decoding="async" 
                       src="/images/uploads/author-avatar.jpg" 
                       alt={entry.data.author} 
                       class="w-10 h-10 rounded-full"
@@ -212,7 +212,7 @@ try {
                         <a href={`/blog/${post.slug}`} class="group">
                           <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col transition-transform hover:-translate-y-1 duration-300">
                             <div class="h-48">
-                              <img 
+                              <img loading="lazy" decoding="async" 
                                 src={post.data.featuredImage} 
                                 alt={post.data.title} 
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -238,7 +238,7 @@ try {
                 <div class="bg-white rounded-lg shadow-md p-6 mb-8">
                   <h3 class="text-xl font-bold text-gray-900 mb-4">Sobre el autor</h3>
                   <div class="flex items-center mb-4">
-                    <img 
+                    <img loading="lazy" decoding="async" 
                       src="/images/uploads/author-avatar.jpg" 
                       alt={entry.data.author} 
                       class="w-16 h-16 rounded-full mr-4"
@@ -266,7 +266,7 @@ try {
                         return recentPosts.map((post: BlogPost) => (
                           <a href={`/blog/${post.slug}`} class="flex items-center group">
                             <div class="w-16 h-16 flex-shrink-0 rounded-md overflow-hidden mr-3">
-                              <img 
+                              <img loading="lazy" decoding="async" 
                                 src={post.data.featuredImage} 
                                 alt={post.data.title} 
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
