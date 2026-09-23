@@ -16,7 +16,7 @@
 
   <div class="iframe-wrapper">
     <iframe
-      src="https://almundo-cotizador.vercel.app/cotizar"
+      data-src="https://almundo-cotizador.vercel.app/cotizar"
       title="Cotizador de viajes TripAny Travel"
       allow="clipboard-write"
       loading="lazy"
@@ -136,3 +136,31 @@
     }
   }
 </style>
+
+<script>
+  // El cotizador es una app externa: ~485 KB de JS, su propia hoja de fuentes
+  // y llamadas a su backend. Con loading="lazy" a secas igual arrancaba a los
+  // ~1.8 s, porque es la segunda sección y entra en el umbral generoso del
+  // lazy nativo, compitiendo por ancho de banda con el hero.
+  // Con IntersectionObserver y un margen corto solo carga cuando el usuario
+  // se acerca de verdad. La UX no cambia: no hay que hacer clic en nada.
+  const iframe = document.querySelector<HTMLIFrameElement>('.iframe-wrapper iframe[data-src]');
+  if (iframe) {
+    const cargar = () => {
+      if (!iframe.dataset.src) return;
+      iframe.src = iframe.dataset.src;
+      delete iframe.dataset.src;
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entradas) => {
+        if (entradas.some((e) => e.isIntersecting)) {
+          cargar();
+          io.disconnect();
+        }
+      }, { rootMargin: '300px' });
+      io.observe(iframe);
+    } else {
+      cargar(); // sin soporte, comportamiento de antes
+    }
+  }
+</script>
