@@ -1,5 +1,5 @@
 ---
-id: "san-andres\t"
+id: san-andres
 name: San Andrés
 type: nacional
 region: Caribe

@@ -1,5 +1,5 @@
 ---
-id: Madrid y París
+id: madrid-y-paris
 name: Escapada Europea
 type: internacional
 region: Madrid y París

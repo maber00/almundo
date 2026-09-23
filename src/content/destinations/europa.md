@@ -1,5 +1,5 @@
 ---
-id: EUROPA
+id: europa
 name: Travesía Europea
 type: internacional
 region: Europa

@@ -13,7 +13,10 @@ collections:
     create: true
     slug: "{{id}}"
     fields:
-      - { label: "ID", name: "id", widget: "string" }
+      # El ID va directo a la URL (slug: "{{id}}"), así que se valida aquí:
+      # solo minúsculas, números y guiones. Antes se colaron mayúsculas,
+      # espacios y un "\t" que salía como %09 en la ruta.
+      - { label: "ID", name: "id", widget: "string", pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Solo minúsculas, números y guiones. Ejemplo: santa-marta"] }
       - { label: "Nombre", name: "name", widget: "string" }
       - { label: "Tipo", name: "type", widget: "select", options: ["nacional", "internacional", "crucero"] }
       - { label: "Región", name: "region", widget: "string" }

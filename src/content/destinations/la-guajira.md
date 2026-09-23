@@ -1,5 +1,5 @@
 ---
-id: "la-guajira\t"
+id: la-guajira
 name: La Guajira
 type: nacional
 region: Caribe

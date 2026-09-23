@@ -1,5 +1,5 @@
 ---
-id: Argentina
+id: argentina
 name: Mágica Argentina
 type: internacional
 region: Conosur

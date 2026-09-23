@@ -29,6 +29,36 @@
   status = 301
   force  = true
 
+# --- Slugs de destinos normalizados a minúsculas sin espacios ---
+# Los ids traían mayúsculas, espacios y hasta un "\t" de YAML que salía
+# como %09 en la URL. Se corrigieron en src/content/destinations; estos
+# 301 conservan lo que Google ya tenga indexado de las rutas viejas.
+
+[[redirects]]
+  from   = "/destinos/internacionales/EUROPA"
+  to     = "/destinos/internacionales/europa"
+  status = 301
+
+[[redirects]]
+  from   = "/destinos/internacionales/Madrid y París"
+  to     = "/destinos/internacionales/madrid-y-paris"
+  status = 301
+
+[[redirects]]
+  from   = "/destinos/internacionales/Argentina"
+  to     = "/destinos/internacionales/argentina"
+  status = 301
+
+[[redirects]]
+  from   = "/destinos/internacionales/Guatemala"
+  to     = "/destinos/internacionales/guatemala"
+  status = 301
+
+[[redirects]]
+  from   = "/destinos/nacionales/Santa Marta"
+  to     = "/destinos/nacionales/santa-marta-premium-tayrona"
+  status = 301
+
 [[forms]]
   name = "cotizacion"
 

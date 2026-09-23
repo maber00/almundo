@@ -1,5 +1,5 @@
 ---
-id: Santa Marta
+id: santa-marta-premium-tayrona
 name: Santa Marta & Experiencia Premium Tayrona
 type: nacional
 region: Caribe

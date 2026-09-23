@@ -1,5 +1,5 @@
 ---
-id: Guatemala
+id: guatemala
 name: Ciudad de Guatemala
 type: internacional
 region: "Central "
