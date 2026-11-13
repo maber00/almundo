@@ -3,10 +3,10 @@ id: la-guajira
 name: La Guajira
 type: nacional
 region: Caribe
-price: 1589000
+price: 1199000
 currency: COP
 priceInUsd: false
-originalPrice: 1489000
+originalPrice: 1039000
 duration: 4
 durationText: 4 días / 3 noches
 image: /images/uploads/foto-la-guajira-4.jpg
@@ -26,14 +26,15 @@ tags:
   - Playa
   - Oferta
 includes:
-  - "- Tiquetes aéreos ida y regreso"
   - Alojamiento 4 días 3 noches en Hotel Wayira Beach - Bungalow
   - "Alimentación: desayuno"
   - almuerzo y cena
   - Traslado aeropuerto–hotel–aeropuerto
   - Asistencia médica
 notIncludes:
-  - "- Gastos no especificados - Seguro hotelero"
+  - Tiquetes aéreos
+  - Gastos no especificados
+  - Seguro hotelero
 notes: El precio publicado es desde, por persona, en acomodación doble. Sujeto a
   cotización.
 ---
