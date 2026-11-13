@@ -3,10 +3,10 @@ id: amazonas
 name: Amazonas
 type: nacional
 region: Amazónica
-price: 1699000
+price: 999000
 currency: COP
 priceInUsd: false
-originalPrice: 1399000
+originalPrice: 899000
 duration: 4
 durationText: 4 días / 3 noches
 image: /images/uploads/foto-amazonas-4.jpg
@@ -20,21 +20,21 @@ description: Sumérgete en el corazón de la selva amazónica, un destino mágic
   del planeta.
 featured: true
 rating: 91
-availability: 5
+availability: 9
 tag: Aventura
 tags:
   - Aventura
   - Ecoturismo
   - Oferta
 includes:
-  - Tiquetes aéreos ida y regreso
   - Alojamiento 4 días 3 noches en Hotel Madreselva en acomodación doble
   - "Alimentación: Desayuno"
   - Traslado aeropuerto–hotel–aeropuerto
   - Asistencia médica
-  - Tours Full day selva
+  - Tours Sacumbu (tres fronteras)
   - Tours Puerto Nariño
 notIncludes:
+  - Tiquetes aéreos
   - Gastos no especificados
   - Seguro hotelero
 notes: El precio publicado es desde, por persona, en acomodación doble. Sujeto a
