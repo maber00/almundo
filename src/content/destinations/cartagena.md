@@ -3,10 +3,10 @@ id: cartagena
 name: Cartagena
 type: nacional
 region: Caribe
-price: 1399000
+price: 899000
 currency: COP
 priceInUsd: false
-originalPrice: 999900
+originalPrice: 769000
 duration: 4
 durationText: 4 días / 3 noches
 image: /images/uploads/foto-cartagena-5-islas-del-rosario.jpg
@@ -26,12 +26,14 @@ tags:
   - Playa
   - Oferta
 includes:
-  - Tiquetes aéreos ida y regreso
   - Alojamiento 4 días 3 noches
   - Alimentación (según hotel)
   - Traslado aeropuerto – hotel – aeropuerto
   - Asistencia médica
+  - Tour playa tranquila
+  - CityTour por Cartagena con entradas
 notIncludes:
+  - Tiquetes aéreos
   - Gastos no especificados en el plan
   - Seguro hotelero
 notes: El precio publicado es desde, por persona, en acomodación doble. Sujeto a
