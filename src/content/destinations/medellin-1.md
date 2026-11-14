@@ -1,12 +1,12 @@
 ---
-id: medellin
-name: Medellín
+id: medellin-esencial
+name: "Medellín Esencial: Cultura y Transformación (3D/2N)"
 type: nacional
 region: Andina
-price: 999000
+price: 659000
 currency: COP
 priceInUsd: false
-originalPrice: null
+originalPrice: 659000
 duration: 4
 durationText: 4 días / 3 noches
 image: /images/uploads/medellin-barrios-inmuebles-coworking.jpg
@@ -25,14 +25,34 @@ tag: Cultural
 tags:
   - Cultural
 includes:
-  - Tiquetes aéreos ida y regreso
-  - Alojamiento 4 días 3 noches
+  - Alojamiento 3 días 4 noches
   - Alimentación según hotel
   - Traslado aeropuerto–hotel–aeropuerto
   - Asistencia médica
+  - City Tour + Graffitour con almuerzo incluido
 notIncludes:
+  - Tiquetes aéreos
   - Gastos no especificados
   - Seguro hotelero
+  - Propinas
 notes: El precio publicado es desde, por persona, en acomodación doble. Sujeto a
   cotización.
+itinerary:
+  - title: Día 1. ¡Bienvenidos a Medellín!
+    description: A tu llegada, te recibiremos en el aeropuerto y te trasladaremos
+      hasta el hotel. Tendrás el resto del día libre para descansar, explorar y
+      comenzar a disfrutar del encanto de Medellín a tu propio ritmo.
+  - title: "Día 2. Medellín: cultura, historia y transformación"
+    description: >-
+      Después del desayuno, iniciaremos un recorrido por los lugares más
+      representativos de la ciudad: Pueblito Paisa, Plaza Botero, Parque de los
+      Pies Descalzos, Parques del Río y una experiencia en el Metro y
+      Metrocable.
+
+
+      Continuaremos hacia la emblemática Comuna 13, donde conocerás su historia y transformación a través de un recorrido guiado por sus coloridos grafitis y escaleras eléctricas. Disfrutarás de un show urbano de hip-hop y break dance, y degustarás una tradicional paleta artesanal de mango biche.
+  - title: Día 3. Hasta pronto, Medellín
+    description: Después del desayuno, realizaremos el traslado desde el hotel hacia
+      el aeropuerto para tomar tu vuelo de regreso. ¡Esperamos que te lleves
+      recuerdos inolvidables de esta experiencia!
 ---
