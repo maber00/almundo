@@ -21,7 +21,7 @@ description: Descubre Medellín en una experiencia que combina cultura, historia
   la Comuna 13. ¡Tres días para enamorarte de la ciudad de la eterna primavera!
 featured: true
 rating: 90
-availability: 5
+availability: 10
 tag: Cultural
 tags:
   - Cultural
