@@ -46,44 +46,41 @@ itinerary:
   - title: Día 2
     description: Tour Tres Fronteras & Lago Zacambú
     activities:
-      - 7:45 a.m. – Encuentro y Zarpe:** Nos encontraremos en el puerto o
-        malecón de Leticia para abordar nuestra embarcación y comenzar la
-        navegación por el majestuoso río Amazonas
-      - descendiendo hasta el caudaloso río Yavarí (frontera natural entre Perú
-        y Brasil)
-      - 'Visita a Islandia ("La Venecia Peruana"): Nuestra primera parada será
-        en este fascinante asentamiento en Perú - famoso por sus casas
-        flotantes. Aquí descubriremos la vida cotidiana de la comunidad y su
-        estrecha conexión con el río'
-      - "Reserva de la Aldea: Continuaremos el recorrido para observar de cerca
-        la fauna emblemática del Amazonas - incluyendo monos - aves exóticas -
-        anacondas y el imponente pez pirarucú (uno de los más grandes de agua
-        dulce del mundo). Aventura y Pesca en Zacambu (Perú): Llegaremos a un
-        entorno natural único donde practicaremos pesca artesanal en lagos de la
-        selva y aprenderemos las técnicas tradicionales de la región"
-      - "Baño en el Río Amazonas: Disfrutaremos de una experiencia inolvidable
-        nadando en las aguas del río más caudaloso del mundo"
-      - rodeados de naturaleza pura
-      - "Descanso en la Selva y Retorno: Finalizaremos la jornada relajándonos
-        en hamacas al son de los sonidos de la selva - antes de emprender el
-        regreso hacia el punto de partida en Leticia"
+      - Navegación por la selva inundada durante la temporada de aguas altas
+      - observación de aves y animales silvestres
+      - visita a los Lagos de Zacambú en Perú
+      - pesca artesanal de pirañas
+      - avistamiento de delfines y sus crías según la temporada
+      - almuerzo durante el recorrido
+      - visita al pueblo de Islandia en Perú conocido como la Venecia del
+        Amazonas
+      - "navegación por el río Solimões en Brasil hasta llegar a
+        Leticia.  Horario: Salida 7:10 a. m. y regreso 5:00 p. m"
   - description: >-
-      Full Day Puerto Nariño (visita a comunidad indígena Macedonia, Isla de los
-      Micos o avistamiento de delfines rosados en los lagos de Tarapoto y
-      recorrido por Puerto Nariño).
+      Reserva de los Micos, avistamiento de delfines, comunidad indígena de las
+      etnias Ticuna y Yagua, recorrido por Puerto Nariño, almuerzo tipo buffet
+      en un restaurante local.
 
 
-      Nota:Se debe tener en cuenta que si el río esta seco en el momento de realizar el tour, no se podrá
+      Horario: Salida desde Puerto Malecón a las 7:30 a. m. y regreso a las 5:30 p. m.
 
-      realizar el tours a tres fronteras y se deberá cambiar por otro tours.
+
+      Incluye: Guianza, transporte fluvial, asistencia médica y almuerzo.
+
+
+      No incluye: Impuesto de entrada de $20.000
     title: Día 3
     activities:
-      - Full Day Puerto Nariño (visita a comunidad indígena Macedonia
-      - Isla de los Micos o avistamiento de delfines rosados en los lagos de
-        Tarapoto y recorrido por Puerto Nariño)
-      - "Nota: Se debe tener en cuenta que si el río esta seco en el momento de
-        realizar el tour - no se podrá realizar el tours a tres fronteras y se
-        deberá cambiar por otro tours"
+      - Reserva de los Micos
+      - avistamiento de delfines
+      - comunidad indígena de las etnias Ticuna y Yagua
+      - recorrido por Puerto Nariño
+      - "almuerzo tipo buffet en un restaurante local.  Horario: Salida desde
+        Puerto Malecón a las 7:30 a. m. y regreso a las 5:30 p. m.  Incluye:
+        Guianza"
+      - transporte fluvial
+      - "asistencia médica y almuerzo.  No incluye: Impuesto de entrada de
+        $20.000"
   - title: Día 4
     description: >
       Después del desayuno,
