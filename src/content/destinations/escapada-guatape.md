@@ -70,6 +70,8 @@ itinerary:
       - Tarjeta de asistencia médica activa durante toda la experiencia
       - "No está Incluido en el tour❌: El ascenso a la Piedra del Peñol - Gastos
         no especificados en el plan - Propinas"
+      - "Nota: si se requiere tour en inglés se debe informar al momento de la
+        reserva"
   - title: Día 3. Hasta pronto, Medellín
     description: Después del desayuno, realizaremos el traslado desde el hotel hacia
       el aeropuerto para tomar tu vuelo de regreso. ¡Esperamos que te lleves
