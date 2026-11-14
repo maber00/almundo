@@ -1,6 +1,6 @@
 ---
-id: cartagena
-name: Cartagena
+id: cartagena-esencial
+name: "Cartagena Esencial: Historia y Playa Barú (4D/3N)"
 type: nacional
 region: Caribe
 price: 899000
@@ -39,19 +39,35 @@ notIncludes:
 notes: El precio publicado es desde, por persona, en acomodación doble. Sujeto a
   cotización.
 itinerary:
-  - title: Llegada a Cartagena
-    description: Recepción en el aeropuerto y traslado al hotel. Tiempo libre para
-      recorrer los alrededores.
+  - title: Día 1
+    description: Recibimiento en el aeropuesto Rafael Núñez, traslado
+      privado/coordinado al hotel en Cartagena y registro.
     activities:
-      - '"Check-in en el hotel"'
-      - '"Recorrido de orientación por la zona"'
-      - '"Cena de bienvenida"'
-  - title: Ciudad Amurallada
-    description: Visita guiada por la histórica ciudad amurallada, conociendo sus
-      principales atractivos.
+      - Recibimiento en el aeropuesto Rafael Núñez
+      - Traslado al hotel en Cartagena y registro.
+  - title: Día 2
+    description: Pasadía a Playa Tranquila en Barú (incluye transporte
+      terrestre/lancha, almuerzo típico y zona de camastros).
     activities:
-      - '"Visita al Castillo de San Felipe"'
-      - '"Recorrido por las calles de la ciudad vieja"'
-      - '"Almuerzo en restaurante típico"'
-      - '"Tarde libre para compras"'
+      - Pasadía a Playa Tranquila en Barú (incluye transporte terrestre/lancha -
+        Almuerzo típico sin bebidas y zona de camastros)
+  - title: Día 3
+    description: City Tour panorámico e histórico por Cartagena (Castillo de San
+      Felipe, Zapatos Viejos, Centro Amurallado y entradas incluidas).
+    activities:
+      - City Tour panorámico e histórico por Cartagena (Castillo de San Felipe -
+        Zapatos Viejos - Centro Amurallado y entradas incluidas)
+  - title: Día 4
+    description: >-
+      Después del desayuno,
+
+      Realizaremos el traslado desde el hotel hacia el aeropuerto para tomar tu vuelo de regreso,
+
+      ¡Esperamos que te lleves recuerdos inolvidables de esta experiencia!,
+    activities:
+      - Después del desayuno
+      - Realizaremos el traslado desde el hotel hacia el aeropuerto para tomar
+        tu vuelo de regreso
+      - ¡Esperamos que te lleves recuerdos inolvidables de esta experiencia!
+      - ""
 ---
