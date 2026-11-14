@@ -58,23 +58,18 @@ itinerary:
 
       También conoceremos la imponente Piedra del Peñol (el ascenso no está incluido) y finalizaremos explorando el colorido pueblo de Guatapé, sus tradicionales zócalos, la Calle de los Recuerdos, el malecón, el parque principal y su iglesia.
     activities:
-      - •	Transporte en vehículos especiales de turismo
-      - •	Almuerzo
-      - "•\tCity Tour por los lugares más representativos de Medellín: Pueblito
-        Paisa – Plaza Botero – Parque de los pies descalzos – Parques del Río –
-        Metro y Metrocable"
-      - "•\tVisita experiencial a la Comuna 13 - donde vivirás su transformación
-        cultural a través de: Un recorrido guiado por los graffitis más
-        representativos y las famosas escaleras eléctricas – Show urbano de
-        hip-hop y break dance – Degustación del postre típico del sector: paleta
-        artesanal de mango biche"
-      - •	Guía local en la Comuna 13
-      - •	Guía acompañante
-      - •	Tarjeta de asistencia médica
-      - No está Incluido en el tour❌
-      - •	Desayuno
-      - •	Gastos no especificados en el plan
-      - ""
+      - Transporte en vehículos especiales de turismo
+      - Desayuno y almuerzo
+      - Conocerás las famosas llamas y alpacas en la visita al ALTO DEL CHOCHO🦙
+      - Visita patrimonial a la réplica del antiguo Peñol
+      - Recorrido en barco por la represa de Guatapé
+      - Visita a la Piedra del Peñol (No incluye ascenso)
+      - "Recorrido cultural por Guatapé: Calle de los recuerdos – Plazoleta de
+        los zócalos – Malecón – Parque central – Iglesia"
+      - Acompañamiento permanente de guía profesional
+      - Tarjeta de asistencia médica activa durante toda la experiencia
+      - "No está Incluido en el tour❌: El ascenso a la Piedra del Peñol - Gastos
+        no especificados en el plan - Propinas"
   - title: Día 3. Hasta pronto, Medellín
     description: Después del desayuno, realizaremos el traslado desde el hotel hacia
       el aeropuerto para tomar tu vuelo de regreso. ¡Esperamos que te lleves
@@ -82,6 +77,6 @@ itinerary:
     activities:
       - Después del desayuno
       - realizaremos el traslado desde el hotel hacia el aeropuerto para tomar
-        tu vuelo de regreso. ¡Esperamos que te lleves recuerdos inolvidables de
-        esta experiencia!
+        tu vuelo de regreso
+      - ¡Esperamos que te lleves recuerdos inolvidables de esta experiencia!
 ---
