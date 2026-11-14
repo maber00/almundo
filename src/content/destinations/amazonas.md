@@ -67,14 +67,23 @@ itinerary:
       - "Descanso en la Selva y Retorno: Finalizaremos la jornada relajándonos
         en hamacas al son de los sonidos de la selva - antes de emprender el
         regreso hacia el punto de partida en Leticia"
-  - description: Full Day Puerto Nariño (visita a comunidad indígena Macedonia, Isla
-      de los Micos o avistamiento de delfines rosados en los lagos de Tarapoto y
+  - description: >-
+      Full Day Puerto Nariño (visita a comunidad indígena Macedonia, Isla de los
+      Micos o avistamiento de delfines rosados en los lagos de Tarapoto y
       recorrido por Puerto Nariño).
+
+
+      Nota:Se debe tener en cuenta que si el río esta seco en el momento de realizar el tour, no se podrá
+
+      realizar el tours a tres fronteras y se deberá cambiar por otro tours.
     title: Día 3
     activities:
       - Full Day Puerto Nariño (visita a comunidad indígena Macedonia
       - Isla de los Micos o avistamiento de delfines rosados en los lagos de
-        Tarapoto y recorrido por Puerto Nariño).
+        Tarapoto y recorrido por Puerto Nariño)
+      - "Nota: Se debe tener en cuenta que si el río esta seco en el momento de
+        realizar el tour - no se podrá realizar el tours a tres fronteras y se
+        deberá cambiar por otro tours"
   - title: Día 4
     description: >
       Después del desayuno,
