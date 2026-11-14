@@ -15,9 +15,10 @@ gallery:
   - /images/uploads/comuna-13-medellin-colombia.jpg
   - /images/uploads/portada-parque-lleras-768x402.jpg
   - /images/uploads/escultura-botero-mujer-sobre-toro-1024x683.jpg
-description: Ciudad de la eterna primavera, reconocida por su clima agradable,
-  innovación urbana y vibrante escena cultural. Destacan lugares como la Comuna
-  13 y el Pueblito Paisa.
+description: Descubre Medellín en una experiencia que combina cultura, historia
+  y transformación. Recorre sus lugares más emblemáticos, disfruta de sus
+  paisajes urbanos y déjate sorprender por la energía, el arte y la historia de
+  la Comuna 13. ¡Tres días para enamorarte de la ciudad de la eterna primavera!
 featured: true
 rating: 90
 availability: 5
