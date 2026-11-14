@@ -7,8 +7,8 @@ price: 699000
 currency: COP
 priceInUsd: false
 originalPrice: 699000
-duration: 4
-durationText: 4 días / 3 noches
+duration: 3
+durationText: 3 días / 2 noches
 image: /images/uploads/medellin-barrios-inmuebles-coworking.jpg
 gallery:
   - /images/uploads/pueblito-paisa-medellin.jpg
