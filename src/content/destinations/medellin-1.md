@@ -43,6 +43,12 @@ itinerary:
     description: A tu llegada, te recibiremos en el aeropuerto y te trasladaremos
       hasta el hotel. Tendrás el resto del día libre para descansar, explorar y
       comenzar a disfrutar del encanto de Medellín a tu propio ritmo.
+    activities:
+      - A tu llegada
+      - te recibiremos en el aeropuerto y te trasladaremos hasta el hotel.
+        Tendrás el resto del día libre para descansar
+      - explorar y comenzar a disfrutar del encanto de Medellín a tu propio
+        ritmo.
   - title: "Día 2. Medellín: cultura, historia y transformación"
     description: >-
       Después del desayuno, iniciaremos un recorrido por los lugares más
@@ -68,4 +74,9 @@ itinerary:
     description: Después del desayuno, realizaremos el traslado desde el hotel hacia
       el aeropuerto para tomar tu vuelo de regreso. ¡Esperamos que te lleves
       recuerdos inolvidables de esta experiencia!
+    activities:
+      - Después del desayuno
+      - realizaremos el traslado desde el hotel hacia el aeropuerto para tomar
+        tu vuelo de regreso. ¡Esperamos que te lleves recuerdos inolvidables de
+        esta experiencia!
 ---
