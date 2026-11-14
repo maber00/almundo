@@ -9,7 +9,7 @@ priceInUsd: false
 originalPrice: 659000
 duration: 4
 durationText: 4 días / 3 noches
-image: /images/uploads/medellin-barrios-inmuebles-coworking.jpg
+image: /images/uploads/comuna-13-medellin-colombia.jpg
 gallery:
   - /images/uploads/pueblito-paisa-medellin.jpg
   - /images/uploads/comuna-13-medellin-colombia.jpg
