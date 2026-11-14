@@ -73,9 +73,10 @@ itinerary:
       - Guía acompañante
       - Tarjeta de asistencia médica
       - "No está Incluido en el tour❌: Desayuno - Gastos no especificados en el
-        plan  Nota: si se requiere tour en inglés se debe informar al momento de
-        la reserva"
-      - ""
+        plan"
+      - Propinas
+      - "Nota: si se requiere tour en inglés se debe informar al momento de la
+        reserva"
   - title: Día 3. Hasta pronto, Medellín
     description: Después del desayuno, realizaremos el traslado desde el hotel hacia
       el aeropuerto para tomar tu vuelo de regreso, ¡Esperamos que te lleves
