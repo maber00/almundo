@@ -44,10 +44,10 @@ itinerary:
       hasta el hotel. Tendrás el resto del día libre para descansar, explorar y
       comenzar a disfrutar del encanto de Medellín a tu propio ritmo.
     activities:
-      - A tu llegada
-      - te recibiremos en el aeropuerto y te trasladaremos hasta el hotel.
-        Tendrás el resto del día libre para descansar
-      - explorar y comenzar a disfrutar del encanto de Medellín a tu propio
+      - A tu llegada te recibiremos en el aeropuerto y te trasladaremos hasta el
+        hotel
+      - Tendrás el resto del día libre para descansar
+      - Explorar y comenzar a disfrutar del encanto de Medellín a tu propio
         ritmo.
   - title: "Día 2. Medellín: cultura, historia y transformación"
     description: >-
@@ -59,24 +59,30 @@ itinerary:
 
       Continuaremos hacia la emblemática Comuna 13, donde conocerás su historia y transformación a través de un recorrido guiado por sus coloridos grafitis y escaleras eléctricas. Disfrutarás de un show urbano de hip-hop y break dance, y degustarás una tradicional paleta artesanal de mango biche.
     activities:
-      - Después del desayuno
-      - "iniciaremos un recorrido por los lugares más representativos de la
-        ciudad: Pueblito Paisa"
-      - Plaza Botero
-      - Parque de los Pies Descalzos
-      - Parques del Río y una experiencia en el Metro y
-        Metrocable.  Continuaremos hacia la emblemática Comuna 13
-      - donde conocerás su historia y transformación a través de un recorrido
-        guiado por sus coloridos grafitis y escaleras eléctricas. Disfrutarás de
-        un show urbano de hip-hop y break dance
-      - y degustarás una tradicional paleta artesanal de mango biche.
+      - Transporte en vehículos especiales de turismo
+      - Almuerzo
+      - "City Tour por los lugares más representativos de Medellín: Pueblito
+        Paisa – Plaza Botero – Parque de los pies descalzos – Parques del Río –
+        Metro y Metrocable"
+      - "Visita experiencial a la Comuna 13 - donde vivirás su transformación
+        cultural a través de: Un recorrido guiado por los graffitis más
+        representativos y las famosas escaleras eléctricas – Show urbano de
+        hip-hop y break dance – Degustación del postre típico del sector: paleta
+        artesanal de mango biche"
+      - Guía local en la Comuna 13
+      - Guía acompañante
+      - Tarjeta de asistencia médica
+      - "No está Incluido en el tour❌: Desayuno - Gastos no especificados en el
+        plan  Nota: si se requiere tour en inglés se debe informar al momento de
+        la reserva"
+      - ""
   - title: Día 3. Hasta pronto, Medellín
     description: Después del desayuno, realizaremos el traslado desde el hotel hacia
-      el aeropuerto para tomar tu vuelo de regreso. ¡Esperamos que te lleves
+      el aeropuerto para tomar tu vuelo de regreso, ¡Esperamos que te lleves
       recuerdos inolvidables de esta experiencia!
     activities:
       - Después del desayuno
-      - realizaremos el traslado desde el hotel hacia el aeropuerto para tomar
-        tu vuelo de regreso. ¡Esperamos que te lleves recuerdos inolvidables de
-        esta experiencia!
+      - Realizaremos el traslado desde el hotel hacia el aeropuerto para tomar
+        tu vuelo de regreso
+      - ¡Esperamos que te lleves recuerdos inolvidables de esta experiencia!
 ---
