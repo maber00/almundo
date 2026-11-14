@@ -42,6 +42,12 @@ itinerary:
     description: A tu llegada, te recibiremos en el aeropuerto y te trasladaremos
       hasta el hotel. Tendrás el resto del día libre para descansar, explorar y
       comenzar a disfrutar del encanto de Medellín a tu propio ritmo.
+    activities:
+      - A tu llegada te recibiremos en el aeropuerto y te trasladaremos hasta el
+        hotel
+      - Tendrás el resto del día libre para descansar
+      - Explorar y comenzar a disfrutar del encanto de Medellín a tu propio
+        ritmo.
   - title: "Día 2. Medellín: cultura, historia y transformación"
     description: >-
       Prepárate para descubrir uno de los destinos más encantadores de
@@ -51,8 +57,31 @@ itinerary:
 
 
       También conoceremos la imponente Piedra del Peñol (el ascenso no está incluido) y finalizaremos explorando el colorido pueblo de Guatapé, sus tradicionales zócalos, la Calle de los Recuerdos, el malecón, el parque principal y su iglesia.
+    activities:
+      - •	Transporte en vehículos especiales de turismo
+      - •	Almuerzo
+      - "•\tCity Tour por los lugares más representativos de Medellín: Pueblito
+        Paisa – Plaza Botero – Parque de los pies descalzos – Parques del Río –
+        Metro y Metrocable"
+      - "•\tVisita experiencial a la Comuna 13 - donde vivirás su transformación
+        cultural a través de: Un recorrido guiado por los graffitis más
+        representativos y las famosas escaleras eléctricas – Show urbano de
+        hip-hop y break dance – Degustación del postre típico del sector: paleta
+        artesanal de mango biche"
+      - •	Guía local en la Comuna 13
+      - •	Guía acompañante
+      - •	Tarjeta de asistencia médica
+      - No está Incluido en el tour❌
+      - •	Desayuno
+      - •	Gastos no especificados en el plan
+      - ""
   - title: Día 3. Hasta pronto, Medellín
     description: Después del desayuno, realizaremos el traslado desde el hotel hacia
       el aeropuerto para tomar tu vuelo de regreso. ¡Esperamos que te lleves
       recuerdos inolvidables de esta experiencia!
+    activities:
+      - Después del desayuno
+      - realizaremos el traslado desde el hotel hacia el aeropuerto para tomar
+        tu vuelo de regreso. ¡Esperamos que te lleves recuerdos inolvidables de
+        esta experiencia!
 ---
