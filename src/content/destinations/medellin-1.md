@@ -52,6 +52,18 @@ itinerary:
 
 
       Continuaremos hacia la emblemática Comuna 13, donde conocerás su historia y transformación a través de un recorrido guiado por sus coloridos grafitis y escaleras eléctricas. Disfrutarás de un show urbano de hip-hop y break dance, y degustarás una tradicional paleta artesanal de mango biche.
+    activities:
+      - Después del desayuno
+      - "iniciaremos un recorrido por los lugares más representativos de la
+        ciudad: Pueblito Paisa"
+      - Plaza Botero
+      - Parque de los Pies Descalzos
+      - Parques del Río y una experiencia en el Metro y
+        Metrocable.  Continuaremos hacia la emblemática Comuna 13
+      - donde conocerás su historia y transformación a través de un recorrido
+        guiado por sus coloridos grafitis y escaleras eléctricas. Disfrutarás de
+        un show urbano de hip-hop y break dance
+      - y degustarás una tradicional paleta artesanal de mango biche.
   - title: Día 3. Hasta pronto, Medellín
     description: Después del desayuno, realizaremos el traslado desde el hotel hacia
       el aeropuerto para tomar tu vuelo de regreso. ¡Esperamos que te lleves
