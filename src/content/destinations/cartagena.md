@@ -69,5 +69,4 @@ itinerary:
       - Realizaremos el traslado desde el hotel hacia el aeropuerto para tomar
         tu vuelo de regreso
       - ¡Esperamos que te lleves recuerdos inolvidables de esta experiencia!
-      - ""
 ---
